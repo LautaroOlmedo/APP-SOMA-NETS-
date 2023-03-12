@@ -16,7 +16,11 @@ export class BrandsService {
 
   public async findAllBrands(): Promise<BrandEntity[]> {
     try {
-      const brands: BrandEntity[] = await this.brandRepository.find();
+      const brands = await this.brandRepository
+        .createQueryBuilder('brand')
+        .leftJoinAndSelect('brand.users', 'user')
+        .leftJoinAndSelect('brand.stores', 'store')
+        .getMany();
       if (brands.length === 0) {
         throw new ErrorManager({
           type: 'NOT_FOUND',
@@ -35,6 +39,8 @@ export class BrandsService {
       const brand: BrandEntity = await this.brandRepository
         .createQueryBuilder('brand')
         .where({ id })
+        .leftJoinAndSelect('brand.users', 'user')
+        .leftJoinAndSelect('brand.stores', 'store')
         .getOne();
       if (!brand) {
         throw new ErrorManager({

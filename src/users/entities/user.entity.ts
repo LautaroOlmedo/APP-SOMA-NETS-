@@ -13,7 +13,7 @@ import { BaseEntity } from '../../config/base.entity';
 import { IUser } from '../../interfaces/user.interface';
 import { ROLES } from '../../constants/roles';
 import { StoreUsersEntity } from '../../stores/entities/store-users.entity';
-import { BrandEntity } from 'src/brands/entities/brand.entity';
+import { BrandEntity } from '../../brands/entities/brand.entity';
 
 @Entity('users')
 export class UserEntity extends BaseEntity implements IUser {
@@ -32,7 +32,7 @@ export class UserEntity extends BaseEntity implements IUser {
   @Column()
   dni: string;
 
-  @Column()
+  @Column({ select: false })
   password: string;
 
   @Column({ type: 'enum', enum: ROLES })

@@ -20,7 +20,12 @@ export class UsersService {
 
   public async findAllUsers(): Promise<UserEntity[]> {
     try {
-      const users: UserEntity[] = await this.userRepository.find();
+      const users = await this.userRepository
+        .createQueryBuilder('user')
+        .leftJoinAndSelect('user.brand', 'brand')
+        .leftJoinAndSelect('user.storesIncludes', 'storesIncludes')
+        .leftJoinAndSelect('storesIncludes.store', 'store')
+        .getMany();
       if (users.length === 0) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',

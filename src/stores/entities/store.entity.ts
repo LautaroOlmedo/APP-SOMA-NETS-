@@ -3,9 +3,9 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 // ---------- ---------- ---------- ---------- ----------
 
 import { BaseEntity } from '../../config/base.entity';
-import { IStore } from 'src/interfaces/store.interface';
+import { IStore } from '../../interfaces/store.interface';
 import { StoreUsersEntity } from './store-users.entity';
-import { BrandEntity } from 'src/brands/entities/brand.entity';
+import { BrandEntity } from '../../brands/entities/brand.entity';
 
 @Entity({ name: 'stores' })
 export class StoreEntity extends BaseEntity implements IStore {
