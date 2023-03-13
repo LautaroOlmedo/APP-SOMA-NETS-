@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 // ---------- ---------- ---------- ---------- ----------
 
@@ -60,8 +61,23 @@ export class UsersService {
     }
   }
 
+  public async findBy({ key, value }: { key: keyof UserDTO; value: any }) {
+    try {
+      const user: UserEntity = await this.userRepository
+        .createQueryBuilder('user')
+        .addSelect('user.password')
+        .where({ [key]: value })
+        .getOne();
+      return user;
+    } catch (e) {
+      console.log(e);
+      throw new ErrorManager.createSignatureError(e.message);
+    }
+  }
+
   public async createUser(body: UserDTO): Promise<UserEntity> {
     try {
+      body.password = await bcrypt.hash(body.password, +process.env.HASH_SALT);
       return await this.userRepository.save(body);
     } catch (e) {
       console.log(e);

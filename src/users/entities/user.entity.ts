@@ -14,6 +14,7 @@ import { IUser } from '../../interfaces/user.interface';
 import { ROLES } from '../../constants/roles';
 import { StoreUsersEntity } from '../../stores/entities/store-users.entity';
 import { BrandEntity } from '../../brands/entities/brand.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity('users')
 export class UserEntity extends BaseEntity implements IUser {
@@ -32,6 +33,7 @@ export class UserEntity extends BaseEntity implements IUser {
   @Column()
   dni: string;
 
+  @Exclude()
   @Column({ select: false })
   password: string;
 
