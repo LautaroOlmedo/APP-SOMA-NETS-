@@ -9,6 +9,8 @@ import { UserDTO, UserToStoreDTO, UserUpdateDTO } from '../dto/user.dto';
 import { UserEntity } from '../entities/user.entity';
 import { StoreUsersEntity } from 'src/stores/entities/store-users.entity';
 import { ErrorManager } from '../../utils/error.manager';
+import { CountryEntity } from 'src/countries/entities/country.entity';
+import { CountriesService } from 'src/countries/services/countries.service';
 
 @Injectable()
 export class UsersService {
@@ -17,11 +19,14 @@ export class UsersService {
     private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(StoreUsersEntity)
     private readonly storeUsersRepository: Repository<StoreUsersEntity>,
+    //@InjectRepository(CountryEntity)
+    //private readonly countryRepository: Repository<CountryEntity>,
+    private readonly countriesService: CountriesService,
   ) {}
 
   public async findAllUsers(): Promise<UserEntity[]> {
     try {
-      const users = await this.userRepository
+      const users: UserEntity[] = await this.userRepository
         .createQueryBuilder('user')
         .leftJoinAndSelect('user.brand', 'brand')
         .leftJoinAndSelect('user.storesIncludes', 'storesIncludes')

@@ -7,6 +7,7 @@ import * as morgan from 'morgan';
 
 import { AppModule } from './app.module';
 import { CORS } from './constants';
+import { ProvincesService } from './provinces/services/provinces.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

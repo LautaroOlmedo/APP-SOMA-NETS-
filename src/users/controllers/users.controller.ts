@@ -17,7 +17,7 @@ import { PublicAcces } from 'src/auth/decorators/public.decorator';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 
 @Controller('users')
-@UseGuards(AuthGuard)
+//@UseGuards(AuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -26,7 +26,7 @@ export class UsersController {
     return await this.usersService.findAllUsers();
   }
 
-  @PublicAcces()
+  //@PublicAcces()
   @Get(':id')
   public async getUserById(@Param('id') id: string) {
     return await this.usersService.findOneUser(id);

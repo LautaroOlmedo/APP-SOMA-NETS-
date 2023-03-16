@@ -8,12 +8,11 @@ import { DataSourceConfig } from './config/data.source';
 import { UsersModule } from './users/users.module';
 import { BrandsModule } from './brands/brands.module';
 import { StoresModule } from './stores/stores.module';
-import { CountryModule } from './country/country.module';
-import { ProvinceModule } from './province/province.module';
-import { DepartmentModule } from './department/department.module';
+import { CountriesModule } from './countries/countries.module';
 import { DirectionModule } from './direction/direction.module';
 import { EmailsModule } from './emails/emails.module';
 import { AuthModule } from './auth/auth.module';
+import { ProvincesModule } from './provinces/provinces.module';
 
 @Module({
   imports: [
@@ -25,12 +24,11 @@ import { AuthModule } from './auth/auth.module';
     UsersModule,
     BrandsModule,
     StoresModule,
-    CountryModule,
-    ProvinceModule,
-    DepartmentModule,
+    CountriesModule,
     DirectionModule,
     EmailsModule,
     AuthModule,
+    ProvincesModule,
   ],
 })
 export class AppModule {}
