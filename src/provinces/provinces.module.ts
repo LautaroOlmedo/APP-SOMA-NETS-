@@ -10,7 +10,8 @@ import { UserEntity } from 'src/users/entities/user.entity';
 import { StoreEntity } from 'src/stores/entities/store.entity';
 import { ProvincesService } from './services/provinces.service';
 import { ProvincesController } from './controllers/provinces.controller';
-import { CountryEntity } from 'src/countries/entities/country.entity';
+import { CountryEntity } from '.././countries/entities/country.entity';
+import { DepartmentEntity } from '.././departments/entities/department.entity';
 
 @Global()
 @Module({
@@ -20,6 +21,7 @@ import { CountryEntity } from 'src/countries/entities/country.entity';
       CountryEntity,
       UserEntity,
       StoreEntity,
+      DepartmentEntity,
     ]),
   ],
   providers: [ProvincesService],

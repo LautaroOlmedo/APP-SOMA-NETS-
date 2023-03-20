@@ -13,6 +13,8 @@ import { DirectionModule } from './direction/direction.module';
 import { EmailsModule } from './emails/emails.module';
 import { AuthModule } from './auth/auth.module';
 import { ProvincesModule } from './provinces/provinces.module';
+import { DepartmentsModule } from './departments/departments.module';
+import { PhonesModule } from './phones/phones.module';
 
 @Module({
   imports: [
@@ -29,6 +31,8 @@ import { ProvincesModule } from './provinces/provinces.module';
     EmailsModule,
     AuthModule,
     ProvincesModule,
+    DepartmentsModule,
+    PhonesModule,
   ],
 })
 export class AppModule {}
