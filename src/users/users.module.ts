@@ -12,6 +12,8 @@ import { ProvinceEntity } from '.././provinces/entities/province.entity';
 import { UserDirectionsEntity } from '.././direction/entities/user-directions.entity';
 import { DepartmentEntity } from '.././departments/entities/department.entity';
 import { UserEmailsEntity } from '.././emails/entities/user-emails.entity';
+import { UserDirectionsService } from 'src/direction/services/user-directions.service';
+import { DirectionModule } from 'src/direction/direction.module';
 
 @Global()
 @Module({
@@ -25,9 +27,10 @@ import { UserEmailsEntity } from '.././emails/entities/user-emails.entity';
       CountryEntity,
       UserEmailsEntity,
     ]),
+    DirectionModule,
   ],
   controllers: [UsersController],
-  providers: [UsersService],
+  providers: [UsersService], //UserDirectionsService],
   exports: [UsersService, TypeOrmModule],
 })
 export class UsersModule {}

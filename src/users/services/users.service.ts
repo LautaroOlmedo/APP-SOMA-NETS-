@@ -9,8 +9,7 @@ import { UserDTO, UserToStoreDTO, UserUpdateDTO } from '../dto/user.dto';
 import { UserEntity } from '../entities/user.entity';
 import { StoreUsersEntity } from 'src/stores/entities/store-users.entity';
 import { ErrorManager } from '../../utils/error.manager';
-import { CountryEntity } from 'src/countries/entities/country.entity';
-import { CountriesService } from 'src/countries/services/countries.service';
+//import { UserDirectionsService } from 'src/direction/services/user-directions.service';
 
 @Injectable()
 export class UsersService {
@@ -19,10 +18,8 @@ export class UsersService {
     private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(StoreUsersEntity)
     private readonly storeUsersRepository: Repository<StoreUsersEntity>,
-    //@InjectRepository(CountryEntity)
-    //private readonly countryRepository: Repository<CountryEntity>,
-    private readonly countriesService: CountriesService,
-  ) {}
+  ) //private readonly userDirectionsService: UserDirectionsService,
+  {}
 
   public async findAllUsers(): Promise<UserEntity[]> {
     try {
@@ -83,7 +80,17 @@ export class UsersService {
   public async createUser(body: UserDTO): Promise<UserEntity> {
     try {
       body.password = await bcrypt.hash(body.password, +process.env.HASH_SALT);
-      return await this.userRepository.save(body);
+      const newUser = this.userRepository.create(body);
+      /*const direction = await this.userDirectionsService.create(
+        newUser.direction,
+        newUser.department.id,
+        newUser.id,
+      );
+      if (direction) {
+        newUser.direction = direction;
+      }*/
+      await this.userRepository.save(newUser);
+      return newUser;
     } catch (e) {
       console.log(e);
       throw ErrorManager.createSignatureError(e.message);

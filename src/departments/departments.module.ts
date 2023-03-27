@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 // ---------- ---------- ---------- ---------- ----------
@@ -11,6 +11,7 @@ import { UserEntity } from '.././users/entities/user.entity';
 import { UserDirectionsEntity } from '.././direction/entities/user-directions.entity';
 import { StoreDirectionsEntity } from '.././direction/entities/store-directions.entity';
 
+@Global()
 @Module({
   imports: [
     TypeOrmModule.forFeature([
