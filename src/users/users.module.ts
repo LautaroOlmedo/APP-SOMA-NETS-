@@ -9,11 +9,11 @@ import { UserEntity } from './entities/user.entity';
 import { StoreUsersEntity } from '.././stores/entities/store-users.entity';
 import { CountryEntity } from '.././countries/entities/country.entity';
 import { ProvinceEntity } from '.././provinces/entities/province.entity';
-import { UserDirectionsEntity } from '.././direction/entities/user-directions.entity';
+import { UserDirectionsEntity } from '.././directions/entities/user-directions.entity';
 import { DepartmentEntity } from '.././departments/entities/department.entity';
 import { UserEmailsEntity } from '.././emails/entities/user-emails.entity';
-import { UserDirectionsService } from 'src/direction/services/user-directions.service';
-import { DirectionModule } from 'src/direction/direction.module';
+import { UserDirectionsService } from '.././directions/services/user-directions.service';
+import { DirectionsModule } from '.././directions/directions.module';
 
 @Global()
 @Module({
@@ -27,10 +27,10 @@ import { DirectionModule } from 'src/direction/direction.module';
       CountryEntity,
       UserEmailsEntity,
     ]),
-    DirectionModule,
+    DirectionsModule,
   ],
   controllers: [UsersController],
-  providers: [UsersService], //UserDirectionsService],
+  providers: [UsersService, UserDirectionsService], //UserDirectionsService],
   exports: [UsersService, TypeOrmModule],
 })
 export class UsersModule {}

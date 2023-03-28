@@ -8,8 +8,7 @@ import { DepartmentsController } from './controllers/departments.controller';
 import { DepartmentEntity } from './entities/department.entity';
 import { ProvinceEntity } from '.././provinces/entities/province.entity';
 import { UserEntity } from '.././users/entities/user.entity';
-import { UserDirectionsEntity } from '.././direction/entities/user-directions.entity';
-import { StoreDirectionsEntity } from '.././direction/entities/store-directions.entity';
+import { UserDirectionsEntity } from '.././directions/entities/user-directions.entity';
 
 @Global()
 @Module({
@@ -17,9 +16,8 @@ import { StoreDirectionsEntity } from '.././direction/entities/store-directions.
     TypeOrmModule.forFeature([
       DepartmentEntity,
       UserEntity,
-      UserDirectionsEntity,
-      StoreDirectionsEntity,
       ProvinceEntity,
+      UserDirectionsEntity,
     ]),
   ],
   controllers: [DepartmentsController],

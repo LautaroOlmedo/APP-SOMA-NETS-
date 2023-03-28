@@ -9,7 +9,7 @@ import { UserDTO, UserToStoreDTO, UserUpdateDTO } from '../dto/user.dto';
 import { UserEntity } from '../entities/user.entity';
 import { StoreUsersEntity } from 'src/stores/entities/store-users.entity';
 import { ErrorManager } from '../../utils/error.manager';
-//import { UserDirectionsService } from 'src/direction/services/user-directions.service';
+import { UserDirectionsService } from '../../directions/services/user-directions.service';
 
 @Injectable()
 export class UsersService {
@@ -18,8 +18,8 @@ export class UsersService {
     private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(StoreUsersEntity)
     private readonly storeUsersRepository: Repository<StoreUsersEntity>,
-  ) //private readonly userDirectionsService: UserDirectionsService,
-  {}
+    private readonly userDirectionsService: UserDirectionsService,
+  ) {}
 
   public async findAllUsers(): Promise<UserEntity[]> {
     try {
@@ -81,14 +81,14 @@ export class UsersService {
     try {
       body.password = await bcrypt.hash(body.password, +process.env.HASH_SALT);
       const newUser = this.userRepository.create(body);
-      /*const direction = await this.userDirectionsService.create(
-        newUser.direction,
+      const direction = await this.userDirectionsService.create(
+        newUser.direction.direction, // A CHECEKAR
         newUser.department.id,
-        newUser.id,
+        newUser,
       );
       if (direction) {
         newUser.direction = direction;
-      }*/
+      }
       await this.userRepository.save(newUser);
       return newUser;
     } catch (e) {

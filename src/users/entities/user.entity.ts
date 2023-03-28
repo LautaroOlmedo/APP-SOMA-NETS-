@@ -18,8 +18,9 @@ import { BrandEntity } from '../../brands/entities/brand.entity';
 import { CountryEntity } from '../../countries/entities/country.entity';
 import { ProvinceEntity } from '../../provinces/entities/province.entity';
 import { DepartmentEntity } from '../../departments/entities/department.entity';
-import { UserDirectionsEntity } from '../../direction/entities/user-directions.entity';
+
 import { UserEmailsEntity } from '../../emails/entities/user-emails.entity';
+import { UserDirectionsEntity } from '../../directions/entities/user-directions.entity';
 
 @Entity('users')
 export class UserEntity extends BaseEntity implements IUser {

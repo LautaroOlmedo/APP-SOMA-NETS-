@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { StoreDirectionsEntity } from 'src/direction/entities/store-directions.entity';
 import { StoreEmailsEntity } from '.././emails/entities/store-emails.entity';
 
 // ---------- ---------- ---------- ---------- ----------
@@ -15,7 +14,6 @@ import { StoresService } from './services/stores.service';
     TypeOrmModule.forFeature([
       StoreEntity,
       StoreUsersEntity,
-      StoreDirectionsEntity,
       StoreEmailsEntity,
     ]),
   ],

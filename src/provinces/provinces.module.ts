@@ -3,8 +3,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 // ---------- ---------- ---------- ---------- ----------
 
-import { UsersService } from 'src/users/services/users.service';
-import { UsersModule } from 'src/users/users.module';
 import { ProvinceEntity } from './entities/province.entity';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { StoreEntity } from 'src/stores/entities/store.entity';
