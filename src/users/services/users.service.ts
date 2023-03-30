@@ -81,14 +81,14 @@ export class UsersService {
     try {
       body.password = await bcrypt.hash(body.password, +process.env.HASH_SALT);
       const newUser = this.userRepository.create(body);
-      const direction = await this.userDirectionsService.create(
-        newUser.direction.direction, // A CHECEKAR
-        newUser.department.id,
-        newUser,
-      );
-      if (direction) {
-        newUser.direction = direction;
-      }
+      // const direction = await this.userDirectionsService.create(
+      //   'Isla Lennox', // ARREGLAR ESTO.
+      //   newUser.department.id,
+      //   newUser,
+      // );
+      // if (direction) {
+      //   newUser.direction = direction;
+      // }
       await this.userRepository.save(newUser);
       return newUser;
     } catch (e) {

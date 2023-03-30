@@ -25,13 +25,13 @@ export class UserDirectionsService {
     const newDirection = this.userDirectionsRepository.create({
       direction: direction,
     });
-    const department = await this.departmentsService.findOneDepartment(
-      departmentId,
-    );
-    if (department) {
-      newDirection.department = department;
-    }
-    newDirection.users.push(user);
+    // const department = await this.departmentsService.findOneDepartment(
+    //   departmentId,
+    // );
+    // if (department) {
+    //   newDirection.department = department;
+    // }
+    newDirection.users = [user]; // ARREGLAR ESTO. SE GUARDAN 2 VALORES??
     await this.userDirectionsRepository.save(newDirection);
     return newDirection;
   }

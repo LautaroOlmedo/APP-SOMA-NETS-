@@ -16,6 +16,10 @@ import { ProvincesModule } from './provinces/provinces.module';
 import { DepartmentsModule } from './departments/departments.module';
 import { PhonesModule } from './phones/phones.module';
 import { DirectionsModule } from './directions/directions.module';
+import { ClientsModule } from './clients/clients.module';
+import { ProductsModule } from './products/products.module';
+import { CategoriesModule } from './categories/categories.module';
+import { StocksModule } from './stocks/stocks.module';
 
 @Module({
   imports: [
@@ -35,6 +39,10 @@ import { DirectionsModule } from './directions/directions.module';
     DepartmentsModule,
     PhonesModule,
     DirectionsModule,
+    ClientsModule,
+    ProductsModule,
+    CategoriesModule,
+    StocksModule,
   ],
 })
 export class AppModule {}
