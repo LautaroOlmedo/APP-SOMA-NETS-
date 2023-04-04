@@ -12,25 +12,27 @@ import { ProvinceEntity } from '.././provinces/entities/province.entity';
 import { UserDirectionsEntity } from '.././directions/entities/user-directions.entity';
 import { DepartmentEntity } from '.././departments/entities/department.entity';
 import { UserEmailsEntity } from '.././emails/entities/user-emails.entity';
-import { UserDirectionsService } from '.././directions/services/user-directions.service';
+
 import { DirectionsModule } from '.././directions/directions.module';
+import { UserPhonesEntity } from 'src/phones/entities/user-phones.entity';
 
 @Global()
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       UserEntity,
-      StoreUsersEntity,
-      UserDirectionsEntity,
       DepartmentEntity,
       ProvinceEntity,
       CountryEntity,
+      StoreUsersEntity,
+      UserDirectionsEntity,
       UserEmailsEntity,
+      UserPhonesEntity,
     ]),
     DirectionsModule,
   ],
   controllers: [UsersController],
-  providers: [UsersService, UserDirectionsService], //UserDirectionsService],
+  providers: [UsersService], //UserDirectionsService],
   exports: [UsersService, TypeOrmModule],
 })
 export class UsersModule {}

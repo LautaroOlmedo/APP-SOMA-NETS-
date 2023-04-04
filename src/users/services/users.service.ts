@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { last } from 'rxjs';
 
 // ---------- ---------- ---------- ---------- ----------
 
@@ -9,7 +10,14 @@ import { UserDTO, UserToStoreDTO, UserUpdateDTO } from '../dto/user.dto';
 import { UserEntity } from '../entities/user.entity';
 import { StoreUsersEntity } from 'src/stores/entities/store-users.entity';
 import { ErrorManager } from '../../utils/error.manager';
-import { UserDirectionsService } from '../../directions/services/user-directions.service';
+import { UserDirectionsEntity } from '../../directions/entities/user-directions.entity';
+import { ROLES } from '../../constants/roles';
+import { BrandEntity } from '../../brands/entities/brand.entity';
+import { DepartmentEntity } from '../../departments/entities/department.entity';
+import { ProvinceEntity } from '../../provinces/entities/province.entity';
+import { CountryEntity } from '../../countries/entities/country.entity';
+import { UserEmailsEntity } from '../../emails/entities/user-emails.entity';
+import { UserPhonesEntity } from '../../phones/entities/user-phones.entity';
 
 @Injectable()
 export class UsersService {
@@ -18,7 +26,10 @@ export class UsersService {
     private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(StoreUsersEntity)
     private readonly storeUsersRepository: Repository<StoreUsersEntity>,
-    private readonly userDirectionsService: UserDirectionsService,
+    @InjectRepository(UserDirectionsEntity)
+    private readonly userDirectionRepository: Repository<UserDirectionsEntity>,
+    @InjectRepository(UserEmailsEntity)
+    private readonly userEmailsRepository: Repository<UserEmailsEntity>,
   ) {}
 
   public async findAllUsers(): Promise<UserEntity[]> {
@@ -47,6 +58,7 @@ export class UsersService {
       const user: UserEntity = await this.userRepository
         .createQueryBuilder('user')
         .where({ id })
+        .leftJoinAndSelect('user.brand', 'brand')
         .leftJoinAndSelect('user.storesIncludes', 'storesIncludes')
         .leftJoinAndSelect('storesIncludes.store', 'store')
         .getOne();
@@ -77,18 +89,47 @@ export class UsersService {
     }
   }
 
-  public async createUser(body: UserDTO): Promise<UserEntity> {
+  public async createUser(
+    lastname: string,
+    firstname: string,
+    age: number,
+    username: string,
+    password: string,
+    role: ROLES,
+    active: boolean,
+    dni: string,
+    direction: string,
+    brand: BrandEntity,
+    department: DepartmentEntity,
+    province: ProvinceEntity,
+    country: CountryEntity,
+    emails: UserEmailsEntity[],
+    phones: UserPhonesEntity[],
+  ): Promise<UserEntity> {
     try {
-      body.password = await bcrypt.hash(body.password, +process.env.HASH_SALT);
-      const newUser = this.userRepository.create(body);
-      // const direction = await this.userDirectionsService.create(
-      //   'Isla Lennox', // ARREGLAR ESTO.
-      //   newUser.department.id,
-      //   newUser,
-      // );
-      // if (direction) {
-      //   newUser.direction = direction;
-      // }
+      password = await bcrypt.hash(password, +process.env.HASH_SALT);
+      const newUser = this.userRepository.create({
+        firstname,
+        lastname,
+        age,
+        password,
+        username,
+        role,
+        active,
+        dni,
+        brand,
+        department,
+        province,
+        country,
+        emails,
+        phones,
+      });
+
+      const newDirection = this.userDirectionRepository.create({ direction });
+      newDirection.department = newUser.department;
+      await this.userDirectionRepository.save(newDirection);
+      newUser.direction = newDirection;
+
       await this.userRepository.save(newUser);
       return newUser;
     } catch (e) {

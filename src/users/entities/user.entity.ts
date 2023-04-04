@@ -21,6 +21,7 @@ import { DepartmentEntity } from '../../departments/entities/department.entity';
 
 import { UserEmailsEntity } from '../../emails/entities/user-emails.entity';
 import { UserDirectionsEntity } from '../../directions/entities/user-directions.entity';
+import { UserPhonesEntity } from '../../phones/entities/user-phones.entity';
 
 @Entity('users')
 export class UserEntity extends BaseEntity implements IUser {
@@ -56,6 +57,9 @@ export class UserEntity extends BaseEntity implements IUser {
 
   @OneToMany(() => UserEmailsEntity, (emails) => emails.user)
   emails?: UserEmailsEntity[];
+
+  @OneToMany(() => UserPhonesEntity, (phones) => phones.user)
+  phones?: UserPhonesEntity[];
 
   @ManyToOne(() => BrandEntity, (brand) => brand.users)
   @JoinColumn({ name: 'brand_id' })
