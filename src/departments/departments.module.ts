@@ -9,6 +9,7 @@ import { DepartmentEntity } from './entities/department.entity';
 import { ProvinceEntity } from '.././provinces/entities/province.entity';
 import { UserEntity } from '.././users/entities/user.entity';
 import { UserDirectionsEntity } from '.././directions/entities/user-directions.entity';
+import { ClientEntity } from '.././clients/entities/client.entity';
 
 @Global()
 @Module({
@@ -16,6 +17,7 @@ import { UserDirectionsEntity } from '.././directions/entities/user-directions.e
     TypeOrmModule.forFeature([
       DepartmentEntity,
       UserEntity,
+      ClientEntity,
       ProvinceEntity,
       UserDirectionsEntity,
     ]),

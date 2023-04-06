@@ -1,11 +1,12 @@
-import { Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Entity, JoinColumn, ManyToOne, Column } from 'typeorm';
 // ---------- ---------- ---------- ---------- ----------
 
 import { BaseEntity } from '../../config/base.entity';
 import { UserEntity } from '../../users/entities/user.entity';
 
-@Entity({ name: 'user_phones' })
+@Entity({ name: 'users_phones' })
 export class UserPhonesEntity extends BaseEntity {
+  @Column({ type: 'varchar' })
   phoneNumber: string;
   // ---------- ----------  RELATIONS  ---------- ----------
 

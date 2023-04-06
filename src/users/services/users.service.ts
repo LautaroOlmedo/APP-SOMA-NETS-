@@ -30,6 +30,8 @@ export class UsersService {
     private readonly userDirectionRepository: Repository<UserDirectionsEntity>,
     @InjectRepository(UserEmailsEntity)
     private readonly userEmailsRepository: Repository<UserEmailsEntity>,
+    @InjectRepository(UserPhonesEntity)
+    private readonly userPhonesRepository: Repository<UserPhonesEntity>,
   ) {}
 
   public async findAllUsers(): Promise<UserEntity[]> {
@@ -39,6 +41,8 @@ export class UsersService {
         .leftJoinAndSelect('user.brand', 'brand')
         .leftJoinAndSelect('user.storesIncludes', 'storesIncludes')
         .leftJoinAndSelect('storesIncludes.store', 'store')
+        .leftJoinAndSelect('user.emails', 'email')
+        .leftJoinAndSelect('user.phones', 'phone')
         .getMany();
       if (users.length === 0) {
         throw new ErrorManager({
@@ -75,6 +79,7 @@ export class UsersService {
     }
   }
 
+  // METODO PARA LOGING DE AUTH
   public async findBy({ key, value }: { key: keyof UserDTO; value: any }) {
     try {
       const user: UserEntity = await this.userRepository
@@ -103,8 +108,8 @@ export class UsersService {
     department: DepartmentEntity,
     province: ProvinceEntity,
     country: CountryEntity,
-    emails: UserEmailsEntity[],
-    phones: UserPhonesEntity[],
+    emails: string[],
+    phones: string[],
   ): Promise<UserEntity> {
     try {
       password = await bcrypt.hash(password, +process.env.HASH_SALT);
@@ -121,8 +126,6 @@ export class UsersService {
         department,
         province,
         country,
-        emails,
-        phones,
       });
 
       const newDirection = this.userDirectionRepository.create({ direction });
@@ -130,7 +133,20 @@ export class UsersService {
       await this.userDirectionRepository.save(newDirection);
       newUser.direction = newDirection;
 
-      await this.userRepository.save(newUser);
+      await this.userRepository.save(newUser); // PARA CREAR UN NUEVO USUARIO Y LUEGO GUARDAR SUS EMAILS Y PHONES PRIMEROS LO GUARDAMOS
+      for (let i = 0; i < emails.length; i++) {
+        let newEmail = this.userEmailsRepository.create({ email: emails[i] });
+        newEmail.user = newUser;
+        await this.userEmailsRepository.save(newEmail);
+      }
+
+      for (let j = 0; j < phones.length; j++) {
+        let newPhone = this.userPhonesRepository.create({
+          phoneNumber: phones[j],
+        });
+        newPhone.user = newUser;
+        await this.userPhonesRepository.save(newPhone);
+      }
       return newUser;
     } catch (e) {
       console.log(e);

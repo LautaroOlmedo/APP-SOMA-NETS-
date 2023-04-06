@@ -7,6 +7,7 @@ import { UserEntity } from '../../users/entities/user.entity';
 import { StoreEntity } from '../../stores/entities/store.entity';
 import { ICountry } from '../../interfaces/country.interface';
 import { ProvinceEntity } from '../../provinces/entities/province.entity';
+import { ClientEntity } from '../../clients/entities/client.entity';
 
 @Entity({ name: 'countries' })
 export class CountryEntity extends BaseEntity implements ICountry {
@@ -20,6 +21,9 @@ export class CountryEntity extends BaseEntity implements ICountry {
 
   @OneToMany(() => UserEntity, (users) => users.country)
   users?: UserEntity[];
+
+  @OneToMany(() => ClientEntity, (clients) => clients.country)
+  clients?: ClientEntity[];
 
   /*@OneToMany(() => StoreEntity, (stores) => stores.country)
   stores?: StoreEntity[];*/

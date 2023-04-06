@@ -7,17 +7,24 @@ import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { StoreDTO, StoreUpdateDTO } from '../dto/store.dto';
 import { StoreEntity } from '../entities/store.entity';
 import { ErrorManager } from '../../utils/error.manager';
+import { StoreEmailsEntity } from '../../emails/entities/store-emails.entity';
+import { BrandEntity } from 'src/brands/entities/brand.entity';
 
 @Injectable()
 export class StoresService {
   constructor(
     @InjectRepository(StoreEntity)
     private readonly storeRepository: Repository<StoreEntity>,
+    @InjectRepository(StoreEmailsEntity)
+    private readonly storeEmailsRepository: Repository<StoreEmailsEntity>,
   ) {}
 
   async findAllStores(): Promise<StoreEntity[]> {
     try {
-      const stores: StoreEntity[] = await this.storeRepository.find();
+      const stores: StoreEntity[] = await this.storeRepository
+        .createQueryBuilder('store')
+        .leftJoinAndSelect('store.emails', 'email')
+        .getMany();
       if (stores.length === 0) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
@@ -52,9 +59,20 @@ export class StoresService {
     }
   }
 
-  public async createStore(body: StoreDTO): Promise<StoreEntity> {
+  public async createStore(
+    storeName: string,
+    brand: BrandEntity,
+    emails: string[],
+  ): Promise<StoreEntity> {
     try {
-      return await this.storeRepository.save(body);
+      const newStore = this.storeRepository.create({ storeName, brand });
+      await this.storeRepository.save(newStore); // PARA CREAR UNA NUEVA TIENDA Y LUEGO GUARDAR SUS EMAILS Y PHONES PRIMEROS LO GUARDAMOS
+      for (let i = 0; i < emails.length; i++) {
+        let newEmail = this.storeEmailsRepository.create({ email: emails[i] });
+        newEmail.store = newStore;
+        await this.storeEmailsRepository.save(newEmail);
+      }
+      return newStore;
     } catch (e) {
       console.log(e);
       throw ErrorManager.createSignatureError(e.message);

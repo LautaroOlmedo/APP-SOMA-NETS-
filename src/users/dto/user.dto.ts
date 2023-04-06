@@ -68,10 +68,10 @@ export class UserDTO {
   province: ProvinceEntity;
   @Expose()
   department: DepartmentEntity;
-  @Expose()
-  emails: UserEmailsEntity[];
-  @Expose()
-  phones: UserPhonesEntity[];
+
+  emails: string[];
+
+  phones: string[];
 }
 
 export class UserUpdateDTO {

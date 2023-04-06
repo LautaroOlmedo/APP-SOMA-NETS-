@@ -6,6 +6,7 @@ import { IProvince } from '../../interfaces/province.interface';
 import { UserEntity } from '../../users/entities/user.entity';
 import { CountryEntity } from '../../countries/entities/country.entity';
 import { DepartmentEntity } from '../../departments/entities/department.entity';
+import { ClientEntity } from '../../clients/entities/client.entity';
 
 @Entity({ name: 'provinces' })
 export class ProvinceEntity extends BaseEntity implements IProvince {
@@ -19,6 +20,9 @@ export class ProvinceEntity extends BaseEntity implements IProvince {
 
   @OneToMany(() => UserEntity, (users) => users.province)
   users?: UserEntity[];
+
+  @OneToMany(() => ClientEntity, (clients) => clients.province)
+  clients?: ClientEntity[];
 
   @OneToMany(() => DepartmentEntity, (departments) => departments.province)
   departments?: DepartmentEntity[];

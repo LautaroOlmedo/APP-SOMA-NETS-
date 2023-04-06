@@ -37,7 +37,7 @@ export class UserEntity extends BaseEntity implements IUser {
   @Column({ unique: true })
   username: string;
 
-  @Column()
+  @Column({ unique: true })
   dni: string;
 
   @Exclude()
