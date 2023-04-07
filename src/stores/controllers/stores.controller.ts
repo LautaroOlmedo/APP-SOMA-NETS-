@@ -29,8 +29,13 @@ export class StoresController {
 
   @Post('register')
   public async registerStore(@Body() body: StoreDTO) {
-    const { storeName, emails, brand } = body;
-    return await this.storesService.createStore(storeName, brand, emails);
+    const { storeName, emails, phones, brand } = body;
+    return await this.storesService.createStore(
+      storeName,
+      brand,
+      emails,
+      phones,
+    );
   }
 
   @Put('edit/:id')

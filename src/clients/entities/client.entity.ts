@@ -10,12 +10,14 @@ import {
 // ---------- ---------- ---------- ---------- ----------
 
 import { BaseEntity } from '../../config/base.entity';
-//import { StoreEntity } from '../../stores/entities/store.entity';
 import { IClient } from '../../interfaces/client.interface';
 import { CountryEntity } from '../../countries/entities/country.entity';
 import { ProvinceEntity } from '../../provinces/entities/province.entity';
 import { DepartmentEntity } from '../../departments/entities/department.entity';
 import { StoreClientsEntity } from '../../stores/entities/store-clients.entity';
+import { ClientsPhonesEntity } from '../../phones/entities/client-phones.entity';
+import { ClientsEmailsEntity } from '../../emails/entities/client-emails.entity';
+import { PurchaseEntity } from '../../purchases/entities/purchase.entity';
 
 @Entity({ name: 'clients' })
 export class ClientEntity extends BaseEntity implements IClient {
@@ -29,14 +31,15 @@ export class ClientEntity extends BaseEntity implements IClient {
   dni: string;
 
   // ---------- ---------- RELATIONS ---------- ----------
-  //@OneToMany(() => StoreUsersEntity, (storesUsers) => storesUsers.user)
-  //storesIncludes: StoreUsersEntity[];
 
-  //@OneToMany(() => UserEmailsEntity, (emails) => emails.user)
-  //emails?: UserEmailsEntity[];
+  @OneToMany(() => ClientsEmailsEntity, (emails) => emails.client)
+  emails?: ClientsEmailsEntity[];
 
-  //@OneToMany(() => UserPhonesEntity, (phones) => phones.user)
-  //phones?: UserPhonesEntity[];
+  @OneToMany(() => ClientsPhonesEntity, (phones) => phones.client)
+  phones?: ClientsPhonesEntity[];
+
+  @OneToMany(() => PurchaseEntity, (purchases) => purchases.client)
+  purchases?: PurchaseEntity[];
 
   //@ManyToOne(() => BrandEntity, (brand) => brand.users)
   //@JoinColumn({ name: 'brand_id' })

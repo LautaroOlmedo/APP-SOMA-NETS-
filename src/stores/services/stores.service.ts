@@ -9,6 +9,7 @@ import { StoreEntity } from '../entities/store.entity';
 import { ErrorManager } from '../../utils/error.manager';
 import { StoreEmailsEntity } from '../../emails/entities/store-emails.entity';
 import { BrandEntity } from 'src/brands/entities/brand.entity';
+import { StorePhonesEntity } from 'src/phones/entities/store-phones.entity';
 
 @Injectable()
 export class StoresService {
@@ -17,13 +18,22 @@ export class StoresService {
     private readonly storeRepository: Repository<StoreEntity>,
     @InjectRepository(StoreEmailsEntity)
     private readonly storeEmailsRepository: Repository<StoreEmailsEntity>,
+
+    @InjectRepository(StorePhonesEntity)
+    private readonly storePhonesRepository: Repository<StorePhonesEntity>,
   ) {}
 
   async findAllStores(): Promise<StoreEntity[]> {
     try {
       const stores: StoreEntity[] = await this.storeRepository
         .createQueryBuilder('store')
+        .leftJoinAndSelect('store.brand', 'brand')
+        .leftJoinAndSelect('store.usersIncludes', 'usersIncludes')
+        .leftJoinAndSelect('usersIncludes.user', 'user')
+        .leftJoinAndSelect('store.clientsIncludes', 'clientsIncludes')
+        .leftJoinAndSelect('clientsIncludes.client', 'client')
         .leftJoinAndSelect('store.emails', 'email')
+        .leftJoinAndSelect('store.phones', 'phone')
         .getMany();
       if (stores.length === 0) {
         throw new ErrorManager({
@@ -43,8 +53,13 @@ export class StoresService {
       const store: StoreEntity = await this.storeRepository
         .createQueryBuilder('store')
         .where({ id })
+        .leftJoinAndSelect('store.brand', 'brand')
         .leftJoinAndSelect('store.usersIncludes', 'usersIncludes')
         .leftJoinAndSelect('usersIncludes.user', 'user')
+        .leftJoinAndSelect('store.clientsIncludes', 'clientsIncludes')
+        .leftJoinAndSelect('clientsIncludes.client', 'client')
+        .leftJoinAndSelect('store.emails', 'email')
+        .leftJoinAndSelect('store.phones', 'phone')
         .getOne();
       if (!store) {
         throw new ErrorManager({
@@ -63,6 +78,7 @@ export class StoresService {
     storeName: string,
     brand: BrandEntity,
     emails: string[],
+    phones: string[],
   ): Promise<StoreEntity> {
     try {
       const newStore = this.storeRepository.create({ storeName, brand });
@@ -71,6 +87,13 @@ export class StoresService {
         let newEmail = this.storeEmailsRepository.create({ email: emails[i] });
         newEmail.store = newStore;
         await this.storeEmailsRepository.save(newEmail);
+      }
+      for (let j = 0; j < phones.length; j++) {
+        let newPhone = this.storePhonesRepository.create({
+          phoneNumber: phones[j],
+        });
+        newPhone.store = newStore;
+        await this.storePhonesRepository.save(newPhone);
       }
       return newStore;
     } catch (e) {

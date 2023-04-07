@@ -1,17 +1,18 @@
-// import { Entity, Column, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 
-// // ---------- ---------- ---------- ---------- ----------
+// ---------- ---------- ---------- ---------- ----------
 
-// import { BaseEntity } from '../../config/base.entity';
+import { BaseEntity } from '../../config/base.entity';
+import { ClientEntity } from '../../clients/entities/client.entity';
 
-// @Entity({ name: 'stores_emails' })
-// export class StoreEmailsEntity extends BaseEntity {
-//   @Column()
-//   email: string;
+@Entity({ name: 'clients_emails' })
+export class ClientsEmailsEntity extends BaseEntity {
+  @Column()
+  email: string;
 
-//   // ---------- ----------  RELATIONS  ---------- ----------
+  // ---------- ----------  RELATIONS  ---------- ----------
 
-//   //@ManyToOne(() => , (store) => store.emails)
-//   //@JoinColumn({ name: 'client_id' })
-//   //store!: StoreEntity;
-// }
+  @ManyToOne(() => ClientEntity, (client) => client.emails)
+  @JoinColumn({ name: 'client_id' })
+  client!: ClientEntity;
+}

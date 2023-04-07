@@ -1,9 +1,16 @@
-// import { Entity } from 'typeorm';
-// // ---------- ---------- ---------- ---------- ----------
+import { Entity, JoinColumn, ManyToOne, Column } from 'typeorm';
+// ---------- ---------- ---------- ---------- ----------
 
-// import { BaseEntity } from 'src/config/base.entity';
+import { BaseEntity } from '../../config/base.entity';
+import { ClientEntity } from '../../clients/entities/client.entity';
 
-// export class UserPhonesEntity extends BaseEntity {
-//   phoneNumber: string;
-//   // ---------- ----------  RELATIONS  ---------- ----------
-// }
+@Entity({ name: 'clients_phones' })
+export class ClientsPhonesEntity extends BaseEntity {
+  @Column({ type: 'varchar' })
+  phoneNumber: string;
+  // ---------- ----------  RELATIONS  ---------- ----------
+
+  @ManyToOne(() => ClientEntity, (client) => client.phones)
+  @JoinColumn({ name: 'client_id' })
+  client!: ClientEntity;
+}

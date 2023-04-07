@@ -18,6 +18,7 @@ export class StoreDTO {
   brand: BrandEntity;
 
   emails: string[];
+  phones: string[];
 }
 
 export class StoreUpdateDTO {

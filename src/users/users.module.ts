@@ -15,6 +15,7 @@ import { UserEmailsEntity } from '.././emails/entities/user-emails.entity';
 
 import { DirectionsModule } from '.././directions/directions.module';
 import { UserPhonesEntity } from 'src/phones/entities/user-phones.entity';
+import { PurchaseEntity } from 'src/purchases/entities/purchase.entity';
 
 @Global()
 @Module({
@@ -28,6 +29,7 @@ import { UserPhonesEntity } from 'src/phones/entities/user-phones.entity';
       UserDirectionsEntity,
       UserEmailsEntity,
       UserPhonesEntity,
+      PurchaseEntity,
     ]),
     DirectionsModule,
   ],

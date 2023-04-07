@@ -20,6 +20,7 @@ import { ClientsModule } from './clients/clients.module';
 import { ProductsModule } from './products/products.module';
 import { CategoriesModule } from './categories/categories.module';
 import { StocksModule } from './stocks/stocks.module';
+import { PurchasesModule } from './purchases/purchases.module';
 
 @Module({
   imports: [
@@ -32,7 +33,6 @@ import { StocksModule } from './stocks/stocks.module';
     BrandsModule,
     StoresModule,
     CountriesModule,
-
     EmailsModule,
     AuthModule,
     ProvincesModule,
@@ -43,6 +43,7 @@ import { StocksModule } from './stocks/stocks.module';
     ProductsModule,
     CategoriesModule,
     StocksModule,
+    PurchasesModule,
   ],
 })
 export class AppModule {}
