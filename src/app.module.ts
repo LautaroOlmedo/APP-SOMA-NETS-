@@ -9,13 +9,18 @@ import { UsersModule } from './users/users.module';
 import { BrandsModule } from './brands/brands.module';
 import { StoresModule } from './stores/stores.module';
 import { CountriesModule } from './countries/countries.module';
-import { DirectionModule } from './direction/direction.module';
+
 import { EmailsModule } from './emails/emails.module';
 import { AuthModule } from './auth/auth.module';
 import { ProvincesModule } from './provinces/provinces.module';
 import { DepartmentsModule } from './departments/departments.module';
 import { PhonesModule } from './phones/phones.module';
-import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { DirectionsModule } from './directions/directions.module';
+import { ClientsModule } from './clients/clients.module';
+import { ProductsModule } from './products/products.module';
+import { CategoriesModule } from './categories/categories.module';
+import { StocksModule } from './stocks/stocks.module';
+import { PurchasesModule } from './purchases/purchases.module';
 
 @Module({
   imports: [
@@ -31,23 +36,29 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
       password: 'lautaro',
       database: 'soma-db',
       autoLoadEntities: true,
-      entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-      migrations: [__dirname + '/../migrations/*{.ts,.js}'],
+      entities: [__dirname + './**/*.entity{.ts,.js}'],
+      //entities: [UserEntity, BrandEntity, CountryEntity, ProvinceEntity],
+      //migrations: [__dirname + './migrations/*{.ts,.js}'],
       synchronize: true,
       migrationsRun: false,
       logging: false,
-      namingStrategy: new SnakeNamingStrategy(), // userName => en db se guarda user_name
-    }),
+      //namingStrategy: new SnakeNamingStrategy(),
+    }), //    }),
     UsersModule,
     BrandsModule,
     StoresModule,
     CountriesModule,
-    DirectionModule,
     EmailsModule,
     AuthModule,
     ProvincesModule,
     DepartmentsModule,
     PhonesModule,
+    DirectionsModule,
+    ClientsModule,
+    ProductsModule,
+    CategoriesModule,
+    StocksModule,
+    PurchasesModule,
   ],
 })
 export class AppModule {}

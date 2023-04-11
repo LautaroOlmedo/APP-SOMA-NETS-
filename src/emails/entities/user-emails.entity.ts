@@ -8,7 +8,7 @@ import { UserEntity } from '../../users/entities/user.entity';
 @Entity({ name: 'users_emails' })
 export class UserEmailsEntity extends BaseEntity {
   @Column()
-  phoneNumber: string;
+  email: string;
 
   // ---------- ----------  RELATIONS  ---------- ----------
 

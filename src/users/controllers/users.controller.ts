@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   UseGuards,
@@ -28,13 +29,47 @@ export class UsersController {
 
   //@PublicAcces()
   @Get(':id')
-  public async getUserById(@Param('id') id: string) {
+  public async getUserById(@Param('id', ParseUUIDPipe) id: string) {
+    // A CHECJEAR EL PARSE
     return await this.usersService.findOneUser(id);
   }
 
   @Post('register')
   public async registerUser(@Body() body: UserDTO) {
-    return await this.usersService.createUser(body);
+    const {
+      firstname,
+      lastname,
+      age,
+      password,
+      dni,
+      role,
+      active,
+      username,
+      direction,
+      brand,
+      department,
+      province,
+      country,
+      emails,
+      phones,
+    } = body;
+    return await this.usersService.createUser(
+      firstname,
+      lastname,
+      age,
+      password,
+      dni,
+      role,
+      active,
+      username,
+      direction,
+      brand,
+      department,
+      province,
+      country,
+      emails,
+      phones,
+    );
   }
 
   @Put('edit/:id')

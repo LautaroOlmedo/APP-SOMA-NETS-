@@ -14,11 +14,10 @@ export const DataSourceConfig: DataSourceOptions = {
   username: 'lautaro',
   password: 'lautaro',
   database: 'soma-db',
-  //autoloadEntities: true,
   entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-  migrations: [__dirname + '/../migrations/*{.ts,.js}'],
-  synchronize: true,
-  migrationsRun: false,
+  migrations: [__dirname + '/..//migrations/*{.ts,.js}'],
+  synchronize: false,
+  migrationsRun: true,
   logging: false,
   namingStrategy: new SnakeNamingStrategy(), // userName => en db se guarda user_name
 };

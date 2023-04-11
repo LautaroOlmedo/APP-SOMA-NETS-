@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { StoreDirectionsEntity } from 'src/direction/entities/store-directions.entity';
-import { StoreEmailsEntity } from '.././emails/entities/store-emails.entity';
 
 // ---------- ---------- ---------- ---------- ----------
 
@@ -9,14 +7,18 @@ import { StoresController } from './controllers/stores.controller';
 import { StoreUsersEntity } from './entities/store-users.entity';
 import { StoreEntity } from './entities/store.entity';
 import { StoresService } from './services/stores.service';
+import { StoreEmailsEntity } from '.././emails/entities/store-emails.entity';
+import { StoreClientsEntity } from './entities/store-clients.entity';
+import { StorePhonesEntity } from '.././phones/entities/store-phones.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       StoreEntity,
       StoreUsersEntity,
-      StoreDirectionsEntity,
+      StoreClientsEntity,
       StoreEmailsEntity,
+      StorePhonesEntity,
     ]),
   ],
   controllers: [StoresController],
