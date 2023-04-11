@@ -11,7 +11,7 @@ import { ProvincesService } from './provinces/services/provinces.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const configService = app.get(ConfigService);
+  //const configService = app.get(ConfigService);
   app.enableCors(CORS);
   app.use(morgan('dev'));
   app.useGlobalPipes(
@@ -23,7 +23,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector));
   app.setGlobalPrefix('api');
 
-  await app.listen(configService.get('PORT'));
+  await app.listen(8000);
   console.log(`Application running on port => ${await app.getUrl()}`);
 }
 bootstrap();

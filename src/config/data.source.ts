@@ -9,15 +9,16 @@ ConfigModule.forRoot({
 const configService = new ConfigService();
 export const DataSourceConfig: DataSourceOptions = {
   type: 'postgres',
-  host: configService.get('DB_HOST'),
-  port: configService.get('DB_PORT'),
-  username: configService.get('DB_USERNAME'),
-  password: configService.get('DB_PASSWORD'),
-  database: configService.get('DB_DATABASE'),
+  host: 'localhost',
+  port: 5432,
+  username: 'lautaro',
+  password: 'lautaro',
+  database: 'soma-db',
+  //autoloadEntities: true,
   entities: [__dirname + '/../**/*.entity{.ts,.js}'],
   migrations: [__dirname + '/../migrations/*{.ts,.js}'],
-  synchronize: false,
-  migrationsRun: true,
+  synchronize: true,
+  migrationsRun: false,
   logging: false,
   namingStrategy: new SnakeNamingStrategy(), // userName => en db se guarda user_name
 };

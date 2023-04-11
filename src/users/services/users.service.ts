@@ -82,7 +82,7 @@ export class UsersService {
 
   public async createUser(body: UserDTO): Promise<UserEntity> {
     try {
-      body.password = await bcrypt.hash(body.password, +process.env.HASH_SALT);
+      body.password = await bcrypt.hash(body.password, +10);
       return await this.userRepository.save(body);
     } catch (e) {
       console.log(e);
