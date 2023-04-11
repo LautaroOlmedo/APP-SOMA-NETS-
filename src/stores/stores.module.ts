@@ -7,10 +7,22 @@ import { StoresController } from './controllers/stores.controller';
 import { StoreUsersEntity } from './entities/store-users.entity';
 import { StoreEntity } from './entities/store.entity';
 import { StoresService } from './services/stores.service';
+import { StoreEmailsEntity } from '.././emails/entities/store-emails.entity';
+import { StoreClientsEntity } from './entities/store-clients.entity';
+import { StorePhonesEntity } from '.././phones/entities/store-phones.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([StoreEntity, StoreUsersEntity])],
+  imports: [
+    TypeOrmModule.forFeature([
+      StoreEntity,
+      StoreUsersEntity,
+      StoreClientsEntity,
+      StoreEmailsEntity,
+      StorePhonesEntity,
+    ]),
+  ],
   controllers: [StoresController],
   providers: [StoresService],
+  exports: [TypeOrmModule, StoresService],
 })
 export class StoresModule {}

@@ -9,12 +9,19 @@ import {
   IsString,
   IsUUID,
 } from 'class-validator';
+import { Expose } from 'class-transformer';
 
 // ---------- ---------- ---------- ---------- ----------
 
 import { ACCESS_LEVEL, ROLES } from 'src/constants/roles';
 import { StoreEntity } from 'src/stores/entities/store.entity';
 import { UserEntity } from '../entities/user.entity';
+import { BrandEntity } from 'src/brands/entities/brand.entity';
+import { ProvinceEntity } from 'src/provinces/entities/province.entity';
+import { CountryEntity } from 'src/countries/entities/country.entity';
+import { DepartmentEntity } from 'src/departments/entities/department.entity';
+import { UserEmailsEntity } from 'src/emails/entities/user-emails.entity';
+import { UserPhonesEntity } from 'src/phones/entities/user-phones.entity';
 
 export class UserDTO {
   @IsNotEmpty()
@@ -48,6 +55,23 @@ export class UserDTO {
   @IsOptional()
   @IsBoolean()
   active: boolean;
+
+  @IsNotEmpty()
+  @IsString()
+  direction: string;
+
+  @Expose()
+  brand: BrandEntity;
+  @Expose()
+  country: CountryEntity;
+  @Expose()
+  province: ProvinceEntity;
+  @Expose()
+  department: DepartmentEntity;
+
+  emails: string[];
+
+  phones: string[];
 }
 
 export class UserUpdateDTO {

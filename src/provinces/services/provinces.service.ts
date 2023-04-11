@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 // ---------- ---------- ---------- ---------- ----------
 
-import { CountriesService } from 'src/countries/services/countries.service';
-import { Repository } from 'typeorm';
+import { CountriesService } from '../../countries/services/countries.service';
 import { ProvinceEntity } from '../entities/province.entity';
 import { provincesData } from '../../utils/data/provinces.data';
-import { CountryEntity } from 'src/countries/entities/country.entity';
+import { CountryEntity } from '../../countries/entities/country.entity';
+import { ErrorManager } from 'src/utils/error.manager';
 
 @Injectable()
 export class ProvincesService {
@@ -26,10 +27,28 @@ export class ProvincesService {
     provincesData.map(async (el) => {
       const newProvince = this.provinceRepository.create({
         provinceName: el.name,
-        provinceKey: el.countryKey,
+        provinceKey: el.key,
       });
       country ? (newProvince.country = country) : null;
       await this.provinceRepository.save(newProvince);
     });
+  }
+
+  public async findOneProvince(id: string): Promise<ProvinceEntity> {
+    try {
+      const province: ProvinceEntity = await this.provinceRepository.findOneBy({
+        id,
+      });
+      if (!province) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No se encontró resultado',
+        });
+      }
+      return province;
+    } catch (e) {
+      console.log(e);
+      throw ErrorManager.createSignatureError(e.message);
+    }
   }
 }

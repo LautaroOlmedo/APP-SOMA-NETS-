@@ -6,22 +6,35 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersService } from './services/users.service';
 import { UsersController } from './controllers/users.controller';
 import { UserEntity } from './entities/user.entity';
-import { StoreUsersEntity } from 'src/stores/entities/store-users.entity';
-import { CountryEntity } from 'src/countries/entities/country.entity';
-import { ProvinceEntity } from 'src/provinces/entities/province.entity';
+import { StoreUsersEntity } from '.././stores/entities/store-users.entity';
+import { CountryEntity } from '.././countries/entities/country.entity';
+import { ProvinceEntity } from '.././provinces/entities/province.entity';
+import { UserDirectionsEntity } from '.././directions/entities/user-directions.entity';
+import { DepartmentEntity } from '.././departments/entities/department.entity';
+import { UserEmailsEntity } from '.././emails/entities/user-emails.entity';
+
+import { DirectionsModule } from '.././directions/directions.module';
+import { UserPhonesEntity } from 'src/phones/entities/user-phones.entity';
+import { PurchaseEntity } from 'src/purchases/entities/purchase.entity';
 
 @Global()
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       UserEntity,
-      StoreUsersEntity,
+      DepartmentEntity,
       ProvinceEntity,
       CountryEntity,
+      StoreUsersEntity,
+      UserDirectionsEntity,
+      UserEmailsEntity,
+      UserPhonesEntity,
+      PurchaseEntity,
     ]),
+    DirectionsModule,
   ],
   controllers: [UsersController],
-  providers: [UsersService],
+  providers: [UsersService], //UserDirectionsService],
   exports: [UsersService, TypeOrmModule],
 })
 export class UsersModule {}

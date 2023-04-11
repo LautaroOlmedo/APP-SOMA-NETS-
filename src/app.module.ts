@@ -9,15 +9,18 @@ import { UsersModule } from './users/users.module';
 import { BrandsModule } from './brands/brands.module';
 import { StoresModule } from './stores/stores.module';
 import { CountriesModule } from './countries/countries.module';
-import { DirectionModule } from './direction/direction.module';
+
 import { EmailsModule } from './emails/emails.module';
 import { AuthModule } from './auth/auth.module';
 import { ProvincesModule } from './provinces/provinces.module';
-import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
-import { UserEntity } from './users/entities/user.entity';
-import { BrandEntity } from './brands/entities/brand.entity';
-import { CountryEntity } from './countries/entities/country.entity';
-import { ProvinceEntity } from './provinces/entities/province.entity';
+import { DepartmentsModule } from './departments/departments.module';
+import { PhonesModule } from './phones/phones.module';
+import { DirectionsModule } from './directions/directions.module';
+import { ClientsModule } from './clients/clients.module';
+import { ProductsModule } from './products/products.module';
+import { CategoriesModule } from './categories/categories.module';
+import { StocksModule } from './stocks/stocks.module';
+import { PurchasesModule } from './purchases/purchases.module';
 
 @Module({
   imports: [
@@ -45,10 +48,17 @@ import { ProvinceEntity } from './provinces/entities/province.entity';
     BrandsModule,
     StoresModule,
     CountriesModule,
-    DirectionModule,
     EmailsModule,
     AuthModule,
     ProvincesModule,
+    DepartmentsModule,
+    PhonesModule,
+    DirectionsModule,
+    ClientsModule,
+    ProductsModule,
+    CategoriesModule,
+    StocksModule,
+    PurchasesModule,
   ],
 })
 export class AppModule {}

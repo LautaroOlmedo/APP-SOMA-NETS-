@@ -17,6 +17,11 @@ import { StoreUsersEntity } from '../../stores/entities/store-users.entity';
 import { BrandEntity } from '../../brands/entities/brand.entity';
 import { CountryEntity } from '../../countries/entities/country.entity';
 import { ProvinceEntity } from '../../provinces/entities/province.entity';
+import { DepartmentEntity } from '../../departments/entities/department.entity';
+import { UserEmailsEntity } from '../../emails/entities/user-emails.entity';
+import { UserDirectionsEntity } from '../../directions/entities/user-directions.entity';
+import { UserPhonesEntity } from '../../phones/entities/user-phones.entity';
+import { PurchaseEntity } from '../../purchases/entities/purchase.entity';
 
 @Entity('users')
 export class UserEntity extends BaseEntity implements IUser {
@@ -32,7 +37,7 @@ export class UserEntity extends BaseEntity implements IUser {
   @Column({ unique: true })
   username: string;
 
-  @Column()
+  @Column({ unique: true })
   dni: string;
 
   @Exclude()
@@ -46,12 +51,30 @@ export class UserEntity extends BaseEntity implements IUser {
   active: boolean;
 
   // ---------- ---------- RELATIONS ---------- ----------
+
   @OneToMany(() => StoreUsersEntity, (storesUsers) => storesUsers.user)
   storesIncludes: StoreUsersEntity[];
+
+  @OneToMany(() => UserEmailsEntity, (emails) => emails.user)
+  emails?: UserEmailsEntity[];
+
+  @OneToMany(() => UserPhonesEntity, (phones) => phones.user)
+  phones?: UserPhonesEntity[];
+
+  @OneToMany(() => PurchaseEntity, (purchases) => purchases.user)
+  purchases?: PurchaseEntity[];
 
   @ManyToOne(() => BrandEntity, (brand) => brand.users)
   @JoinColumn({ name: 'brand_id' })
   brand?: BrandEntity;
+
+  @ManyToOne(() => UserDirectionsEntity, (direction) => direction.users)
+  @JoinColumn({ name: 'direction_id' })
+  direction!: UserDirectionsEntity;
+
+  @ManyToOne(() => DepartmentEntity, (department) => department.users)
+  @JoinColumn({ name: 'department_id' })
+  department!: DepartmentEntity;
 
   @ManyToOne(() => ProvinceEntity, (province) => province.users)
   @JoinColumn({ name: 'province_id' })

@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { last } from 'rxjs';
 
 // ---------- ---------- ---------- ---------- ----------
 
@@ -9,8 +10,14 @@ import { UserDTO, UserToStoreDTO, UserUpdateDTO } from '../dto/user.dto';
 import { UserEntity } from '../entities/user.entity';
 import { StoreUsersEntity } from 'src/stores/entities/store-users.entity';
 import { ErrorManager } from '../../utils/error.manager';
-import { CountryEntity } from 'src/countries/entities/country.entity';
-import { CountriesService } from 'src/countries/services/countries.service';
+import { UserDirectionsEntity } from '../../directions/entities/user-directions.entity';
+import { ROLES } from '../../constants/roles';
+import { BrandEntity } from '../../brands/entities/brand.entity';
+import { DepartmentEntity } from '../../departments/entities/department.entity';
+import { ProvinceEntity } from '../../provinces/entities/province.entity';
+import { CountryEntity } from '../../countries/entities/country.entity';
+import { UserEmailsEntity } from '../../emails/entities/user-emails.entity';
+import { UserPhonesEntity } from '../../phones/entities/user-phones.entity';
 
 @Injectable()
 export class UsersService {
@@ -19,9 +26,12 @@ export class UsersService {
     private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(StoreUsersEntity)
     private readonly storeUsersRepository: Repository<StoreUsersEntity>,
-    //@InjectRepository(CountryEntity)
-    //private readonly countryRepository: Repository<CountryEntity>,
-    private readonly countriesService: CountriesService,
+    @InjectRepository(UserDirectionsEntity)
+    private readonly userDirectionRepository: Repository<UserDirectionsEntity>,
+    @InjectRepository(UserEmailsEntity)
+    private readonly userEmailsRepository: Repository<UserEmailsEntity>,
+    @InjectRepository(UserPhonesEntity)
+    private readonly userPhonesRepository: Repository<UserPhonesEntity>,
   ) {}
 
   public async findAllUsers(): Promise<UserEntity[]> {
@@ -31,6 +41,8 @@ export class UsersService {
         .leftJoinAndSelect('user.brand', 'brand')
         .leftJoinAndSelect('user.storesIncludes', 'storesIncludes')
         .leftJoinAndSelect('storesIncludes.store', 'store')
+        .leftJoinAndSelect('user.emails', 'email')
+        .leftJoinAndSelect('user.phones', 'phone')
         .getMany();
       if (users.length === 0) {
         throw new ErrorManager({
@@ -50,6 +62,7 @@ export class UsersService {
       const user: UserEntity = await this.userRepository
         .createQueryBuilder('user')
         .where({ id })
+        .leftJoinAndSelect('user.brand', 'brand')
         .leftJoinAndSelect('user.storesIncludes', 'storesIncludes')
         .leftJoinAndSelect('storesIncludes.store', 'store')
         .getOne();
@@ -66,6 +79,7 @@ export class UsersService {
     }
   }
 
+  // METODO PARA LOGING DE AUTH
   public async findBy({ key, value }: { key: keyof UserDTO; value: any }) {
     try {
       const user: UserEntity = await this.userRepository
@@ -80,10 +94,60 @@ export class UsersService {
     }
   }
 
-  public async createUser(body: UserDTO): Promise<UserEntity> {
+  public async createUser(
+    lastname: string,
+    firstname: string,
+    age: number,
+    username: string,
+    password: string,
+    role: ROLES,
+    active: boolean,
+    dni: string,
+    direction: string,
+    brand: BrandEntity,
+    department: DepartmentEntity,
+    province: ProvinceEntity,
+    country: CountryEntity,
+    emails: string[],
+    phones: string[],
+  ): Promise<UserEntity> {
     try {
-      body.password = await bcrypt.hash(body.password, +process.env.HASH_SALT);
-      return await this.userRepository.save(body);
+      password = await bcrypt.hash(password, +process.env.HASH_SALT);
+      const newUser = this.userRepository.create({
+        firstname,
+        lastname,
+        age,
+        password,
+        username,
+        role,
+        active,
+        dni,
+        brand,
+        department,
+        province,
+        country,
+      });
+
+      const newDirection = this.userDirectionRepository.create({ direction });
+      newDirection.department = newUser.department;
+      await this.userDirectionRepository.save(newDirection);
+      newUser.direction = newDirection;
+
+      await this.userRepository.save(newUser); // PARA CREAR UN NUEVO USUARIO Y LUEGO GUARDAR SUS EMAILS Y PHONES PRIMEROS LO GUARDAMOS
+      for (let i = 0; i < emails.length; i++) {
+        let newEmail = this.userEmailsRepository.create({ email: emails[i] });
+        newEmail.user = newUser;
+        await this.userEmailsRepository.save(newEmail);
+      }
+
+      for (let j = 0; j < phones.length; j++) {
+        let newPhone = this.userPhonesRepository.create({
+          phoneNumber: phones[j],
+        });
+        newPhone.user = newUser;
+        await this.userPhonesRepository.save(newPhone);
+      }
+      return newUser;
     } catch (e) {
       console.log(e);
       throw ErrorManager.createSignatureError(e.message);
