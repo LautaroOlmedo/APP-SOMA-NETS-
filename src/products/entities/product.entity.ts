@@ -2,6 +2,7 @@ import { Entity, Column, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { Min, Max } from 'class-validator';
 
 // ---------- ---------- ---------- ---------- ----------
+
 import { BaseEntity } from '../../config/base.entity';
 import { CategoryEntity } from '../../categories/entities/catogory.entity';
 import { PurchaseProductsEntity } from '../../purchases/entities/purchase-product.entity';

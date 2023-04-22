@@ -10,7 +10,9 @@ import { ClientEntity } from '.././clients/entities/client.entity';
 import { PurchaseService } from './services/purchase.service';
 import { PurchaseProductService } from './services/purchase-product.service';
 import { PurchaseController } from './controllers/purchase.controller';
-import { ProductEntity } from 'src/products/entities/product.entity';
+import { ProductEntity } from '.././products/entities/product.entity';
+import { ProductService } from '.././products/services/product.service';
+import { PuchaseProductsController } from './controllers/puchase-products.controller';
 
 @Module({
   imports: [
@@ -22,8 +24,8 @@ import { ProductEntity } from 'src/products/entities/product.entity';
       ProductEntity,
     ]),
   ],
-  controllers: [PurchaseController],
-  providers: [PurchaseService, PurchaseProductService],
+  controllers: [PurchaseController, PuchaseProductsController],
+  providers: [PurchaseService, PurchaseProductService, ProductService],
   exports: [TypeOrmModule],
 })
 export class PurchasesModule {}
