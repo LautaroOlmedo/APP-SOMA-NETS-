@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 
 // ---------- ---------- ---------- ---------- ----------
 
 import { ProductEntity } from '../entities/product.entity';
 import { ProductDTO } from '../dto/product.dto';
 import { CategoryEntity } from 'src/categories/entities/catogory.entity';
+import { size, talle } from 'src/constants/enums';
+import { ErrorManager } from 'src/utils/error.manager';
 
 @Injectable()
 export class ProductService {
@@ -34,13 +36,66 @@ export class ProductService {
     description: string,
     productName: string,
     category: CategoryEntity,
+    size: size,
+    talle: talle,
+    quantity: number,
   ): Promise<ProductEntity> {
-    const newProduct = this.productRepository.create({
-      price,
-      description,
-      product_name: productName,
-      category,
-    });
+    console.log('SIZEEEEEEE1', size);
+    let newProduct: ProductEntity;
+    if (size) {
+      console.log('SIZEEEEEEE2', size);
+
+      newProduct = this.productRepository.create({
+        price,
+        description,
+        product_name: productName,
+        category,
+        size: size,
+        quantity: quantity,
+      });
+    } else {
+      newProduct = this.productRepository.create({
+        price,
+        description,
+        product_name: productName,
+        category,
+        talle: talle,
+        quantity: quantity,
+      });
+    }
     return await this.productRepository.save(newProduct);
   }
+
+  public async addProductStock(id: string, newQuantity: number) {
+    // -----> CAMBIAR NOMBRE CON ACTUALIZA CANTIDAD (EN INGLES)
+    try {
+      const prod: ProductEntity = await this.productRepository
+        .createQueryBuilder('prod')
+        .where({ id })
+        .getOne();
+      prod.quantity += newQuantity;
+      await this.productRepository.save(prod);
+    } catch (e) {
+      console.log(e);
+      throw ErrorManager.createSignatureError(e.message);
+    }
+  }
+
+  async actualizarCantidad(id: string, newQuantity: number) {
+    const prod: ProductEntity = await this.productRepository
+      .createQueryBuilder('prod')
+      .where({ id })
+      .getOne();
+    prod.quantity = newQuantity;
+    await this.productRepository.update({ id: id }, { quantity: newQuantity });
+  }
+
+  // async agregaCantidad(id: string, newQuantity: number) {
+  //   const prod: ProductEntity = await this.productRepository  // --------> INNECESARIO? REUTILIZACIÓN DE ACTUALIZA CANTIDAD?
+  //     .createQueryBuilder('prod')
+  //     .where({ id })
+  //     .getOne();
+  //   prod.quantity = newQuantity;
+  //   await this.productRepository.save(prod);
+  // }
 }

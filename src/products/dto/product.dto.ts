@@ -1,8 +1,9 @@
 import { Expose } from 'class-transformer';
-import { IsNotEmpty } from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional, Max, Min } from 'class-validator';
 // ---------- ---------- ---------- ---------- ----------
 
 import { CategoryEntity } from 'src/categories/entities/catogory.entity';
+import { size, talle } from 'src/constants/enums';
 
 export class ProductDTO {
   @IsNotEmpty()
@@ -16,4 +17,22 @@ export class ProductDTO {
 
   @Expose()
   category: CategoryEntity;
+
+  @IsNotEmpty()
+  @IsInt()
+  @Min(9)
+  @Max(250)
+  quantity: number;
+
+  @IsOptional()
+  size: size;
+
+  @IsOptional()
+  talle: talle;
+}
+
+export class UpdateProductDTO {
+  @IsOptional()
+  @IsInt()
+  quantity: number;
 }

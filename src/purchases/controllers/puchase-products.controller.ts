@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, HttpStatus } from '@nestjs/common';
 
 // ---------- ---------- ---------- ---------- ----------
 
@@ -17,7 +17,24 @@ export class PuchaseProductsController {
 
   @Post('register')
   public async registerPP(@Body() body: any) {
-    const { quantity, product } = body;
-    return await this.purchaseProductsService.create(quantity, product);
+    try {
+      const { quantity, product, purchase } = body;
+
+      const newPP = await this.purchaseProductsService.create(
+        quantity,
+        product,
+        purchase,
+      );
+      if (newPP) {
+        return newPP;
+      } else {
+        return 'prueba';
+      }
+    } catch (e) {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        msg: 'Error en el servidor',
+      };
+    }
   }
 }

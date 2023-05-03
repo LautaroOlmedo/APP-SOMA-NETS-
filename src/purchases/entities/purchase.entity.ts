@@ -35,7 +35,7 @@ export class PurchaseEntity extends BaseEntity {
   status!: transactionStatus;
 
   @Column({ type: 'enum', enum: paymentMethod, default: paymentMethod.CASH })
-  payment_method!: paymentMethod;
+  paymentMethod!: paymentMethod;
 
   // ---------- ---------- RELATIONS ---------- ----------
 

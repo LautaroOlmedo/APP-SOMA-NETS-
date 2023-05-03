@@ -21,7 +21,7 @@ export class ProvincesService {
   public async loadProvinceDB(): Promise<string | void> {
     let provinces: ProvinceEntity[] = await this.provinceRepository.find();
     const country: CountryEntity = await this.countriesServices.findOneCountry(
-      '879ccb56-f2a2-4448-b026-b67b2798d663',
+      '23bcb975-0dea-4b9c-b70a-819f10622b67',
     );
     if (provinces.length > 0) return 'Provinces already exists';
     provincesData.map(async (el) => {
