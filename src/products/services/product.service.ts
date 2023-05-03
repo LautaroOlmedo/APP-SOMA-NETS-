@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
+import * as ExcelJS from 'exceljs';
 
 // ---------- ---------- ---------- ---------- ----------
 
@@ -98,4 +99,21 @@ export class ProductService {
   //   prod.quantity = newQuantity;
   //   await this.productRepository.save(prod);
   // }
+
+  // ---------- ---------- EXCEL ---------- ----------
+
+  async generateExcelFile(productsCount: number) {
+    // Crear el nuevo libro de Excel
+    const workbook = new ExcelJS.Workbook();
+
+    // Crear una hoja de trabajo y establecer su nombre
+    const worksheet = workbook.addWorksheet('Cantidad de productos');
+
+    // Agregar los datos a la hoja de trabajo
+    worksheet.addRow(['Cantidad de productos']);
+    worksheet.addRow([productsCount]);
+
+    // Escribir el libro en un archivo
+    await workbook.xlsx.writeFile('cantidad_productos.xlsx');
+  }
 }
