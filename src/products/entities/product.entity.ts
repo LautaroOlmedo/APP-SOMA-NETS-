@@ -32,6 +32,9 @@ export class ProductEntity extends BaseEntity {
   @Max(2500)
   quantity: number;
 
+  @Column({ type: 'integer', nullable: false, unique: false })
+  code: number;
+
   // ---------- ---------- RELATIONS ---------- ----------
   @ManyToOne(() => CategoryEntity, (category) => category.products)
   @JoinColumn({ name: 'category_id' })
