@@ -10,6 +10,7 @@ import { StoresService } from './services/stores.service';
 import { StoreEmailsEntity } from '.././emails/entities/store-emails.entity';
 import { StoreClientsEntity } from './entities/store-clients.entity';
 import { StorePhonesEntity } from '.././phones/entities/store-phones.entity';
+import { StockEntity } from '.././stocks/entities/stock.entity';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { StorePhonesEntity } from '.././phones/entities/store-phones.entity';
       StoreClientsEntity,
       StoreEmailsEntity,
       StorePhonesEntity,
+      StockEntity,
     ]),
   ],
   controllers: [StoresController],

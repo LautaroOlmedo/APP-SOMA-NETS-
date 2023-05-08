@@ -8,6 +8,7 @@ import { CategoryEntity } from '.././categories/entities/catogory.entity';
 import { PurchaseProductsEntity } from '.././purchases/entities/purchase-product.entity';
 import { ProductService } from './services/product.service';
 import { ProductController } from './controllers/product.controller';
+import { StockEntity } from '.././stocks/entities/stock.entity';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { ProductController } from './controllers/product.controller';
       ProductEntity,
       CategoryEntity,
       PurchaseProductsEntity,
+      StockEntity,
     ]),
   ],
   controllers: [ProductController],

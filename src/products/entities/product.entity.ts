@@ -7,6 +7,7 @@ import { BaseEntity } from '../../config/base.entity';
 import { CategoryEntity } from '../../categories/entities/catogory.entity';
 import { PurchaseProductsEntity } from '../../purchases/entities/purchase-product.entity';
 import { size, talle } from '../../constants/enums';
+import { StockEntity } from '../../stocks/entities/stock.entity';
 
 @Entity({ name: 'products' })
 export class ProductEntity extends BaseEntity {
@@ -45,4 +46,6 @@ export class ProductEntity extends BaseEntity {
     (purchaseProduct) => purchaseProduct.product,
   )
   purchaseProduct: PurchaseProductsEntity[];
+  @OneToMany(() => StockEntity, (stock) => stock.product)
+  stock: StockEntity[];
 }

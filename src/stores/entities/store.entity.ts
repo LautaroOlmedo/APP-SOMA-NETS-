@@ -10,6 +10,7 @@ import { BrandEntity } from '../../brands/entities/brand.entity';
 import { StoreEmailsEntity } from '../../emails/entities/store-emails.entity';
 import { StoreClientsEntity } from './store-clients.entity';
 import { StorePhonesEntity } from '../../phones/entities/store-phones.entity';
+import { StockEntity } from '../../stocks/entities/stock.entity';
 
 @Entity({ name: 'stores' })
 export class StoreEntity extends BaseEntity implements IStore {
@@ -31,6 +32,9 @@ export class StoreEntity extends BaseEntity implements IStore {
 
   @OneToMany(() => StorePhonesEntity, (phones) => phones.store)
   phones?: StorePhonesEntity[];
+
+  @OneToMany(() => StockEntity, (stock) => stock.store)
+  stock?: StockEntity[];
 
   /*@ManyToOne(() => StoreDirectionsEntity, (direction) => direction.stores)
   @JoinColumn({ name: 'direction_id' })
