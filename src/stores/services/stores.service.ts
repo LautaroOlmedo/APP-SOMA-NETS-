@@ -54,12 +54,13 @@ export class StoresService {
         .createQueryBuilder('store')
         .where({ id })
         .leftJoinAndSelect('store.brand', 'brand')
-        // .leftJoinAndSelect('store.usersIncludes', 'usersIncludes')
-        // .leftJoinAndSelect('usersIncludes.user', 'user')
-        // .leftJoinAndSelect('store.clientsIncludes', 'clientsIncludes')
-        // .leftJoinAndSelect('clientsIncludes.client', 'client')
-        // .leftJoinAndSelect('store.emails', 'email')
-        // .leftJoinAndSelect('store.phones', 'phone')
+        .leftJoinAndSelect('store.usersIncludes', 'usersIncludes')
+        .leftJoinAndSelect('usersIncludes.user', 'user')
+        .leftJoinAndSelect('store.clientsIncludes', 'clientsIncludes')
+        .leftJoinAndSelect('clientsIncludes.client', 'client')
+        .leftJoinAndSelect('store.stock', 'stock')
+        .leftJoinAndSelect('store.emails', 'email')
+        .leftJoinAndSelect('store.phones', 'phone')
         .getOne();
       if (!store) {
         throw new ErrorManager({

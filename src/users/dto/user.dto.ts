@@ -13,13 +13,13 @@ import { Expose } from 'class-transformer';
 
 // ---------- ---------- ---------- ---------- ----------
 
-import { ACCESS_LEVEL, ROLES } from 'src/constants/roles';
-import { StoreEntity } from 'src/stores/entities/store.entity';
+import { ACCESS_LEVEL, ROLES } from '../../constants/roles';
+import { StoreEntity } from '../../stores/entities/store.entity';
 import { UserEntity } from '../entities/user.entity';
-import { BrandEntity } from 'src/brands/entities/brand.entity';
-import { ProvinceEntity } from 'src/provinces/entities/province.entity';
-import { CountryEntity } from 'src/countries/entities/country.entity';
-import { DepartmentEntity } from 'src/departments/entities/department.entity';
+import { BrandEntity } from '../../brands/entities/brand.entity';
+import { ProvinceEntity } from '../../provinces/entities/province.entity';
+import { CountryEntity } from '../../countries/entities/country.entity';
+import { DepartmentEntity } from '../../departments/entities/department.entity';
 
 import { PhonesEntity } from 'src/phones/entities/phones.entity';
 

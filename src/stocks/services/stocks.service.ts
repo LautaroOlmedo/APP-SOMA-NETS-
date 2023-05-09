@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 
 import { StockEntity } from '../entities/stock.entity';
 import { ErrorManager } from 'src/utils/error.manager';
-import { StoreEntity } from 'src/stores/entities/store.entity';
+import { StoreEntity } from '../../stores/entities/store.entity';
 //import { ProductEntity } from 'src/products/entities/product.entity';
 
 @Injectable()
@@ -16,10 +16,11 @@ export class StocksService {
     private readonly stockRepository: Repository<StockEntity>,
   ) {}
 
-  public async createStock(quantity: number): Promise<any> {
+  public async createStock(quantity: number, store: StoreEntity): Promise<any> {
     try {
       const newStock = this.stockRepository.create({
         availableQuantity: quantity,
+        store,
       });
       if (!newStock) {
         throw new ErrorManager({

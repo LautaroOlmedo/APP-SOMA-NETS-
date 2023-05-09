@@ -6,9 +6,10 @@ import {
   IsString,
 } from 'class-validator';
 import { Expose } from 'class-transformer';
-import { BrandEntity } from 'src/brands/entities/brand.entity';
 
 // ---------- ---------- ---------- ---------- ----------
+
+import { BrandEntity } from '../../brands/entities/brand.entity';
 
 export class StoreDTO {
   @IsNotEmpty()
