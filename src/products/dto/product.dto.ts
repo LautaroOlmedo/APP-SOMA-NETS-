@@ -1,9 +1,18 @@
 import { Expose } from 'class-transformer';
-import { IsInt, IsNotEmpty, IsOptional, Max, Min } from 'class-validator';
+import {
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsUUID,
+  Max,
+  Min,
+} from 'class-validator';
 // ---------- ---------- ---------- ---------- ----------
 
-import { CategoryEntity } from 'src/categories/entities/catogory.entity';
-import { size, talle } from 'src/constants/enums';
+import { CategoryEntity } from '../../categories/entities/catogory.entity';
+import { size, talle } from '../../constants/enums';
+import { ProductEntity } from '../entities/product.entity';
+import { StockEntity } from '../../stocks/entities/stock.entity';
 
 export class ProductDTO {
   @IsNotEmpty()
@@ -39,4 +48,14 @@ export class UpdateProductDTO {
   @IsOptional()
   @IsInt()
   quantity: number;
+}
+
+export class ProductToStockDTO {
+  @IsNotEmpty()
+  @IsUUID()
+  product: ProductEntity;
+
+  @IsNotEmpty()
+  @IsUUID()
+  stock: StockEntity;
 }

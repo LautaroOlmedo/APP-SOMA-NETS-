@@ -15,7 +15,6 @@ import { ProductService } from '.././products/services/product.service';
 import { PuchaseProductsController } from './controllers/puchase-products.controller';
 import { StoreEntity } from '.././stores/entities/store.entity';
 import { StocksService } from 'src/stocks/services/stocks.service';
-import { StockEntity } from '.././stocks/entities/stock.entity';
 import { StoresService } from '.././stores/services/stores.service';
 
 @Module({
@@ -27,7 +26,6 @@ import { StoresService } from '.././stores/services/stores.service';
       ClientEntity,
       ProductEntity,
       StoreEntity,
-      StockEntity,
     ]),
   ],
   controllers: [PurchaseController, PuchaseProductsController],

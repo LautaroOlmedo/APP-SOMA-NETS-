@@ -6,19 +6,20 @@ import * as ExcelJS from 'exceljs';
 // ---------- ---------- ---------- ---------- ----------
 
 import { ProductEntity } from '../entities/product.entity';
-import { ProductDTO } from '../dto/product.dto';
+import { ProductDTO, ProductToStockDTO } from '../dto/product.dto';
 import { CategoryEntity } from '../../categories/entities/catogory.entity';
 import { size, talle } from '../../constants/enums';
 import { ErrorManager } from '../../utils/error.manager';
-import { StocksService } from '../../stocks/services/stocks.service';
-import { StockEntity } from '../../stocks/entities/stock.entity';
+import { StockProductsEntity } from 'src/stocks/entities/stock-products.entity';
 
 @Injectable()
 export class ProductService {
   constructor(
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
-    private readonly stocksService: StocksService,
+
+    @InjectRepository(StockProductsEntity)
+    private readonly stockProductsRepository: Repository<StockProductsEntity>,
   ) {}
 
   async findAllProducts(): Promise<ProductEntity[]> {
@@ -73,13 +74,6 @@ export class ProductService {
           message: 'No se pudo crear el producto',
         });
       }
-      const stock: StockEntity = await this.stocksService.createStock(
-        newProduct,
-        quantity,
-      );
-      console.log('STOOOOOCK', stock);
-
-      newProduct.stock.push(stock);
       return await this.productRepository.save(newProduct);
     } catch (e) {
       console.log(e);
@@ -137,5 +131,16 @@ export class ProductService {
 
     // Escribir el libro en un archivo
     await workbook.xlsx.writeFile('cantidad_productos.xlsx');
+  }
+
+  // ---------- ----------  RELATIONS  ---------- ----------
+
+  public async relationToStock(body: ProductToStockDTO) {
+    try {
+      return await this.stockProductsRepository.save(body);
+    } catch (e) {
+      console.log(e);
+      throw ErrorManager.createSignatureError(e.message);
+    }
   }
 }

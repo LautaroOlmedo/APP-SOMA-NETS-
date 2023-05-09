@@ -1,7 +1,8 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../config/base.entity';
 import { ProductEntity } from '../../products/entities/product.entity';
 import { StoreEntity } from '../../stores/entities/store.entity';
+import { StockProductsEntity } from './stock-products.entity';
 
 @Entity({ name: 'stock' })
 export class StockEntity extends BaseEntity {
@@ -10,9 +11,8 @@ export class StockEntity extends BaseEntity {
 
   // ---------- ---------- RELATIONS ---------- ----------
 
-  @ManyToOne(() => ProductEntity, (product) => product.stock)
-  @JoinColumn({ name: 'product_id' })
-  product: ProductEntity;
+  @OneToMany(() => StockProductsEntity, (stockProducts) => stockProducts.stock)
+  productsIncludes: StockProductsEntity[];
 
   @ManyToOne(() => StoreEntity, (store) => store.stock)
   @JoinColumn({ name: 'store_id' })

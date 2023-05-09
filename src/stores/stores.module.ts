@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 // ---------- ---------- ---------- ---------- ----------
@@ -14,6 +14,7 @@ import { StockEntity } from '.././stocks/entities/stock.entity';
 import { PurchaseEntity } from '.././purchases/entities/purchase.entity';
 // import { PurchaseProductsEntity } from '.././purchases/entities/purchase-product.entity';
 
+@Global()
 @Module({
   imports: [
     TypeOrmModule.forFeature([

@@ -7,7 +7,8 @@ import { BaseEntity } from '../../config/base.entity';
 import { CategoryEntity } from '../../categories/entities/catogory.entity';
 import { PurchaseProductsEntity } from '../../purchases/entities/purchase-product.entity';
 import { size, talle } from '../../constants/enums';
-import { StockEntity } from '../../stocks/entities/stock.entity';
+
+import { StockProductsEntity } from '../../stocks/entities/stock-products.entity';
 
 @Entity({ name: 'products' })
 export class ProductEntity extends BaseEntity {
@@ -37,6 +38,7 @@ export class ProductEntity extends BaseEntity {
   code: number;
 
   // ---------- ---------- RELATIONS ---------- ----------
+
   @ManyToOne(() => CategoryEntity, (category) => category.products)
   @JoinColumn({ name: 'category_id' })
   category!: CategoryEntity;
@@ -47,6 +49,9 @@ export class ProductEntity extends BaseEntity {
   )
   purchaseProduct: PurchaseProductsEntity[];
 
-  @OneToMany(() => StockEntity, (stock) => stock.product)
-  stock: StockEntity[];
+  @OneToMany(
+    () => StockProductsEntity,
+    (stockProducts) => stockProducts.product,
+  )
+  stocksIncludes: StockProductsEntity[];
 }
