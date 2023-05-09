@@ -15,10 +15,11 @@ export class PurchaseController {
 
   @Post('register')
   public async createPurchase(@Body() body: PurchaseDTO) {
-    const { user, client, purchaseProduct, paymentMethod, status } = body;
+    const { user, client, store, paymentMethod, status } = body;
     return await this.purchasesService.createPurchase(
       user,
       client,
+      store,
       paymentMethod,
       status,
     );

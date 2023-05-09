@@ -16,8 +16,8 @@ import { BrandEntity } from '../../brands/entities/brand.entity';
 import { DepartmentEntity } from '../../departments/entities/department.entity';
 import { ProvinceEntity } from '../../provinces/entities/province.entity';
 import { CountryEntity } from '../../countries/entities/country.entity';
-import { UserEmailsEntity } from '../../emails/entities/user-emails.entity';
-import { UserPhonesEntity } from '../../phones/entities/user-phones.entity';
+import { EmailsEntity } from '../../emails/entities/emails.entity';
+import { PhonesEntity } from 'src/phones/entities/phones.entity';
 
 @Injectable()
 export class UsersService {
@@ -28,10 +28,10 @@ export class UsersService {
     private readonly storeUsersRepository: Repository<StoreUsersEntity>,
     @InjectRepository(UserDirectionsEntity)
     private readonly userDirectionRepository: Repository<UserDirectionsEntity>,
-    @InjectRepository(UserEmailsEntity)
-    private readonly userEmailsRepository: Repository<UserEmailsEntity>,
-    @InjectRepository(UserPhonesEntity)
-    private readonly userPhonesRepository: Repository<UserPhonesEntity>,
+    @InjectRepository(EmailsEntity)
+    private readonly emailRepository: Repository<EmailsEntity>,
+    @InjectRepository(PhonesEntity)
+    private readonly phoneRepository: Repository<PhonesEntity>,
   ) {}
 
   public async findAllUsers(): Promise<UserEntity[]> {
@@ -135,17 +135,17 @@ export class UsersService {
 
       await this.userRepository.save(newUser); // PARA CREAR UN NUEVO USUARIO Y LUEGO GUARDAR SUS EMAILS Y PHONES PRIMEROS LO GUARDAMOS
       for (let i = 0; i < emails.length; i++) {
-        let newEmail = this.userEmailsRepository.create({ email: emails[i] });
+        let newEmail = this.emailRepository.create({ email: emails[i] });
         newEmail.user = newUser;
-        await this.userEmailsRepository.save(newEmail);
+        await this.emailRepository.save(newEmail);
       }
 
       for (let j = 0; j < phones.length; j++) {
-        let newPhone = this.userPhonesRepository.create({
+        let newPhone = this.phoneRepository.create({
           phoneNumber: phones[j],
         });
         newPhone.user = newUser;
-        await this.userPhonesRepository.save(newPhone);
+        await this.phoneRepository.save(newPhone);
       }
       return newUser;
     } catch (e) {

@@ -5,10 +5,14 @@ import { Repository } from 'typeorm';
 // ---------- ---------- ---------- ---------- ----------
 
 import { PurchaseProductsEntity } from '../entities/purchase-product.entity';
-import { ProductService } from 'src/products/services/product.service';
-import { ProductEntity } from 'src/products/entities/product.entity';
-import { ErrorManager } from 'src/utils/error.manager';
+import { ProductService } from '../../products/services/product.service';
+import { ProductEntity } from '../../products/entities/product.entity';
+import { ErrorManager } from '../../utils/error.manager';
 import { PurchaseEntity } from '../entities/purchase.entity';
+import { StoresService } from '../../stores/services/stores.service';
+import { StocksService } from '../../stocks/services/stocks.service';
+import { StockEntity } from '../../stocks/entities/stock.entity';
+import { StoreEntity } from '../../stores/entities/store.entity';
 
 @Injectable()
 export class PurchaseProductService {
@@ -16,6 +20,8 @@ export class PurchaseProductService {
     @InjectRepository(PurchaseProductsEntity)
     private readonly purchaseProductRepository: Repository<PurchaseProductsEntity>,
     private readonly productsService: ProductService,
+    private readonly storesService: StoresService,
+    private readonly stocksService: StocksService,
   ) {}
 
   public async findAllPP(): Promise<PurchaseProductsEntity[]> {
@@ -33,19 +39,28 @@ export class PurchaseProductService {
         quantity_products: quantity,
         purchase: purchase,
       });
-      const prod = await this.productsService.findOne(newPP.product.id);
-      if (prod!.quantity < newPP.quantity_products) {
+      const prod: ProductEntity = await this.productsService.findOneProduct(
+        newPP.product.id,
+      );
+      const store: StoreEntity = await this.storesService.findOneStore(
+        newPP.purchase.store.id,
+      );
+      const stock: StockEntity = await this.stocksService.findOneStock(
+        store,
+        prod,
+      );
+      if (stock.availableQuantity < newPP.quantity_products) {
         throw new ErrorManager({
           type: 'CONFLICT',
           message: 'No hay suficiente stock',
         });
       }
-      const newProductQuantity = (prod!.quantity =
-        prod!.quantity - newPP.quantity_products);
-      await this.productsService.actualizarCantidad(
-        prod.id,
-        newProductQuantity,
-      );
+      // const newProductQuantity = (prod!.quantity =
+      //   prod!.quantity - newPP.quantity_products);
+      // await this.productsService.actualizarCantidad(
+      //   prod.id,
+      //   newProductQuantity,
+      // );
 
       newPP.total_price = prod!.price * newPP.quantity_products;
       return await this.purchaseProductRepository.save(newPP);

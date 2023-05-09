@@ -10,8 +10,8 @@ import { ProvinceEntity } from '.././provinces/entities/province.entity';
 import { CountryEntity } from '.././countries/entities/country.entity';
 import { StoreClientsEntity } from '.././stores/entities/store-clients.entity';
 import { DepartmentEntity } from '.././departments/entities/department.entity';
-import { ClientsPhonesEntity } from '.././phones/entities/client-phones.entity';
-import { ClientsEmailsEntity } from '.././emails/entities/client-emails.entity';
+import { PhonesEntity } from '.././phones/entities/phones.entity';
+import { EmailsEntity } from '.././emails/entities/emails.entity';
 import { PurchaseEntity } from '.././purchases/entities/purchase.entity';
 
 @Module({
@@ -22,8 +22,8 @@ import { PurchaseEntity } from '.././purchases/entities/purchase.entity';
       DepartmentEntity,
       ProvinceEntity,
       StoreClientsEntity,
-      ClientsPhonesEntity,
-      ClientsEmailsEntity,
+      PhonesEntity,
+      EmailsEntity,
       PurchaseEntity,
     ]),
   ],

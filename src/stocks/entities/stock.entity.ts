@@ -16,5 +16,5 @@ export class StockEntity extends BaseEntity {
 
   @ManyToOne(() => StoreEntity, (store) => store.stock)
   @JoinColumn({ name: 'store_id' })
-  store: ProductEntity;
+  store: StoreEntity;
 }

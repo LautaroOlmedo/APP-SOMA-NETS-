@@ -14,6 +14,7 @@ import { UserEntity } from '../../users/entities/user.entity';
 import { PurchaseProductsEntity } from '../entities/purchase-product.entity';
 import { ClientEntity } from '../../clients/entities/client.entity';
 import { paymentMethod, transactionStatus } from '../../constants';
+import { StoreEntity } from 'src/stores/entities/store.entity';
 
 // ---------- ---------- ---------- ---------- ----------
 
@@ -34,4 +35,7 @@ export class PurchaseDTO {
 
   @Expose()
   purchaseProduct: PurchaseProductsEntity;
+
+  @Expose()
+  store: StoreEntity;
 }

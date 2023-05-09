@@ -1,4 +1,11 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 
 // ---------- ---------- ---------- ---------- ----------
 
@@ -7,34 +14,36 @@ import { IStore } from '../../interfaces/store.interface';
 import { StoreUsersEntity } from './store-users.entity';
 import { BrandEntity } from '../../brands/entities/brand.entity';
 
-import { StoreEmailsEntity } from '../../emails/entities/store-emails.entity';
+import { EmailsEntity } from '../../emails/entities/emails.entity';
 import { StoreClientsEntity } from './store-clients.entity';
-import { StorePhonesEntity } from '../../phones/entities/store-phones.entity';
+import { PhonesEntity } from '../../phones/entities/phones.entity';
 import { StockEntity } from '../../stocks/entities/stock.entity';
+import { PurchaseEntity } from '../../purchases/entities/purchase.entity';
 
 @Entity({ name: 'stores' })
 export class StoreEntity extends BaseEntity implements IStore {
   @Column()
   storeName: string;
 
-  //@Column()
-  // Sucursal? Cconsultar con Nara
-
   // ---------- ---------- RELATIONS ---------- ----------
+
   @OneToMany(() => StoreUsersEntity, (storesUsers) => storesUsers.store)
   usersIncludes: StoreUsersEntity[];
 
   @OneToMany(() => StoreClientsEntity, (storesClients) => storesClients.store)
   clientsIncludes: StoreClientsEntity[];
 
-  @OneToMany(() => StoreEmailsEntity, (emails) => emails.store)
-  emails?: StoreEmailsEntity[];
+  @OneToMany(() => EmailsEntity, (emails) => emails.store)
+  emails?: EmailsEntity[];
 
-  @OneToMany(() => StorePhonesEntity, (phones) => phones.store)
-  phones?: StorePhonesEntity[];
+  @OneToMany(() => PhonesEntity, (phones) => phones.store)
+  phones?: PhonesEntity[];
 
   @OneToMany(() => StockEntity, (stock) => stock.store)
   stock?: StockEntity[];
+
+  @OneToOne(() => PurchaseEntity, (purchases) => purchases.store)
+  purchases: PurchaseEntity[];
 
   /*@ManyToOne(() => StoreDirectionsEntity, (direction) => direction.stores)
   @JoinColumn({ name: 'direction_id' })

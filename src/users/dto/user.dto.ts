@@ -20,8 +20,8 @@ import { BrandEntity } from 'src/brands/entities/brand.entity';
 import { ProvinceEntity } from 'src/provinces/entities/province.entity';
 import { CountryEntity } from 'src/countries/entities/country.entity';
 import { DepartmentEntity } from 'src/departments/entities/department.entity';
-import { UserEmailsEntity } from 'src/emails/entities/user-emails.entity';
-import { UserPhonesEntity } from 'src/phones/entities/user-phones.entity';
+
+import { PhonesEntity } from 'src/phones/entities/phones.entity';
 
 export class UserDTO {
   @IsNotEmpty()

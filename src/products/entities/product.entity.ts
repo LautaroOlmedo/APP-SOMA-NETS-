@@ -12,7 +12,7 @@ import { StockEntity } from '../../stocks/entities/stock.entity';
 @Entity({ name: 'products' })
 export class ProductEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 25 })
-  product_name!: string;
+  productName!: string;
 
   @Column({ type: 'varchar', length: 150 })
   description!: string;
@@ -28,10 +28,10 @@ export class ProductEntity extends BaseEntity {
   @Column({ type: 'enum', enum: talle, nullable: true })
   talle: talle;
 
-  @Column({ type: 'integer' })
-  @Min(10)
-  @Max(2500)
-  quantity: number;
+  // @Column({ type: 'integer' })
+  // @Min(10)
+  // @Max(2500)
+  // quantity: number;
 
   @Column({ type: 'integer', nullable: false, unique: false })
   code: number;
@@ -46,6 +46,7 @@ export class ProductEntity extends BaseEntity {
     (purchaseProduct) => purchaseProduct.product,
   )
   purchaseProduct: PurchaseProductsEntity[];
+
   @OneToMany(() => StockEntity, (stock) => stock.product)
   stock: StockEntity[];
 }

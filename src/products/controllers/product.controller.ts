@@ -30,8 +30,16 @@ export class ProductController {
   }
   @Post('register')
   public async registerProduct(@Body() body: ProductDTO) {
-    const { productName, price, description, category, quantity, size, talle } =
-      body;
+    const {
+      productName,
+      price,
+      description,
+      category,
+      quantity,
+      size,
+      talle,
+      code,
+    } = body;
 
     let newSize: size;
     let newTalle: talle;
@@ -52,6 +60,7 @@ export class ProductController {
         size,
         talle,
         quantity,
+        code,
       );
     }
   }

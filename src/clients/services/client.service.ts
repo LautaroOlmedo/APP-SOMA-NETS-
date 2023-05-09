@@ -5,13 +5,13 @@ import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 // ---------- ---------- ---------- ---------- ----------
 
 import { ClientEntity } from '../entities/client.entity';
-import { ClientsEmailsEntity } from 'src/emails/entities/client-emails.entity';
-import { ClientsPhonesEntity } from 'src/phones/entities/client-phones.entity';
+import { EmailsEntity } from '../../emails/entities/emails.entity';
+import { PhonesEntity } from '../../phones/entities/phones.entity';
 import { ErrorManager } from '../../utils/error.manager';
-import { StoreClientsEntity } from 'src/stores/entities/store-clients.entity';
-import { DepartmentEntity } from 'src/departments/entities/department.entity';
-import { ProvinceEntity } from 'src/provinces/entities/province.entity';
-import { CountryEntity } from 'src/countries/entities/country.entity';
+import { StoreClientsEntity } from '../../stores/entities/store-clients.entity';
+import { DepartmentEntity } from '../../departments/entities/department.entity';
+import { ProvinceEntity } from '../../provinces/entities/province.entity';
+import { CountryEntity } from '../../countries/entities/country.entity';
 import { ClientUpdateDTO } from '../dto/client.dto';
 
 @Injectable()
@@ -21,13 +21,11 @@ export class ClientsService {
     private readonly clientRepository: Repository<ClientEntity>,
     @InjectRepository(StoreClientsEntity)
     private readonly storeClientsRepository: Repository<StoreClientsEntity>,
-    @InjectRepository(ClientsEmailsEntity)
-    private readonly clientEmailsRepository: Repository<ClientsEmailsEntity>,
-    @InjectRepository(ClientsPhonesEntity)
-    private readonly clientPhonesRepository: Repository<ClientsPhonesEntity>,
-  ) //@InjectRepository(UserDirectionsEntity)
-  //private readonly userDirectionRepository: Repository<UserDirectionsEntity>,
-  {}
+    @InjectRepository(EmailsEntity)
+    private readonly emailRepository: Repository<EmailsEntity>,
+    @InjectRepository(PhonesEntity)
+    private readonly phoneRepository: Repository<PhonesEntity>, //@InjectRepository(UserDirectionsEntity) //private readonly userDirectionRepository: Repository<UserDirectionsEntity>,
+  ) {}
 
   public async findAllClients(): Promise<ClientEntity[]> {
     try {
@@ -93,17 +91,17 @@ export class ClientsService {
       await this.clientRepository.save(newClient);
 
       for (let i = 0; i < emails.length; i++) {
-        let newEmail = this.clientEmailsRepository.create({ email: emails[i] });
+        let newEmail = this.emailRepository.create({ email: emails[i] });
         newEmail.client = newClient;
-        await this.clientEmailsRepository.save(newEmail);
+        await this.emailRepository.save(newEmail);
       }
 
       for (let j = 0; j < phones.length; j++) {
-        let newPhone = this.clientPhonesRepository.create({
+        let newPhone = this.phoneRepository.create({
           phoneNumber: phones[j],
         });
         newPhone.client = newClient;
-        await this.clientPhonesRepository.save(newPhone);
+        await this.phoneRepository.save(newPhone);
       }
     } catch (e) {
       console.log(e);

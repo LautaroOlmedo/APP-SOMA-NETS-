@@ -1,7 +1,11 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+// ---------- ---------- ---------- ---------- ----------
+
 import { StocksController } from './controllers/stocks.controller';
 import { StocksService } from './services/stocks.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { StockEntity } from './entities/stock.entity';
 import { ProductEntity } from '.././products/entities/product.entity';
 import { StoreEntity } from '.././stores/entities/store.entity';
@@ -12,6 +16,6 @@ import { StoreEntity } from '.././stores/entities/store.entity';
   ],
   controllers: [StocksController],
   providers: [StocksService],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, StocksService],
 })
 export class StocksModule {}

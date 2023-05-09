@@ -24,6 +24,10 @@ export class ProductDTO {
   @Max(250)
   quantity: number;
 
+  @IsNotEmpty()
+  @IsInt()
+  code: number;
+
   @IsOptional()
   size: size;
 

@@ -18,9 +18,9 @@ import { BrandEntity } from '../../brands/entities/brand.entity';
 import { CountryEntity } from '../../countries/entities/country.entity';
 import { ProvinceEntity } from '../../provinces/entities/province.entity';
 import { DepartmentEntity } from '../../departments/entities/department.entity';
-import { UserEmailsEntity } from '../../emails/entities/user-emails.entity';
+import { EmailsEntity } from '../../emails/entities/emails.entity';
 import { UserDirectionsEntity } from '../../directions/entities/user-directions.entity';
-import { UserPhonesEntity } from '../../phones/entities/user-phones.entity';
+import { PhonesEntity } from 'src/phones/entities/phones.entity';
 import { PurchaseEntity } from '../../purchases/entities/purchase.entity';
 
 @Entity('users')
@@ -55,11 +55,11 @@ export class UserEntity extends BaseEntity implements IUser {
   @OneToMany(() => StoreUsersEntity, (storesUsers) => storesUsers.user)
   storesIncludes: StoreUsersEntity[];
 
-  @OneToMany(() => UserEmailsEntity, (emails) => emails.user)
-  emails?: UserEmailsEntity[];
+  @OneToMany(() => EmailsEntity, (emails) => emails.user)
+  emails?: EmailsEntity[];
 
-  @OneToMany(() => UserPhonesEntity, (phones) => phones.user)
-  phones?: UserPhonesEntity[];
+  @OneToMany(() => PhonesEntity, (phones) => phones.user)
+  phones?: PhonesEntity[];
 
   @OneToMany(() => PurchaseEntity, (purchases) => purchases.user)
   purchases?: PurchaseEntity[];
