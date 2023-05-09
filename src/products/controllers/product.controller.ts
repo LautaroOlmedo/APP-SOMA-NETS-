@@ -17,7 +17,11 @@ import * as xl from 'excel4node';
 // ---------- ---------- ---------- ---------- ----------
 
 import { ProductService } from '../services/product.service';
-import { ProductDTO, UpdateProductDTO } from '../dto/product.dto';
+import {
+  ProductDTO,
+  ProductToStockDTO,
+  UpdateProductDTO,
+} from '../dto/product.dto';
 import { size, talle } from 'src/constants/enums';
 
 @Controller('products')
@@ -78,6 +82,14 @@ export class ProductController {
         msg: 'ERROR',
       };
     }
+  }
+
+  // ---------- ----------  RELATIONS  ---------- ----------
+
+  @Post('add-to-stock')
+  public async addToStore(@Body() body: ProductToStockDTO) {
+    const { product, stock } = body;
+    return await this.productsService.relationToStock(product, stock);
   }
 
   @Get('cantidad_productos.xlsx')

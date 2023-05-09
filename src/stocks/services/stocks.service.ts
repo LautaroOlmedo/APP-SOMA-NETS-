@@ -7,7 +7,7 @@ import { Repository } from 'typeorm';
 import { StockEntity } from '../entities/stock.entity';
 import { ErrorManager } from 'src/utils/error.manager';
 import { StoreEntity } from '../../stores/entities/store.entity';
-//import { ProductEntity } from 'src/products/entities/product.entity';
+import { StockProductsEntity } from '../entities/stock-products.entity';
 
 @Injectable()
 export class StocksService {

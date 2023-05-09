@@ -59,6 +59,8 @@ export class StoresService {
         .leftJoinAndSelect('store.clientsIncludes', 'clientsIncludes')
         .leftJoinAndSelect('clientsIncludes.client', 'client')
         .leftJoinAndSelect('store.stock', 'stock')
+        .leftJoinAndSelect('stock.productsIncludes', 'productsIncludes')
+        .leftJoinAndSelect('productsIncludes.product', 'product')
         .leftJoinAndSelect('store.emails', 'email')
         .leftJoinAndSelect('store.phones', 'phone')
         .getOne();

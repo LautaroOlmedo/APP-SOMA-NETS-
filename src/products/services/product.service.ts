@@ -11,6 +11,7 @@ import { CategoryEntity } from '../../categories/entities/catogory.entity';
 import { size, talle } from '../../constants/enums';
 import { ErrorManager } from '../../utils/error.manager';
 import { StockProductsEntity } from 'src/stocks/entities/stock-products.entity';
+import { StockEntity } from 'src/stocks/entities/stock.entity';
 
 @Injectable()
 export class ProductService {
@@ -135,9 +136,19 @@ export class ProductService {
 
   // ---------- ----------  RELATIONS  ---------- ----------
 
-  public async relationToStock(body: ProductToStockDTO) {
+  public async relationToStock(product: ProductEntity, stock: StockEntity) {
     try {
-      return await this.stockProductsRepository.save(body);
+      const productInStock = this.stockProductsRepository.create({
+        product,
+        stock,
+      });
+      if (!productInStock) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No se pudo guardar el producto',
+        });
+      }
+      return await this.stockProductsRepository.save(productInStock);
     } catch (e) {
       console.log(e);
       throw ErrorManager.createSignatureError(e.message);
