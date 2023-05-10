@@ -27,6 +27,9 @@ export class ProductDTO {
   @Expose()
   category: CategoryEntity;
 
+  @Expose()
+  stock: StockEntity;
+
   @IsNotEmpty()
   @IsInt()
   @Min(9)

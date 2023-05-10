@@ -16,6 +16,22 @@ export class StocksService {
     private readonly stockRepository: Repository<StockEntity>,
   ) {}
 
+  public async findOneStock(id: string): Promise<StockEntity | ErrorManager> {
+    try {
+      const stock: StockEntity = await this.stockRepository.findOneBy({ id });
+      if (!stock) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No se pudo crear el stock',
+        });
+      }
+      return stock;
+    } catch (e) {
+      console.log(e);
+      throw ErrorManager.createSignatureError(e.message);
+    }
+  }
+
   public async createStock(quantity: number, store: StoreEntity): Promise<any> {
     try {
       const newStock = this.stockRepository.create({

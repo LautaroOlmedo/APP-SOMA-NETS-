@@ -10,8 +10,9 @@ import { ProductDTO, ProductToStockDTO } from '../dto/product.dto';
 import { CategoryEntity } from '../../categories/entities/catogory.entity';
 import { size, talle } from '../../constants/enums';
 import { ErrorManager } from '../../utils/error.manager';
-import { StockProductsEntity } from 'src/stocks/entities/stock-products.entity';
-import { StockEntity } from 'src/stocks/entities/stock.entity';
+import { StockProductsEntity } from '../../stocks/entities/stock-products.entity';
+import { StockEntity } from '../../stocks/entities/stock.entity';
+import { StocksService } from '../../stocks/services/stocks.service';
 
 @Injectable()
 export class ProductService {
@@ -21,10 +22,16 @@ export class ProductService {
 
     @InjectRepository(StockProductsEntity)
     private readonly stockProductsRepository: Repository<StockProductsEntity>,
+
+    private readonly stocksSerive: StocksService,
   ) {}
 
   async findAllProducts(): Promise<ProductEntity[]> {
-    return await this.productRepository.find();
+    const products: ProductEntity[] = await this.productRepository
+      .createQueryBuilder('products')
+      .leftJoinAndSelect('products.category', 'category')
+      .getMany();
+    return products;
   }
 
   async findOneProduct(id: string): Promise<ProductEntity | undefined> {
@@ -76,6 +83,38 @@ export class ProductService {
         });
       }
       return await this.productRepository.save(newProduct);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async createTESTfront(
+    price: number,
+    description: string,
+    productName: string,
+    category: CategoryEntity,
+    size: size,
+    talle: talle,
+    quantity: number,
+    code: number,
+    stock: StockEntity,
+  ) {
+    try {
+      const myProd = await this.create(
+        price,
+        description,
+        productName,
+        category,
+        size,
+        talle,
+        quantity,
+        code,
+      );
+      const myStock: StockEntity | ErrorManager =
+        await this.stocksSerive.findOneStock(stock.id);
+      console.log(myStock);
+      await this.relationToStock(myProd, stock);
+      return myProd;
     } catch (e) {
       console.log(e);
     }

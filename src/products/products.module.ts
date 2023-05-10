@@ -9,7 +9,7 @@ import { PurchaseProductsEntity } from '.././purchases/entities/purchase-product
 import { ProductService } from './services/product.service';
 import { ProductController } from './controllers/product.controller';
 import { StockEntity } from '.././stocks/entities/stock.entity';
-import { StocksService } from 'src/stocks/services/stocks.service';
+import { StocksService } from '.././stocks/services/stocks.service';
 import { StockProductsEntity } from 'src/stocks/entities/stock-products.entity';
 
 @Global()
@@ -19,6 +19,7 @@ import { StockProductsEntity } from 'src/stocks/entities/stock-products.entity';
       ProductEntity,
       CategoryEntity,
       PurchaseProductsEntity,
+      StockEntity,
       StockProductsEntity,
     ]),
   ],

@@ -84,6 +84,45 @@ export class ProductController {
     }
   }
 
+  @Post('register/II')
+  public async registerProductTEST(@Body() body: ProductDTO) {
+    const {
+      productName,
+      price,
+      description,
+      category,
+      quantity,
+      size,
+      talle,
+      code,
+      stock,
+    } = body;
+
+    let newSize: size;
+    let newTalle: talle;
+    size ? (newSize = size) : null;
+
+    talle ? (newTalle = talle) : null;
+    if (newSize && newTalle) {
+      return {
+        httpStatus: HttpStatus.CONFLICT,
+        msg: 'No puedes cargar propiedades de 2 productos distintos en uno',
+      };
+    } else {
+      return await this.productsService.createTESTfront(
+        price,
+        productName,
+        description,
+        category,
+        size,
+        talle,
+        quantity,
+        code,
+        stock,
+      );
+    }
+  }
+
   // ---------- ----------  RELATIONS  ---------- ----------
 
   @Post('add-to-stock')
