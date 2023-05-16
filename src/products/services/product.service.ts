@@ -30,6 +30,9 @@ export class ProductService {
     const products: ProductEntity[] = await this.productRepository
       .createQueryBuilder('products')
       .leftJoinAndSelect('products.category', 'category')
+      .leftJoinAndSelect('products.stocksIncludes', 'stocksIncludes')
+      .leftJoinAndSelect('stocksIncludes.stock', 'stock')
+      //.leftJoinAndSelect('productsIncludes.product', 'product')
       .getMany();
     return products;
   }
