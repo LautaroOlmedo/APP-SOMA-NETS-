@@ -24,6 +24,7 @@ import { UserEntity } from '../../users/entities/user.entity';
 import { PurchaseProductsEntity } from './purchase-product.entity';
 import { paymentMethod, transactionStatus } from '../../constants/index';
 import { ClientEntity } from '../../clients/entities/client.entity';
+import { StoreEntity } from '../../stores/entities/store.entity';
 
 @Entity({ name: 'purchases' })
 export class PurchaseEntity extends BaseEntity {
@@ -46,6 +47,10 @@ export class PurchaseEntity extends BaseEntity {
   @ManyToOne(() => ClientEntity, (client) => client.purchases)
   @JoinColumn({ name: 'client_id' })
   client!: ClientEntity;
+
+  @ManyToOne(() => StoreEntity, (store) => store.purchases)
+  @JoinColumn({ name: 'store_id' })
+  store: StoreEntity;
 
   @OneToMany(
     () => PurchaseProductsEntity,

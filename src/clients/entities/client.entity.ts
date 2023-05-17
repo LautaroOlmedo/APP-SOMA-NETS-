@@ -15,8 +15,8 @@ import { CountryEntity } from '../../countries/entities/country.entity';
 import { ProvinceEntity } from '../../provinces/entities/province.entity';
 import { DepartmentEntity } from '../../departments/entities/department.entity';
 import { StoreClientsEntity } from '../../stores/entities/store-clients.entity';
-import { ClientsPhonesEntity } from '../../phones/entities/client-phones.entity';
-import { ClientsEmailsEntity } from '../../emails/entities/client-emails.entity';
+import { PhonesEntity } from '../../phones/entities/phones.entity';
+import { EmailsEntity } from '../../emails/entities/emails.entity';
 import { PurchaseEntity } from '../../purchases/entities/purchase.entity';
 
 @Entity({ name: 'clients' })
@@ -32,11 +32,11 @@ export class ClientEntity extends BaseEntity implements IClient {
 
   // ---------- ---------- RELATIONS ---------- ----------
 
-  @OneToMany(() => ClientsEmailsEntity, (emails) => emails.client)
-  emails?: ClientsEmailsEntity[];
+  @OneToMany(() => EmailsEntity, (emails) => emails.client)
+  emails?: EmailsEntity[];
 
-  @OneToMany(() => ClientsPhonesEntity, (phones) => phones.client)
-  phones?: ClientsPhonesEntity[];
+  @OneToMany(() => PhonesEntity, (phones) => phones.client)
+  phones?: PhonesEntity[];
 
   @OneToMany(() => PurchaseEntity, (purchases) => purchases.client)
   purchases?: PurchaseEntity[];

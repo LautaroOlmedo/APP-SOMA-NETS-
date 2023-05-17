@@ -18,7 +18,7 @@ import { ProductEntity } from '../../products/entities/product.entity';
 @Entity({ name: 'categories' })
 export class CategoryEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 25 })
-  category_name!: string;
+  categoryName!: string;
 
   // ---------- ---------- RELATIONS ---------- ----------
 

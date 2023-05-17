@@ -1,5 +1,5 @@
 ## Description
-
+APP SOMA es una aplicación web que contiene base de E-commerce, fácil para administrar tiendas, gestionar sus usuarios, clientes, proveedores, etc.. Esste es el backend de la App (EN DESARROLLO). 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
 ## Installation

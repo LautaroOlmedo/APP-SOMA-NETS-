@@ -17,7 +17,11 @@ import * as xl from 'excel4node';
 // ---------- ---------- ---------- ---------- ----------
 
 import { ProductService } from '../services/product.service';
-import { ProductDTO, UpdateProductDTO } from '../dto/product.dto';
+import {
+  ProductDTO,
+  ProductToStockDTO,
+  UpdateProductDTO,
+} from '../dto/product.dto';
 import { size, talle } from 'src/constants/enums';
 
 @Controller('products')
@@ -30,8 +34,16 @@ export class ProductController {
   }
   @Post('register')
   public async registerProduct(@Body() body: ProductDTO) {
-    const { productName, price, description, category, quantity, size, talle } =
-      body;
+    const {
+      productName,
+      price,
+      description,
+      category,
+      quantity,
+      size,
+      talle,
+      code,
+    } = body;
 
     let newSize: size;
     let newTalle: talle;
@@ -52,6 +64,7 @@ export class ProductController {
         size,
         talle,
         quantity,
+        code,
       );
     }
   }
@@ -69,6 +82,53 @@ export class ProductController {
         msg: 'ERROR',
       };
     }
+  }
+
+  @Post('register/II')
+  public async registerProductTEST(@Body() body: ProductDTO) {
+    const {
+      productName,
+      price,
+      description,
+      category,
+      quantity,
+      size,
+      talle,
+      code,
+      stock,
+    } = body;
+
+    let newSize: size;
+    let newTalle: talle;
+    size ? (newSize = size) : null;
+
+    talle ? (newTalle = talle) : null;
+    if (newSize && newTalle) {
+      return {
+        httpStatus: HttpStatus.CONFLICT,
+        msg: 'No puedes cargar propiedades de 2 productos distintos en uno',
+      };
+    } else {
+      return await this.productsService.createTESTfront(
+        price,
+        productName,
+        description,
+        category,
+        size,
+        talle,
+        quantity,
+        code,
+        stock,
+      );
+    }
+  }
+
+  // ---------- ----------  RELATIONS  ---------- ----------
+
+  @Post('add-to-stock')
+  public async addToStore(@Body() body: ProductToStockDTO) {
+    const { product, stock } = body;
+    return await this.productsService.relationToStock(product, stock);
   }
 
   @Get('cantidad_productos.xlsx')

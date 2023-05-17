@@ -4,10 +4,11 @@ import { Repository } from 'typeorm';
 // ---------- ---------- ---------- ---------- ----------
 
 import { PurchaseEntity } from '../entities/purchase.entity';
-import { paymentMethod, transactionStatus } from 'src/constants';
-import { ClientEntity } from 'src/clients/entities/client.entity';
-import { UserEntity } from 'src/users/entities/user.entity';
-import { ErrorManager } from 'src/utils/error.manager';
+import { paymentMethod, transactionStatus } from '../../constants';
+import { ClientEntity } from '../../clients/entities/client.entity';
+import { UserEntity } from '../../users/entities/user.entity';
+import { ErrorManager } from '../../utils/error.manager';
+import { StoreEntity } from '../../stores/entities/store.entity';
 
 @Injectable()
 export class PurchaseService {
@@ -35,6 +36,7 @@ export class PurchaseService {
   public async createPurchase(
     user: UserEntity,
     client: ClientEntity,
+    store: StoreEntity,
     paymentMethod: paymentMethod,
     status: transactionStatus,
   ): Promise<PurchaseEntity> {
@@ -42,6 +44,7 @@ export class PurchaseService {
       const newPurchase = this.purchaseRepository.create({
         user,
         client,
+        store,
         paymentMethod,
         status,
       });
