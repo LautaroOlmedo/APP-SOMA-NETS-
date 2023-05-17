@@ -2,9 +2,11 @@ import { Entity, Column, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { Min, Max } from 'class-validator';
 
 // ---------- ---------- ---------- ---------- ----------
+
 import { BaseEntity } from '../../config/base.entity';
 import { CategoryEntity } from '../../categories/entities/catogory.entity';
 import { PurchaseProductsEntity } from '../../purchases/entities/purchase-product.entity';
+import { size, talle } from '../../constants/enums';
 
 @Entity({ name: 'products' })
 export class ProductEntity extends BaseEntity {
@@ -16,11 +18,21 @@ export class ProductEntity extends BaseEntity {
 
   @Column({ type: 'integer' })
   @Min(9)
-  @Max(2500)
+  @Max(25000)
   price!: number;
 
-  // ---------- ---------- RELATIONS ---------- ----------
+  @Column({ type: 'enum', enum: size, nullable: true })
+  size: size;
 
+  @Column({ type: 'enum', enum: talle, nullable: true })
+  talle: talle;
+
+  @Column({ type: 'integer' })
+  @Min(10)
+  @Max(2500)
+  quantity: number;
+
+  // ---------- ---------- RELATIONS ---------- ----------
   @ManyToOne(() => CategoryEntity, (category) => category.products)
   @JoinColumn({ name: 'category_id' })
   category!: CategoryEntity;

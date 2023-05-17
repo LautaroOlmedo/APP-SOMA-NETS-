@@ -13,3 +13,17 @@ export enum transactionStatus {
 
   REJECTED = 'TREJECTED',
 }
+
+export enum size {
+  S = 'S',
+
+  L = 'L',
+
+  M = 'M',
+}
+
+export enum talle {
+  small = 41,
+  intermediate = 43,
+  bigger = 45,
+}

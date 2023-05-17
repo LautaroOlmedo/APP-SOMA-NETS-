@@ -22,7 +22,7 @@ export class DepartmentsService {
       await this.departmentRepository.find();
     const province: ProvinceEntity =
       await this.provincesService.findOneProvince(
-        'f4b9e285-e790-4c4b-8458-fa2e38d16e92',
+        'fa3d2dd1-cba0-4d8d-a1ad-ab8e4b483de6',
       );
     if (departments.length > 0) return 'Provinces already exists';
     mendozaDepartments.map(async (el) => {

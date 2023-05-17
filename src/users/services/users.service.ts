@@ -114,8 +114,8 @@ export class UsersService {
     try {
       password = await bcrypt.hash(password, +process.env.HASH_SALT);
       const newUser = this.userRepository.create({
-        firstname,
-        lastname,
+        firstname: firstname,
+        lastname: lastname,
         age,
         password,
         username,

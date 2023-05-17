@@ -30,7 +30,7 @@ export class UsersController {
   //@PublicAcces()
   @Get(':id')
   public async getUserById(@Param('id', ParseUUIDPipe) id: string) {
-    // A CHECJEAR EL PARSE
+    // A CHECKEAR EL PARSE
     return await this.usersService.findOneUser(id);
   }
 

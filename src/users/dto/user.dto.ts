@@ -62,10 +62,13 @@ export class UserDTO {
 
   @Expose()
   brand: BrandEntity;
+
   @Expose()
   country: CountryEntity;
+
   @Expose()
   province: ProvinceEntity;
+
   @Expose()
   department: DepartmentEntity;
 
