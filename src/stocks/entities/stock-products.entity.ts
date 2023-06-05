@@ -6,7 +6,7 @@ import { BaseEntity } from '../../config/base.entity';
 import { StockEntity } from './stock.entity';
 import { ProductEntity } from '../../products/entities/product.entity';
 
-@Entity({ name: 'stocks_prodcuts' })
+@Entity({ name: 'stocks_products' })
 export class StockProductsEntity extends BaseEntity {
   // ---------- ---------- RELATIONS ---------- ----------
 

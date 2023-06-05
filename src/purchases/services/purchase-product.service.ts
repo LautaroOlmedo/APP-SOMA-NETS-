@@ -22,7 +22,20 @@ export class PurchaseProductService {
   ) {}
 
   public async findAllPP(): Promise<PurchaseProductsEntity[]> {
-    return await this.purchaseProductRepository.find();
+    try {
+      const purchaseProducts: PurchaseProductsEntity[] =
+        await this.purchaseProductRepository.find();
+      if (purchaseProducts.length === 0) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No se encontró resultado',
+        });
+      }
+      return purchaseProducts;
+    } catch (e) {
+      console.log(e);
+      throw ErrorManager.createSignatureError(e.message);
+    }
   }
 
   async create(
