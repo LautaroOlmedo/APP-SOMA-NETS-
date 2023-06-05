@@ -53,15 +53,17 @@ export class UsersController {
       emails,
       phones,
     } = body;
+    console.log('USERNAME: ', username);
+
     return await this.usersService.createUser(
-      firstname,
       lastname,
+      firstname,
       age,
+      username,
       password,
-      dni,
       role,
       active,
-      username,
+      dni,
       direction,
       brand,
       department,

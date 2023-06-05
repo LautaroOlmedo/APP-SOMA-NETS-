@@ -112,20 +112,22 @@ export class UsersService {
     phones: string[],
   ): Promise<UserEntity> {
     try {
+      console.log('USERNAMEEE ', username);
+
       password = await bcrypt.hash(password, +process.env.HASH_SALT);
       const newUser = this.userRepository.create({
         firstname: firstname,
         lastname: lastname,
-        age,
-        password,
-        username,
-        role,
-        active,
-        dni,
-        brand,
-        department,
-        province,
-        country,
+        age: age,
+        password: password,
+        username: username,
+        role: role,
+        active: active,
+        dni: dni,
+        brand: brand,
+        department: department,
+        province: province,
+        country: country,
       });
 
       const newDirection = this.userDirectionRepository.create({ direction });
@@ -147,7 +149,7 @@ export class UsersService {
         newPhone.user = newUser;
         await this.phoneRepository.save(newPhone);
       }
-      return newUser;
+      return this.userRepository.save(newUser);
     } catch (e) {
       console.log(e);
       throw ErrorManager.createSignatureError(e.message);
