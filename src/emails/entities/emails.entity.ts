@@ -6,6 +6,7 @@ import { BaseEntity } from '../../config/base.entity';
 import { UserEntity } from '../../users/entities/user.entity';
 import { ClientEntity } from '../../clients/entities/client.entity';
 import { StoreEntity } from '../../stores/entities/store.entity';
+import { SupplierEntity } from '../../suppliers/entities/supplier.entity';
 
 @Entity({ name: 'emails' })
 export class EmailsEntity extends BaseEntity {
@@ -25,4 +26,8 @@ export class EmailsEntity extends BaseEntity {
   @ManyToOne(() => ClientEntity, (client) => client.emails)
   @JoinColumn({ name: 'client_id' })
   client?: ClientEntity;
+
+  @ManyToOne(() => SupplierEntity, (supplier) => supplier.phones)
+  @JoinColumn({ name: 'supplier_id' })
+  supplier?: SupplierEntity;
 }
