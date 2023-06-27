@@ -13,12 +13,12 @@ import { BaseEntity } from '../../config/base.entity';
 import { IStore } from '../../interfaces/store.interface';
 import { StoreUsersEntity } from './store-users.entity';
 import { BrandEntity } from '../../brands/entities/brand.entity';
-
 import { EmailsEntity } from '../../emails/entities/emails.entity';
 import { StoreClientsEntity } from './store-clients.entity';
 import { PhonesEntity } from '../../phones/entities/phones.entity';
 import { StockEntity } from '../../stocks/entities/stock.entity';
 import { PurchaseEntity } from '../../purchases/entities/purchase.entity';
+import { StoreSuppliersEntity } from './store-suppliers.entity';
 
 @Entity({ name: 'stores' })
 export class StoreEntity extends BaseEntity implements IStore {
@@ -32,6 +32,12 @@ export class StoreEntity extends BaseEntity implements IStore {
 
   @OneToMany(() => StoreClientsEntity, (storesClients) => storesClients.store)
   clientsIncludes: StoreClientsEntity[];
+
+  @OneToMany(
+    () => StoreSuppliersEntity,
+    (storesSupplier) => storesSupplier.store,
+  )
+  suppliersIncludes: StoreSuppliersEntity[];
 
   @OneToMany(() => EmailsEntity, (emails) => emails.store)
   emails?: EmailsEntity[];

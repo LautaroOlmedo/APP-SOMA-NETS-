@@ -12,6 +12,7 @@ import { StoreClientsEntity } from './entities/store-clients.entity';
 import { PhonesEntity } from 'src/phones/entities/phones.entity';
 import { StockEntity } from '.././stocks/entities/stock.entity';
 import { PurchaseEntity } from '.././purchases/entities/purchase.entity';
+import { StoreSuppliersEntity } from './entities/store-suppliers.entity';
 // import { PurchaseProductsEntity } from '.././purchases/entities/purchase-product.entity';
 
 @Global()
@@ -21,6 +22,7 @@ import { PurchaseEntity } from '.././purchases/entities/purchase.entity';
       StoreEntity,
       StoreUsersEntity,
       StoreClientsEntity,
+      StoreSuppliersEntity,
       EmailsEntity,
       PhonesEntity,
       StockEntity,
