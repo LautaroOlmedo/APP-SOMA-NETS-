@@ -47,80 +47,48 @@ export class ProductService {
     return await this.productRepository.findOneBy({ id });
   }
 
-  async create(
-    price: number,
-    description: string,
-    productName: string,
-    category: CategoryEntity,
-    size: size,
-    talle: talle,
-    quantity: number,
-    code: number,
-  ): Promise<ProductEntity | undefined> {
+  async create(body: ProductDTO): Promise<ProductEntity | undefined> {
     try {
-      let newProduct: ProductEntity;
-
-      if (size) {
-        newProduct = this.productRepository.create({
-          price,
-          description,
-          productName: productName,
-          category,
-          size: size,
-          code,
-        });
+      const { productName, price, description, code, size, category, stock } =
+        body;
+      //category: CategoryEntity;
+      //stock: StockEntity;
+      const newProduct = this.productRepository.create({
+        productName,
+        description,
+        price,
+        size,
+        code,
+        category,
+      });
+      if (this.validateProductAndStock(newProduct, stock)) {
+        return newProduct;
       } else {
-        newProduct = this.productRepository.create({
-          price,
-          description,
-          productName: productName,
-          category,
-          talle: talle,
-          code,
-        });
-      }
-      if (!newProduct) {
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
+          type: 'INTERNAL_SERVER_ERROR',
           message: 'No se pudo crear el producto',
         });
       }
-      return await this.productRepository.save(newProduct);
     } catch (e) {
       console.log(e);
     }
   }
 
-  async createTESTfront(
-    price: number,
-    description: string,
-    productName: string,
-    category: CategoryEntity,
-    size: size,
-    talle: talle,
-    quantity: number,
-    code: number,
+  private async validateProductAndStock(
+    product: ProductEntity,
     stock: StockEntity,
-  ) {
+  ): Promise<boolean> {
     try {
-      const myProd = await this.create(
-        price,
-        description,
-        productName,
-        category,
-        size,
-        talle,
-        quantity,
-        code,
-      );
-      const myStock: StockEntity | ErrorManager =
+      const findStock: StockEntity | ErrorManager =
         await this.stocksSerive.findOneStock(stock.id);
-      console.log(myStock);
-      await this.relationToStock(myProd, stock);
-      return myProd;
-    } catch (e) {
-      console.log(e);
-    }
+
+      if (findStock) {
+        await this.productRepository.save(product);
+        await this.relationToStock(product, stock);
+      }
+      return true;
+    } catch (e) {}
+    return false;
   }
 
   public async addProductStock(id: string, newQuantity: number) {

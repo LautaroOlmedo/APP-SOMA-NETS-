@@ -20,6 +20,12 @@ export enum size {
   L = 'L',
 
   M = 'M',
+
+  small = 41,
+
+  intermediate = 43,
+
+  bigger = 45,
 }
 
 export enum talle {

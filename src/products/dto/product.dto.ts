@@ -24,10 +24,12 @@ export class ProductDTO {
   @IsNotEmpty()
   price: number;
 
-  @Expose()
+  @IsNotEmpty()
+  @IsUUID()
   category: CategoryEntity;
 
-  @Expose()
+  @IsNotEmpty()
+  @IsUUID()
   stock: StockEntity;
 
   @IsNotEmpty()
