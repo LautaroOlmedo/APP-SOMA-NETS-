@@ -26,8 +26,8 @@ export class ProductEntity extends BaseEntity {
   @Column({ type: 'enum', enum: size, nullable: true })
   size: size;
 
-  @Column({ type: 'enum', enum: talle, nullable: true })
-  talle: talle;
+  // @Column({ type: 'enum', enum: talle, nullable: true })
+  // talle: talle;
 
   // @Column({ type: 'integer' })
   // @Min(10)

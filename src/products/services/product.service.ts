@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, UpdateResult } from 'typeorm';
+import { Repository, UpdateResult, DataSource } from 'typeorm';
 import * as ExcelJS from 'exceljs';
 
 // ---------- ---------- ---------- ---------- ----------
@@ -24,6 +24,7 @@ export class ProductService {
     private readonly stockProductsRepository: Repository<StockProductsEntity>,
 
     private readonly stocksSerive: StocksService,
+    private readonly dataSource: DataSource,
   ) {}
 
   async findAllProducts(): Promise<ProductEntity[]> {
@@ -47,80 +48,67 @@ export class ProductService {
     return await this.productRepository.findOneBy({ id });
   }
 
-  async create(
-    price: number,
-    description: string,
-    productName: string,
-    category: CategoryEntity,
-    size: size,
-    talle: talle,
-    quantity: number,
-    code: number,
-  ): Promise<ProductEntity | undefined> {
-    try {
-      let newProduct: ProductEntity;
+  async create(body: ProductDTO): Promise<ProductEntity | null> {
+    const { productName, price, description, code, size, category, stock } =
+      body;
 
-      if (size) {
-        newProduct = this.productRepository.create({
-          price,
-          description,
-          productName: productName,
-          category,
-          size: size,
-          code,
-        });
-      } else {
-        newProduct = this.productRepository.create({
-          price,
-          description,
-          productName: productName,
-          category,
-          talle: talle,
-          code,
-        });
-      }
-      if (!newProduct) {
+    const queryRunner = this.dataSource.createQueryRunner();
+
+    try {
+      const stockInDB: StockEntity | null =
+        await this.stocksSerive.findOneStock(stock);
+      queryRunner.connect();
+
+      if (!stock) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'No se pudo crear el producto',
+          message: 'No se encontró el stock',
         });
       }
-      return await this.productRepository.save(newProduct);
+
+      queryRunner.startTransaction();
+      const newProduct = this.productRepository.create({
+        productName,
+        description,
+        price,
+        size,
+        code,
+        category,
+      });
+      await this.productRepository.save(newProduct);
+      await this.relationToStock(newProduct, stockInDB);
+
+      await queryRunner.commitTransaction();
+      return newProduct;
     } catch (e) {
       console.log(e);
+      await queryRunner.rollbackTransaction();
+      throw new ErrorManager({
+        type: 'INTERNAL_SERVER_ERROR',
+        message: 'No se pudo crear el producto',
+      });
+    } finally {
+      await queryRunner.release();
     }
   }
 
-  async createTESTfront(
-    price: number,
-    description: string,
-    productName: string,
-    category: CategoryEntity,
-    size: size,
-    talle: talle,
-    quantity: number,
-    code: number,
+  private async validateProductAndStock(
+    product: ProductEntity,
     stock: StockEntity,
-  ) {
+  ): Promise<boolean> {
     try {
-      const myProd = await this.create(
-        price,
-        description,
-        productName,
-        category,
-        size,
-        talle,
-        quantity,
-        code,
-      );
-      const myStock: StockEntity | ErrorManager =
+      const findStock: StockEntity | ErrorManager =
         await this.stocksSerive.findOneStock(stock.id);
-      console.log(myStock);
-      await this.relationToStock(myProd, stock);
-      return myProd;
-    } catch (e) {
-      console.log(e);
-    }
+      if (findStock instanceof StockEntity) {
+        // MEJORAR ESTA VALIDACION
+        await this.productRepository.save(product);
+        await this.relationToStock(product, stock);
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {}
+    return false;
   }
 
   public async addProductStock(id: string, newQuantity: number) {

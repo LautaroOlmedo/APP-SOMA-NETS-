@@ -23,6 +23,8 @@ import {
   UpdateProductDTO,
 } from '../dto/product.dto';
 import { size, talle } from 'src/constants/enums';
+import { ErrorManager } from 'src/utils/error.manager';
+import { ProductEntity } from '../entities/product.entity';
 
 @Controller('products')
 export class ProductController {
@@ -32,40 +34,14 @@ export class ProductController {
   public async getAllPeroducts() {
     return await this.productsService.findAllProducts();
   }
+
   @Post('register')
   public async registerProduct(@Body() body: ProductDTO) {
-    const {
-      productName,
-      price,
-      description,
-      category,
-      quantity,
-      size,
-      talle,
-      code,
-    } = body;
-
-    let newSize: size;
-    let newTalle: talle;
-    size ? (newSize = size) : null;
-
-    talle ? (newTalle = talle) : null;
-    if (newSize && newTalle) {
-      return {
-        httpStatus: HttpStatus.CONFLICT,
-        msg: 'No puedes cargar propiedades de 2 productos distintos en uno',
-      };
+    const newProduct = await this.productsService.create(body);
+    if (newProduct) {
+      return newProduct;
     } else {
-      return await this.productsService.create(
-        price,
-        productName,
-        description,
-        category,
-        size,
-        talle,
-        quantity,
-        code,
-      );
+      return new Error('ERROR');
     }
   }
 
@@ -84,44 +60,44 @@ export class ProductController {
     }
   }
 
-  @Post('register/II')
-  public async registerProductTEST(@Body() body: ProductDTO) {
-    const {
-      productName,
-      price,
-      description,
-      category,
-      quantity,
-      size,
-      talle,
-      code,
-      stock,
-    } = body;
+  // @Post('register/II')
+  // public async registerProductTEST(@Body() body: ProductDTO) {
+  //   const {
+  //     productName,
+  //     price,
+  //     description,
+  //     category,
+  //     quantity,
+  //     size,
+  //     talle,
+  //     code,
+  //     stock,
+  //   } = body;
 
-    let newSize: size;
-    let newTalle: talle;
-    size ? (newSize = size) : null;
+  //   let newSize: size;
+  //   let newTalle: talle;
+  //   size ? (newSize = size) : null;
 
-    talle ? (newTalle = talle) : null;
-    if (newSize && newTalle) {
-      return {
-        httpStatus: HttpStatus.CONFLICT,
-        msg: 'No puedes cargar propiedades de 2 productos distintos en uno',
-      };
-    } else {
-      return await this.productsService.createTESTfront(
-        price,
-        productName,
-        description,
-        category,
-        size,
-        talle,
-        quantity,
-        code,
-        stock,
-      );
-    }
-  }
+  //   talle ? (newTalle = talle) : null;
+  //   if (newSize && newTalle) {
+  //     return {
+  //       httpStatus: HttpStatus.CONFLICT,
+  //       msg: 'No puedes cargar propiedades de 2 productos distintos en uno',
+  //     };
+  //   } else {
+  //     return await this.productsService.createTESTfront(
+  //       price,
+  //       productName,
+  //       description,
+  //       category,
+  //       size,
+  //       talle,
+  //       quantity,
+  //       code,
+  //       stock,
+  //     );
+  //   }
+  // }
 
   // ---------- ----------  RELATIONS  ---------- ----------
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 
 // ---------- ---------- ---------- ---------- ----------
 
@@ -14,16 +14,24 @@ export class StocksService {
   constructor(
     @InjectRepository(StockEntity)
     private readonly stockRepository: Repository<StockEntity>,
+    private readonly dataSource: DataSource,
   ) {}
 
-  public async findOneStock(id: string): Promise<StockEntity | ErrorManager> {
+  public async findOneStock(id: string): Promise<StockEntity | null> {
+    const queryRunner = this.dataSource.createQueryRunner();
     try {
+      //queryRunner.connect();
+
+      //const myStock = queryRunner.query(`SELECT * FROM stock where id=${id}`);
+
+      //queryRunner.startTransaction();
       const stock: StockEntity = await this.stockRepository.findOneBy({ id });
       if (!stock) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
           message: 'No se pudo crear el stock',
         });
+        // return null;
       }
       return stock;
     } catch (e) {
