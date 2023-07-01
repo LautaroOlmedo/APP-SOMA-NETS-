@@ -30,7 +30,7 @@ export class ProductDTO {
 
   @IsNotEmpty()
   @IsUUID()
-  stock: StockEntity;
+  stock: string;
 
   @IsNotEmpty()
   @IsInt()

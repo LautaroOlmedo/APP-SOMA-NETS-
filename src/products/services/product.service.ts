@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, UpdateResult } from 'typeorm';
+import { Repository, UpdateResult, DataSource } from 'typeorm';
 import * as ExcelJS from 'exceljs';
 
 // ---------- ---------- ---------- ---------- ----------
@@ -24,6 +24,7 @@ export class ProductService {
     private readonly stockProductsRepository: Repository<StockProductsEntity>,
 
     private readonly stocksSerive: StocksService,
+    private readonly dataSource: DataSource,
   ) {}
 
   async findAllProducts(): Promise<ProductEntity[]> {
@@ -47,12 +48,25 @@ export class ProductService {
     return await this.productRepository.findOneBy({ id });
   }
 
-  async create(body: ProductDTO): Promise<ProductEntity | undefined> {
+  async create(body: ProductDTO): Promise<ProductEntity | null> {
+    const { productName, price, description, code, size, category, stock } =
+      body;
+
+    const queryRunner = this.dataSource.createQueryRunner();
+
     try {
-      const { productName, price, description, code, size, category, stock } =
-        body;
-      //category: CategoryEntity;
-      //stock: StockEntity;
+      const stockInDB: StockEntity | null =
+        await this.stocksSerive.findOneStock(stock);
+      queryRunner.connect();
+
+      if (!stock) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No se encontró el stock',
+        });
+      }
+
+      queryRunner.startTransaction();
       const newProduct = this.productRepository.create({
         productName,
         description,
@@ -61,16 +75,20 @@ export class ProductService {
         code,
         category,
       });
-      if (this.validateProductAndStock(newProduct, stock)) {
-        return newProduct;
-      } else {
-        throw new ErrorManager({
-          type: 'INTERNAL_SERVER_ERROR',
-          message: 'No se pudo crear el producto',
-        });
-      }
+      await this.productRepository.save(newProduct);
+      await this.relationToStock(newProduct, stockInDB);
+
+      await queryRunner.commitTransaction();
+      return newProduct;
     } catch (e) {
       console.log(e);
+      await queryRunner.rollbackTransaction();
+      throw new ErrorManager({
+        type: 'INTERNAL_SERVER_ERROR',
+        message: 'No se pudo crear el producto',
+      });
+    } finally {
+      await queryRunner.release();
     }
   }
 
@@ -81,12 +99,14 @@ export class ProductService {
     try {
       const findStock: StockEntity | ErrorManager =
         await this.stocksSerive.findOneStock(stock.id);
-
-      if (findStock) {
+      if (findStock instanceof StockEntity) {
+        // MEJORAR ESTA VALIDACION
         await this.productRepository.save(product);
         await this.relationToStock(product, stock);
+        return true;
+      } else {
+        return false;
       }
-      return true;
     } catch (e) {}
     return false;
   }
