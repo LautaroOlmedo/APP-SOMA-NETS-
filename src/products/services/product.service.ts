@@ -92,25 +92,6 @@ export class ProductService {
     }
   }
 
-  private async validateProductAndStock(
-    product: ProductEntity,
-    stock: StockEntity,
-  ): Promise<boolean> {
-    try {
-      const findStock: StockEntity | ErrorManager =
-        await this.stocksSerive.findOneStock(stock.id);
-      if (findStock instanceof StockEntity) {
-        // MEJORAR ESTA VALIDACION
-        await this.productRepository.save(product);
-        await this.relationToStock(product, stock);
-        return true;
-      } else {
-        return false;
-      }
-    } catch (e) {}
-    return false;
-  }
-
   public async addProductStock(id: string, newQuantity: number) {
     // -----> CAMBIAR NOMBRE CON ACTUALIZA CANTIDAD (EN INGLES)
     try {
@@ -166,8 +147,13 @@ export class ProductService {
 
   // ---------- ----------  RELATIONS  ---------- ----------
 
-  public async relationToStock(product: ProductEntity, stock: StockEntity) {
+  public async relationToStock(
+    product: ProductEntity,
+    stock: StockEntity,
+  ): Promise<StockProductsEntity | ErrorManager> {
+    const queryRunner = this.dataSource.createQueryRunner();
     try {
+      queryRunner.connect();
       const productInStock = this.stockProductsRepository.create({
         product,
         stock,
@@ -178,10 +164,18 @@ export class ProductService {
           message: 'No se pudo guardar el producto',
         });
       }
-      return await this.stockProductsRepository.save(productInStock);
+
+      queryRunner.startTransaction();
+
+      await this.stockProductsRepository.save(productInStock);
+      await queryRunner.commitTransaction();
+      return productInStock;
     } catch (e) {
+      await queryRunner.rollbackTransaction();
       console.log(e);
       throw ErrorManager.createSignatureError(e.message);
+    } finally {
+      await queryRunner.release();
     }
   }
 }
