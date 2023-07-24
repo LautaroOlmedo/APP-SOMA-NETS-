@@ -6,9 +6,6 @@ import { StockProductsEntity } from './stock-products.entity';
 
 @Entity({ name: 'stock' })
 export class StockEntity extends BaseEntity {
-  @Column({ type: 'integer' })
-  availableQuantity: number;
-
   // ---------- ---------- RELATIONS ---------- ----------
 
   @OneToMany(() => StockProductsEntity, (stockProducts) => stockProducts.stock)

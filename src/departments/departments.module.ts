@@ -8,7 +8,7 @@ import { DepartmentsController } from './controllers/departments.controller';
 import { DepartmentEntity } from './entities/department.entity';
 import { ProvinceEntity } from '.././provinces/entities/province.entity';
 import { UserEntity } from '.././users/entities/user.entity';
-import { UserDirectionsEntity } from '.././directions/entities/user-directions.entity';
+import { DirectionsEntity } from 'src/directions/entities/directions.entity';
 import { ClientEntity } from '.././clients/entities/client.entity';
 
 @Global()
@@ -19,7 +19,7 @@ import { ClientEntity } from '.././clients/entities/client.entity';
       UserEntity,
       ClientEntity,
       ProvinceEntity,
-      UserDirectionsEntity,
+      DirectionsEntity,
     ]),
   ],
   controllers: [DepartmentsController],

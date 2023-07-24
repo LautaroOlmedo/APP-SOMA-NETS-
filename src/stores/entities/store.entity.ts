@@ -19,6 +19,7 @@ import { PhonesEntity } from '../../phones/entities/phones.entity';
 import { StockEntity } from '../../stocks/entities/stock.entity';
 import { PurchaseEntity } from '../../purchases/entities/purchase.entity';
 import { StoreSuppliersEntity } from './store-suppliers.entity';
+import { StoreWalletsEntity } from './store-wallet.entity';
 
 @Entity({ name: 'stores' })
 export class StoreEntity extends BaseEntity implements IStore {
@@ -32,6 +33,9 @@ export class StoreEntity extends BaseEntity implements IStore {
 
   @OneToMany(() => StoreClientsEntity, (storesClients) => storesClients.store)
   clientsIncludes: StoreClientsEntity[];
+
+  @OneToMany(() => StoreWalletsEntity, (storesWallet) => storesWallet.store)
+  walletsIncludes: StoreWalletsEntity[];
 
   @OneToMany(
     () => StoreSuppliersEntity,

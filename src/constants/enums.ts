@@ -34,4 +34,16 @@ export enum talle {
   bigger = 45,
 }
 
-export enum movement_in {}
+export enum movement_in {
+  inversion = 'INVERSION',
+}
+
+export enum wallet_type {
+  payPal = 'PAYPAL',
+  mercadoPago = 'Mercado Pago',
+}
+
+export enum wallet_tax {
+  payPal_tax = 3,
+  mercadoPago_tax = 4,
+}

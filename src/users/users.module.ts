@@ -9,14 +9,13 @@ import { UserEntity } from './entities/user.entity';
 import { StoreUsersEntity } from '.././stores/entities/store-users.entity';
 import { CountryEntity } from '.././countries/entities/country.entity';
 import { ProvinceEntity } from '.././provinces/entities/province.entity';
-import { UserDirectionsEntity } from '.././directions/entities/user-directions.entity';
 import { DepartmentEntity } from '.././departments/entities/department.entity';
 import { EmailsEntity } from '.././emails/entities/emails.entity';
-
 import { DirectionsModule } from '.././directions/directions.module';
 import { PhonesEntity } from '.././phones/entities/phones.entity';
 import { PurchaseEntity } from '.././purchases/entities/purchase.entity';
 import { StoreEntity } from '.././stores/entities/store.entity';
+import { DirectionsEntity } from '.././directions/entities/directions.entity';
 
 @Global()
 @Module({
@@ -28,7 +27,7 @@ import { StoreEntity } from '.././stores/entities/store.entity';
       CountryEntity,
       StoreEntity,
       StoreUsersEntity,
-      UserDirectionsEntity,
+      DirectionsEntity,
       EmailsEntity,
       PhonesEntity,
       PurchaseEntity,

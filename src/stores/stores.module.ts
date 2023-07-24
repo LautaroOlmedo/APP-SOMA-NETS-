@@ -14,6 +14,7 @@ import { StockEntity } from '.././stocks/entities/stock.entity';
 import { PurchaseEntity } from '.././purchases/entities/purchase.entity';
 import { StoreSuppliersEntity } from './entities/store-suppliers.entity';
 import { SupplierEntity } from 'src/suppliers/entities/supplier.entity';
+import { WalletEntity } from 'src/finances/entities/wallet.entity';
 // import { PurchaseProductsEntity } from '.././purchases/entities/purchase-product.entity';
 
 @Global()
@@ -29,6 +30,7 @@ import { SupplierEntity } from 'src/suppliers/entities/supplier.entity';
       PhonesEntity,
       StockEntity,
       PurchaseEntity,
+      WalletEntity,
     ]),
   ],
   controllers: [StoresController],

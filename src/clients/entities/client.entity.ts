@@ -18,6 +18,7 @@ import { StoreClientsEntity } from '../../stores/entities/store-clients.entity';
 import { PhonesEntity } from '../../phones/entities/phones.entity';
 import { EmailsEntity } from '../../emails/entities/emails.entity';
 import { PurchaseEntity } from '../../purchases/entities/purchase.entity';
+import { DirectionsEntity } from 'src/directions/entities/directions.entity';
 
 @Entity({ name: 'clients' })
 export class ClientEntity extends BaseEntity implements IClient {
@@ -45,9 +46,9 @@ export class ClientEntity extends BaseEntity implements IClient {
   //@JoinColumn({ name: 'brand_id' })
   //brand?: BrandEntity;
 
-  //@ManyToOne(() => UserDirectionsEntity, (direction) => direction.users)
-  //@JoinColumn({ name: 'direction_id' })
-  //direction!: UserDirectionsEntity;
+  @ManyToOne(() => DirectionsEntity, (direction) => direction.clients)
+  @JoinColumn({ name: 'direction_id' })
+  direction!: DirectionsEntity;
 
   @OneToMany(() => StoreClientsEntity, (storesClients) => storesClients.client)
   storesIncludes: StoreClientsEntity[];

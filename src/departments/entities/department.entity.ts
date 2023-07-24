@@ -5,8 +5,8 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../config/base.entity';
 import { UserEntity } from '../../users/entities/user.entity';
 import { ProvinceEntity } from '../../provinces/entities/province.entity';
-import { UserDirectionsEntity } from '../../directions/entities/user-directions.entity';
 import { ClientEntity } from '../../clients/entities/client.entity';
+import { DirectionsEntity } from 'src/directions/entities/directions.entity';
 
 @Entity({ name: 'departments' })
 export class DepartmentEntity extends BaseEntity {
@@ -24,8 +24,8 @@ export class DepartmentEntity extends BaseEntity {
   @OneToMany(() => ClientEntity, (clients) => clients.department)
   clients?: ClientEntity[];
 
-  @OneToMany(() => UserDirectionsEntity, (directions) => directions.department)
-  directions?: UserDirectionsEntity[];
+  @OneToMany(() => DirectionsEntity, (directions) => directions.department)
+  directions?: DirectionsEntity[];
 
   /*@OneToMany(() => StoreDirectionsEntity, (stores) => stores.department)
   storesDirection?: StoreDirectionsEntity[];*/

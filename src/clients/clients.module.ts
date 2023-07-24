@@ -13,6 +13,7 @@ import { DepartmentEntity } from '.././departments/entities/department.entity';
 import { PhonesEntity } from '.././phones/entities/phones.entity';
 import { EmailsEntity } from '.././emails/entities/emails.entity';
 import { PurchaseEntity } from '.././purchases/entities/purchase.entity';
+import { DirectionsEntity } from 'src/directions/entities/directions.entity';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { PurchaseEntity } from '.././purchases/entities/purchase.entity';
       ClientEntity,
       CountryEntity,
       DepartmentEntity,
+      DirectionsEntity,
       ProvinceEntity,
       StoreClientsEntity,
       PhonesEntity,

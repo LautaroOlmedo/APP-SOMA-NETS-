@@ -19,7 +19,7 @@ import { CountryEntity } from '../../countries/entities/country.entity';
 import { ProvinceEntity } from '../../provinces/entities/province.entity';
 import { DepartmentEntity } from '../../departments/entities/department.entity';
 import { EmailsEntity } from '../../emails/entities/emails.entity';
-import { UserDirectionsEntity } from '../../directions/entities/user-directions.entity';
+import { DirectionsEntity } from '../../directions/entities/directions.entity';
 import { PhonesEntity } from 'src/phones/entities/phones.entity';
 import { PurchaseEntity } from '../../purchases/entities/purchase.entity';
 
@@ -68,9 +68,9 @@ export class UserEntity extends BaseEntity implements IUser {
   @JoinColumn({ name: 'brand_id' })
   brand?: BrandEntity;
 
-  @ManyToOne(() => UserDirectionsEntity, (direction) => direction.users)
+  @ManyToOne(() => DirectionsEntity, (direction) => direction.users)
   @JoinColumn({ name: 'direction_id' })
-  direction!: UserDirectionsEntity;
+  direction!: DirectionsEntity;
 
   @ManyToOne(() => DepartmentEntity, (department) => department.users)
   @JoinColumn({ name: 'department_id' })

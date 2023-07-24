@@ -9,14 +9,9 @@ import { UserDTO, UserToStoreDTO, UserUpdateDTO } from '../dto/user.dto';
 import { UserEntity } from '../entities/user.entity';
 import { StoreUsersEntity } from 'src/stores/entities/store-users.entity';
 import { ErrorManager } from '../../utils/error.manager';
-import { UserDirectionsEntity } from '../../directions/entities/user-directions.entity';
-import { ROLES } from '../../constants/roles';
-import { BrandEntity } from '../../brands/entities/brand.entity';
-import { DepartmentEntity } from '../../departments/entities/department.entity';
-import { ProvinceEntity } from '../../provinces/entities/province.entity';
-import { CountryEntity } from '../../countries/entities/country.entity';
 import { EmailsEntity } from '../../emails/entities/emails.entity';
 import { PhonesEntity } from '../../phones/entities/phones.entity';
+import { DirectionsEntity } from 'src/directions/entities/directions.entity';
 
 @Injectable()
 export class UsersService {
@@ -25,8 +20,8 @@ export class UsersService {
     private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(StoreUsersEntity)
     private readonly storeUsersRepository: Repository<StoreUsersEntity>,
-    @InjectRepository(UserDirectionsEntity)
-    private readonly userDirectionRepository: Repository<UserDirectionsEntity>,
+    @InjectRepository(DirectionsEntity)
+    private readonly directionRepository: Repository<DirectionsEntity>,
     @InjectRepository(EmailsEntity)
     private readonly emailRepository: Repository<EmailsEntity>,
     @InjectRepository(PhonesEntity)
@@ -134,10 +129,12 @@ export class UsersService {
       queryRunner.connect();
       queryRunner.startTransaction();
 
-      const newDirection = this.userDirectionRepository.create({ direction });
+      const newDirection = this.directionRepository.create({ direction });
       newDirection.department = newUser.department;
-      await this.userDirectionRepository.save(newDirection);
+      await this.directionRepository.save(newDirection);
       newUser.direction = newDirection;
+
+      // ---> MODIFICAR EMAILS & PHONES
 
       await this.userRepository.save(newUser); // PARA CREAR UN NUEVO USUARIO Y LUEGO GUARDAR SUS EMAILS Y PHONES PRIMEROS LO GUARDAMOS
       for (let i = 0; i < emails.length; i++) {
@@ -153,6 +150,9 @@ export class UsersService {
         newPhone.user = newUser;
         await this.phoneRepository.save(newPhone);
       }
+
+      // ---> MODIFICAR EMAILS & PHONES
+
       await queryRunner.commitTransaction();
       return newUser;
     } catch (e) {
