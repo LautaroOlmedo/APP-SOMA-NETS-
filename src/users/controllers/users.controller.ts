@@ -36,42 +36,7 @@ export class UsersController {
 
   @Post('register')
   public async registerUser(@Body() body: UserDTO) {
-    const {
-      firstname,
-      lastname,
-      age,
-      password,
-      dni,
-      role,
-      active,
-      username,
-      direction,
-      brand,
-      department,
-      province,
-      country,
-      emails,
-      phones,
-    } = body;
-    console.log('USERNAME: ', username);
-
-    return await this.usersService.createUser(
-      lastname,
-      firstname,
-      age,
-      username,
-      password,
-      role,
-      active,
-      dni,
-      direction,
-      brand,
-      department,
-      province,
-      country,
-      emails,
-      phones,
-    );
+    return await this.usersService.createUser(body);
   }
 
   @Put('edit/:id')
@@ -92,8 +57,8 @@ export class UsersController {
 
   // ---------- ----------  RELATIONS  ---------- ----------
 
-  @Post('add-to-store')
-  public async addToStore(@Body() body: UserToStoreDTO) {
-    return await this.usersService.relationToStore(body);
-  }
+  // @Post('add-to-store')
+  // public async addToStore(@Body() body: UserToStoreDTO) {
+  //   return await this.usersService.relationToStore(body);
+  // }
 }

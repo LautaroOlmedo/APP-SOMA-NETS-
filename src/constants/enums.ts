@@ -33,3 +33,5 @@ export enum talle {
   intermediate = 43,
   bigger = 45,
 }
+
+export enum movement_in {}

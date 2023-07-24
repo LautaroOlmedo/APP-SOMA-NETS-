@@ -1,8 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { DataSource, DeleteResult, Repository, UpdateResult } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { last } from 'rxjs';
 
 // ---------- ---------- ---------- ---------- ----------
 
@@ -17,7 +16,7 @@ import { DepartmentEntity } from '../../departments/entities/department.entity';
 import { ProvinceEntity } from '../../provinces/entities/province.entity';
 import { CountryEntity } from '../../countries/entities/country.entity';
 import { EmailsEntity } from '../../emails/entities/emails.entity';
-import { PhonesEntity } from 'src/phones/entities/phones.entity';
+import { PhonesEntity } from '../../phones/entities/phones.entity';
 
 @Injectable()
 export class UsersService {
@@ -32,6 +31,7 @@ export class UsersService {
     private readonly emailRepository: Repository<EmailsEntity>,
     @InjectRepository(PhonesEntity)
     private readonly phoneRepository: Repository<PhonesEntity>,
+    private readonly dataSource: DataSource,
   ) {}
 
   public async findAllUsers(): Promise<UserEntity[]> {
@@ -94,26 +94,27 @@ export class UsersService {
     }
   }
 
-  public async createUser(
-    lastname: string,
-    firstname: string,
-    age: number,
-    username: string,
-    password: string,
-    role: ROLES,
-    active: boolean,
-    dni: string,
-    direction: string,
-    brand: BrandEntity,
-    department: DepartmentEntity,
-    province: ProvinceEntity,
-    country: CountryEntity,
-    emails: string[],
-    phones: string[],
-  ): Promise<UserEntity> {
+  public async createUser(body: UserDTO): Promise<UserEntity> {
+    let {
+      lastname,
+      firstname,
+      age,
+      username,
+      password,
+      role,
+      active,
+      dni,
+      direction,
+      brand,
+      department,
+      province,
+      country,
+      emails,
+      phones,
+      storesIncludes,
+    } = body;
+    const queryRunner = this.dataSource.createQueryRunner();
     try {
-      console.log('USERNAMEEE ', username);
-
       password = await bcrypt.hash(password, +process.env.HASH_SALT);
       const newUser = this.userRepository.create({
         firstname: firstname,
@@ -129,6 +130,9 @@ export class UsersService {
         province: province,
         country: country,
       });
+
+      queryRunner.connect();
+      queryRunner.startTransaction();
 
       const newDirection = this.userDirectionRepository.create({ direction });
       newDirection.department = newUser.department;
@@ -149,10 +153,14 @@ export class UsersService {
         newPhone.user = newUser;
         await this.phoneRepository.save(newPhone);
       }
-      return this.userRepository.save(newUser);
+      await queryRunner.commitTransaction();
+      return newUser;
     } catch (e) {
+      await queryRunner.rollbackTransaction();
       console.log(e);
       throw ErrorManager.createSignatureError(e.message);
+    } finally {
+      queryRunner.release();
     }
   }
 

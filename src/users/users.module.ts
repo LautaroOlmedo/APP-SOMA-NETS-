@@ -16,6 +16,7 @@ import { EmailsEntity } from '.././emails/entities/emails.entity';
 import { DirectionsModule } from '.././directions/directions.module';
 import { PhonesEntity } from '.././phones/entities/phones.entity';
 import { PurchaseEntity } from '.././purchases/entities/purchase.entity';
+import { StoreEntity } from '.././stores/entities/store.entity';
 
 @Global()
 @Module({
@@ -25,6 +26,7 @@ import { PurchaseEntity } from '.././purchases/entities/purchase.entity';
       DepartmentEntity,
       ProvinceEntity,
       CountryEntity,
+      StoreEntity,
       StoreUsersEntity,
       UserDirectionsEntity,
       EmailsEntity,

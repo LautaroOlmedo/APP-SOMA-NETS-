@@ -22,6 +22,7 @@ import { CountryEntity } from '../../countries/entities/country.entity';
 import { DepartmentEntity } from '../../departments/entities/department.entity';
 
 import { PhonesEntity } from 'src/phones/entities/phones.entity';
+import { StoreUsersEntity } from 'src/stores/entities/store-users.entity';
 
 export class UserDTO {
   @IsNotEmpty()
@@ -71,6 +72,9 @@ export class UserDTO {
 
   @Expose()
   department: DepartmentEntity;
+
+  @Expose()
+  storesIncludes: StoreUsersEntity[];
 
   emails: string[];
 
