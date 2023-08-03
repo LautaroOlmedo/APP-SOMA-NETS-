@@ -45,21 +45,6 @@ export class ProductController {
     }
   }
 
-  @Put('add-stock/:id')
-  public async addStock(
-    @Param('id') id: string,
-    @Body() body: UpdateProductDTO,
-  ) {
-    try {
-      const { quantity } = body;
-      return await this.productsService.addProductStock(id, quantity);
-    } catch (error) {
-      return {
-        msg: 'ERROR',
-      };
-    }
-  }
-
   // @Post('register/II')
   // public async registerProductTEST(@Body() body: ProductDTO) {
   //   const {
@@ -101,11 +86,11 @@ export class ProductController {
 
   // ---------- ----------  RELATIONS  ---------- ----------
 
-  @Post('add-to-stock')
-  public async addToStore(@Body() body: ProductToStockDTO) {
-    const { product, stock } = body;
-    return await this.productsService.relationToStock(product, stock);
-  }
+  // @Post('add-to-stock')
+  // public async addToStore(@Body() body: ProductToStockDTO) {
+  //   const { product, stock, quantity } = body;
+  //   return await this.productsService.relationToStock(product, stock, quantity);
+  // }
 
   @Get('cantidad_productos.xlsx')
   async descargarCantidadProductos(@Res() response: Response) {

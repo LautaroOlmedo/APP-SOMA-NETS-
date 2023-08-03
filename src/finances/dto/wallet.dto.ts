@@ -1,11 +1,20 @@
 import { Expose } from 'class-transformer';
+import {
+  IsDecimal,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 
 // ---------- ---------- ---------- ---------- ----------
 
 import { BrandEntity } from '../../brands/entities/brand.entity';
-import { wallet_type } from 'src/constants/enums';
-import { IsDecimal, IsEnum, IsNotEmpty, IsOptional } from 'class-validator';
+import { wallet_type } from '../../constants/enums';
 import { StoreWalletsEntity } from 'src/stores/entities/store-wallet.entity';
+import { WalletEntity } from '../entities/wallet.entity';
+import { StoreEntity } from 'src/stores/entities/store.entity';
 
 export class WalletDTO {
   @IsNotEmpty()
@@ -13,12 +22,25 @@ export class WalletDTO {
   walletType: wallet_type;
 
   @IsOptional()
-  @IsDecimal()
+  //@IsDecimal()
   totalAcount: number;
 
-  @Expose()
+  @IsNotEmpty()
+  //@IsString()
+  @IsUUID()
   brand: BrandEntity;
 
   @Expose()
-  storesIncludes: StoreWalletsEntity[];
+  //@IsUUID()
+  storesIncludes: StoreEntity;
+}
+
+export class StoreWalletDTO {
+  @IsNotEmpty()
+  @IsUUID()
+  wallet: WalletEntity;
+
+  @IsNotEmpty()
+  @IsUUID()
+  store: StoreEntity;
 }

@@ -3,7 +3,7 @@ import { BaseEntity } from '../../config/base.entity';
 import { WalletEntity } from '../../finances/entities/wallet.entity';
 import { StoreEntity } from './store.entity';
 
-@Entity()
+@Entity({ name: 'stores_wallets' })
 export class StoreWalletsEntity extends BaseEntity {
   // ---------- ---------- RELATIONS ---------- ----------
 

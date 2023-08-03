@@ -49,8 +49,16 @@ export class ProductService {
   }
 
   async create(body: ProductDTO): Promise<ProductEntity | null> {
-    const { productName, price, description, code, size, category, stock } =
-      body;
+    const {
+      productName,
+      price,
+      description,
+      code,
+      size,
+      category,
+      stock,
+      quantity,
+    } = body;
 
     const queryRunner = this.dataSource.createQueryRunner();
 
@@ -76,7 +84,7 @@ export class ProductService {
         category,
       });
       await this.productRepository.save(newProduct);
-      await this.relationToStock(newProduct, stockInDB);
+      await this.relationToStock(newProduct, stockInDB, quantity);
 
       await queryRunner.commitTransaction();
       return newProduct;
@@ -92,69 +100,18 @@ export class ProductService {
     }
   }
 
-  public async addProductStock(id: string, newQuantity: number) {
-    // -----> CAMBIAR NOMBRE CON ACTUALIZA CANTIDAD (EN INGLES)
-    try {
-      //   const prod: ProductEntity = await this.productRepository
-      //     .createQueryBuilder('prod')
-      //     .where({ id })
-      //     .getOne();
-      //   prod.quantity += newQuantity;
-      //   await this.productRepository.save(prod);
-      return false;
-    } catch (e) {
-      console.log(e);
-      throw ErrorManager.createSignatureError(e.message);
-    }
-  }
-
-  async actualizarCantidad(id: string, newQuantity: number) {
-    // const prod: ProductEntity = await this.productRepository
-    //   .createQueryBuilder('prod')
-    //   .where({ id })
-    //   .getOne();
-    // prod.quantity = newQuantity;
-    // await this.productRepository.update({ id: id }, { quantity: newQuantity });
-    return false;
-  }
-
-  async agregaCantidad(id: string, newQuantity: number) {
-    //   const prod: ProductEntity = await this.productRepository  // --------> INNECESARIO? REUTILIZACIÓN DE ACTUALIZA CANTIDAD?
-    //     .createQueryBuilder('prod')
-    //     .where({ id })
-    //     .getOne();
-    //   prod.quantity = newQuantity;
-    //   await this.productRepository.save(prod);
-    return false;
-  }
-
-  // ---------- ---------- EXCEL ---------- ----------
-
-  async generateExcelFile(productsCount: number) {
-    // Crear el nuevo libro de Excel
-    const workbook = new ExcelJS.Workbook();
-
-    // Crear una hoja de trabajo y establecer su nombre
-    const worksheet = workbook.addWorksheet('Cantidad de productos');
-
-    // Agregar los datos a la hoja de trabajo
-    worksheet.addRow(['Cantidad de productos']);
-    worksheet.addRow([productsCount]);
-
-    // Escribir el libro en un archivo
-    await workbook.xlsx.writeFile('cantidad_productos.xlsx');
-  }
-
   // ---------- ----------  RELATIONS  ---------- ----------
 
-  public async relationToStock(
+  private async relationToStock(
     product: ProductEntity,
     stock: StockEntity,
+    quantity: number,
   ): Promise<StockProductsEntity | ErrorManager> {
     const queryRunner = this.dataSource.createQueryRunner();
     try {
       queryRunner.connect();
       const productInStock = this.stockProductsRepository.create({
+        productInStock: quantity,
         product,
         stock,
       });

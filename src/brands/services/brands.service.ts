@@ -34,7 +34,7 @@ export class BrandsService {
     }
   }
 
-  public async findOneBrand(id: string): Promise<BrandEntity | undefined> {
+  public async findOneBrand(id: string): Promise<BrandEntity | null> {
     try {
       const brand: BrandEntity = await this.brandRepository
         .createQueryBuilder('brand')
@@ -43,10 +43,7 @@ export class BrandsService {
         .leftJoinAndSelect('brand.stores', 'store')
         .getOne();
       if (!brand) {
-        throw new ErrorManager({
-          type: 'NOT_FOUND',
-          message: 'No se encontró resultado',
-        });
+        return null;
       }
       return brand;
     } catch (e) {

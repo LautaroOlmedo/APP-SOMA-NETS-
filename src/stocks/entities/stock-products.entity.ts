@@ -9,7 +9,7 @@ import { ProductEntity } from '../../products/entities/product.entity';
 @Entity({ name: 'stocks_products' })
 export class StockProductsEntity extends BaseEntity {
   @Column({ type: 'integer', default: 10 })
-  productStock: number;
+  productInStock: number;
   // ---------- ---------- RELATIONS ---------- ----------
 
   @ManyToOne(() => ProductEntity, (product) => product.stocksIncludes)

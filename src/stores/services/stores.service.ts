@@ -48,7 +48,7 @@ export class StoresService {
     }
   }
 
-  async findOneStore(id: string): Promise<StoreEntity | undefined> {
+  async findOneStore(id: string): Promise<StoreEntity | null> {
     try {
       const store: StoreEntity = await this.storeRepository
         .createQueryBuilder('store')
@@ -61,14 +61,14 @@ export class StoresService {
         .leftJoinAndSelect('store.stock', 'stock')
         .leftJoinAndSelect('stock.productsIncludes', 'productsIncludes')
         .leftJoinAndSelect('productsIncludes.product', 'product')
+        //.leftJoinAndSelect('productsIncludes.product', 'product')
+        .leftJoinAndSelect('store.walletsIncludes', 'walletsIncludes')
+        .leftJoinAndSelect('walletsIncludes.wallet', 'wallet')
         .leftJoinAndSelect('store.emails', 'email')
         .leftJoinAndSelect('store.phones', 'phone')
         .getOne();
       if (!store) {
-        throw new ErrorManager({
-          type: 'BAD_REQUEST',
-          message: 'No se encontró resultado',
-        });
+        return null;
       }
       return store;
     } catch (e) {
@@ -138,5 +138,18 @@ export class StoresService {
       console.log(e);
       throw ErrorManager.createSignatureError(e.message);
     }
+  }
+
+  public async validateStores(stores: string[]): Promise<ErrorManager | null> {
+    for (let i = 0; i < stores.length; i++) {
+      let store = await this.findOneStore(stores[i]);
+      if (!store) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No se encontró la tienda',
+        });
+      }
+    }
+    return null;
   }
 }

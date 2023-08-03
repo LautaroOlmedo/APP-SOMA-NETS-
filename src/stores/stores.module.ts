@@ -30,7 +30,6 @@ import { WalletEntity } from 'src/finances/entities/wallet.entity';
       PhonesEntity,
       StockEntity,
       PurchaseEntity,
-      WalletEntity,
     ]),
   ],
   controllers: [StoresController],

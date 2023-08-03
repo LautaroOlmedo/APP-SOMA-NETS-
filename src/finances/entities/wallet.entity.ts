@@ -16,12 +16,12 @@ import { StoreWalletsEntity } from 'src/stores/entities/store-wallet.entity';
 
 @Entity({ name: 'wallet' })
 export class WalletEntity extends BaseEntity {
+  //@Column({ type: 'enum', enum: wallet_type })
   @Column()
-  @Column({ type: 'enum', enum: wallet_type, default: wallet_type.mercadoPago })
-  walletType: wallet_type;
+  walletType: string;
 
-  @Column({ default: 50000, type: 'decimal' })
-  totalAcount: number;
+  @Column()
+  totalAcount: number; 
 
   // ---------- ---------- RELATIONS ---------- ----------
 

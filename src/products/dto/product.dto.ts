@@ -63,4 +63,8 @@ export class ProductToStockDTO {
   @IsNotEmpty()
   @IsUUID()
   stock: StockEntity;
+
+  @IsNotEmpty()
+  @IsInt()
+  quantity: number;
 }

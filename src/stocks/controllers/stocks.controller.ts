@@ -22,8 +22,8 @@ export class StocksController {
   @Post('register')
   public async createStore(@Body() body: StockDTO) {
     try {
-      const { quantity, store } = body;
-      const newStore = await this.stocksService.createStock(quantity, store);
+      const { store } = body;
+      const newStore = await this.stocksService.createStock(store);
       return newStore;
     } catch (e) {
       console.log(e);

@@ -40,10 +40,10 @@ export class StocksService {
     }
   }
 
-  public async createStock(quantity: number, store: StoreEntity): Promise<any> {
+  public async createStock(store: StoreEntity): Promise<any> {
     try {
       const newStock = this.stockRepository.create({
-        availableQuantity: quantity,
+        //availableQuantity: quantity,
         store,
       });
       if (!newStock) {
