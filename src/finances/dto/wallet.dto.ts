@@ -18,8 +18,9 @@ import { StoreEntity } from 'src/stores/entities/store.entity';
 
 export class WalletDTO {
   @IsNotEmpty()
-  @IsEnum(wallet_type)
-  walletType: wallet_type;
+  //@IsEnum(wallet_type)
+  @IsString()
+  walletType: string;
 
   @IsOptional()
   //@IsDecimal()
@@ -30,9 +31,9 @@ export class WalletDTO {
   @IsUUID()
   brand: BrandEntity;
 
-  @Expose()
+  //@Expose()
   //@IsUUID()
-  storesIncludes: StoreEntity;
+  //storesIncludes: StoreEntity;
 }
 
 export class StoreWalletDTO {

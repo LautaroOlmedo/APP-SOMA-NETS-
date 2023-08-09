@@ -29,23 +29,11 @@ export class WalletService {
   public async createWallet(
     body: WalletDTO,
   ): Promise<WalletEntity | ErrorManager> {
-    let { brand, walletType, totalAcount, storesIncludes } = body;
+    let { brand, walletType, totalAcount } = body;
 
     const queryRunner = this.dataSource.createQueryRunner();
     queryRunner.startTransaction();
     try {
-      // if ((await this.storesService.validateStores(storesIncludes)) !== null) {
-      //   throw new ErrorManager({
-      //     type: 'BAD_REQUEST',
-      //     message: 'No se encontró la tienda',
-      //   });
-      // } else if ((await this.brandsService.findOneBrand(brand.id)) == null) {
-      //   throw new ErrorManager({
-      //     type: 'BAD_REQUEST',
-      //     message: 'No se encontró la marca',
-      //   });
-      // }
-
       const newWallet: WalletEntity = this.walletRepository.create({
         walletType: walletType,
         totalAcount: totalAcount,
@@ -69,13 +57,11 @@ export class WalletService {
     }
   }
 
-  public async relationToStore(
-    body: StoreWalletDTO,
-  ): Promise<ErrorManager | null> {
-    try {
-      await this.storeWalletsRepository.save(body);
+  // ---------- ----------  RELATIONS  ---------- ----------
 
-      return null;
+  public async relationToStore(body: StoreWalletDTO) {
+    try {
+      return await this.storeWalletsRepository.save(body);
     } catch (e) {
       console.log(e);
     }

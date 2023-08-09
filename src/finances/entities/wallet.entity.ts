@@ -14,14 +14,13 @@ import { BrandEntity } from 'src/brands/entities/brand.entity';
 import { wallet_type } from 'src/constants/enums';
 import { StoreWalletsEntity } from 'src/stores/entities/store-wallet.entity';
 
-@Entity({ name: 'wallet' })
+@Entity({ name: 'wallets' })
 export class WalletEntity extends BaseEntity {
-  //@Column({ type: 'enum', enum: wallet_type })
   @Column()
   walletType: string;
 
   @Column()
-  totalAcount: number; 
+  totalAcount: number;
 
   // ---------- ---------- RELATIONS ---------- ----------
 
@@ -30,5 +29,5 @@ export class WalletEntity extends BaseEntity {
   brand!: BrandEntity;
 
   @OneToMany(() => StoreWalletsEntity, (storesWallet) => storesWallet.wallet)
-  storesIncludes?: StoreWalletsEntity[];
+  storesIncludes: StoreWalletsEntity[];
 }
