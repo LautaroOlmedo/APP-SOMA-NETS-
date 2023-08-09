@@ -8,11 +8,21 @@ import { DataSourceConfig } from './config/data.source';
 import { UsersModule } from './users/users.module';
 import { BrandsModule } from './brands/brands.module';
 import { StoresModule } from './stores/stores.module';
-import { CountryModule } from './country/country.module';
-import { ProvinceModule } from './province/province.module';
-import { DepartmentModule } from './department/department.module';
-import { DirectionModule } from './direction/direction.module';
+import { CountriesModule } from './countries/countries.module';
 import { EmailsModule } from './emails/emails.module';
+import { AuthModule } from './auth/auth.module';
+import { ProvincesModule } from './provinces/provinces.module';
+import { DepartmentsModule } from './departments/departments.module';
+import { PhonesModule } from './phones/phones.module';
+import { DirectionsModule } from './directions/directions.module';
+import { ClientsModule } from './clients/clients.module';
+import { ProductsModule } from './products/products.module';
+import { CategoriesModule } from './categories/categories.module';
+import { StocksModule } from './stocks/stocks.module';
+import { PurchasesModule } from './purchases/purchases.module';
+import { SuppliersModule } from './suppliers/suppliers.module';
+import { FinancesModule } from './finances/finances.module';
+import { EmployeesModule } from './employees/employees.module';
 
 @Module({
   imports: [
@@ -24,11 +34,21 @@ import { EmailsModule } from './emails/emails.module';
     UsersModule,
     BrandsModule,
     StoresModule,
-    CountryModule,
-    ProvinceModule,
-    DepartmentModule,
-    DirectionModule,
+    CountriesModule,
     EmailsModule,
+    AuthModule,
+    ProvincesModule,
+    DepartmentsModule,
+    PhonesModule,
+    DirectionsModule,
+    ClientsModule,
+    ProductsModule,
+    CategoriesModule,
+    StocksModule,
+    PurchasesModule,
+    SuppliersModule,
+    FinancesModule,
+    EmployeesModule,
   ],
 })
 export class AppModule {}

@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { DataSource, DeleteResult, Repository, UpdateResult } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 // ---------- ---------- ---------- ---------- ----------
 
@@ -8,6 +9,9 @@ import { UserDTO, UserToStoreDTO, UserUpdateDTO } from '../dto/user.dto';
 import { UserEntity } from '../entities/user.entity';
 import { StoreUsersEntity } from 'src/stores/entities/store-users.entity';
 import { ErrorManager } from '../../utils/error.manager';
+import { EmailsEntity } from '../../emails/entities/emails.entity';
+import { PhonesEntity } from '../../phones/entities/phones.entity';
+import { DirectionsEntity } from 'src/directions/entities/directions.entity';
 
 @Injectable()
 export class UsersService {
@@ -16,11 +20,25 @@ export class UsersService {
     private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(StoreUsersEntity)
     private readonly storeUsersRepository: Repository<StoreUsersEntity>,
+    @InjectRepository(DirectionsEntity)
+    private readonly directionRepository: Repository<DirectionsEntity>,
+    @InjectRepository(EmailsEntity)
+    private readonly emailRepository: Repository<EmailsEntity>,
+    @InjectRepository(PhonesEntity)
+    private readonly phoneRepository: Repository<PhonesEntity>,
+    private readonly dataSource: DataSource,
   ) {}
 
   public async findAllUsers(): Promise<UserEntity[]> {
     try {
-      const users: UserEntity[] = await this.userRepository.find();
+      const users: UserEntity[] = await this.userRepository
+        .createQueryBuilder('user')
+        .leftJoinAndSelect('user.brand', 'brand')
+        .leftJoinAndSelect('user.storesIncludes', 'storesIncludes')
+        .leftJoinAndSelect('storesIncludes.store', 'store')
+        .leftJoinAndSelect('user.emails', 'email')
+        .leftJoinAndSelect('user.phones', 'phone')
+        .getMany();
       if (users.length === 0) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
@@ -39,6 +57,7 @@ export class UsersService {
       const user: UserEntity = await this.userRepository
         .createQueryBuilder('user')
         .where({ id })
+        .leftJoinAndSelect('user.brand', 'brand')
         .leftJoinAndSelect('user.storesIncludes', 'storesIncludes')
         .leftJoinAndSelect('storesIncludes.store', 'store')
         .getOne();
@@ -55,12 +74,93 @@ export class UsersService {
     }
   }
 
-  public async createUser(body: UserDTO): Promise<UserEntity> {
+  // METODO PARA LOGING DE AUTH
+  public async findBy({ key, value }: { key: keyof UserDTO; value: any }) {
     try {
-      return await this.userRepository.save(body);
+      const user: UserEntity = await this.userRepository
+        .createQueryBuilder('user')
+        .addSelect('user.password')
+        .where({ [key]: value })
+        .getOne();
+      return user;
     } catch (e) {
       console.log(e);
+      throw new ErrorManager.createSignatureError(e.message);
+    }
+  }
+
+  public async createUser(body: UserDTO): Promise<UserEntity> {
+    let {
+      lastname,
+      firstname,
+      age,
+      username,
+      password,
+      role,
+      active,
+      dni,
+      direction,
+      brand,
+      department,
+      province,
+      country,
+      emails,
+      phones,
+      storesIncludes,
+    } = body;
+    const queryRunner = this.dataSource.createQueryRunner();
+    try {
+      password = await bcrypt.hash(password, +process.env.HASH_SALT);
+      const newUser = this.userRepository.create({
+        firstname: firstname,
+        lastname: lastname,
+        age: age,
+        password: password,
+        username: username,
+        role: role,
+        active: active,
+        dni: dni,
+        brand: brand,
+        department: department,
+        province: province,
+        country: country,
+      });
+
+      queryRunner.connect();
+      queryRunner.startTransaction();
+
+      const newDirection = this.directionRepository.create({ direction });
+      newDirection.department = newUser.department;
+      await this.directionRepository.save(newDirection);
+      newUser.direction = newDirection;
+
+      // ---> MODIFICAR EMAILS & PHONES
+
+      await this.userRepository.save(newUser); // PARA CREAR UN NUEVO USUARIO Y LUEGO GUARDAR SUS EMAILS Y PHONES PRIMEROS LO GUARDAMOS
+      for (let i = 0; i < emails.length; i++) {
+        let newEmail = this.emailRepository.create({ email: emails[i] });
+        newEmail.user = newUser;
+        await this.emailRepository.save(newEmail);
+      }
+
+      for (let j = 0; j < phones.length; j++) {
+        let newPhone = this.phoneRepository.create({
+          phoneNumber: phones[j],
+        });
+        newPhone.user = newUser;
+        await this.phoneRepository.save(newPhone);
+      }
+
+      // ---> MODIFICAR EMAILS & PHONES
+
+      await queryRunner.commitTransaction();
+      return newUser;
+    } catch (e) {
+      await queryRunner.rollbackTransaction();
+      console.log(e);
       throw ErrorManager.createSignatureError(e.message);
+    } finally {
+      queryRunner.release();
     }
   }
 
