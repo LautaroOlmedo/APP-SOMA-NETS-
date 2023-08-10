@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 
@@ -6,11 +6,14 @@ import * as jwt from 'jsonwebtoken';
 
 import { UsersService } from 'src/users/services/users.service';
 import { UserEntity } from 'src/users/entities/user.entity';
-import { PayloadToken } from '../interfaces/auth.interface';
+import { IUseToken, PayloadToken } from '../interfaces/auth.interface';
+import { useToken, validateToken } from 'src/utils/use.token';
+import { ErrorManager } from 'src/utils/error.manager';
 
 @Injectable()
 export class AuthService {
   constructor(private readonly usersService: UsersService) {}
+
   public async validateUser(username: string, password: string) {
     const userByUsername = await this.usersService.findBy({
       key: 'username',
@@ -56,5 +59,19 @@ export class AuthService {
       }),
       user,
     };
+  }
+
+  public async activeTokenValidate(
+    token: string,
+  ): Promise<boolean | UnauthorizedException> {
+    const manageToken = validateToken(token);
+    if (typeof manageToken === 'string') {
+      throw new UnauthorizedException(manageToken);
+    }
+    if (manageToken == true) {
+      return true;
+    }
+
+    return false;
   }
 }
