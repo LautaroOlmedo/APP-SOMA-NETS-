@@ -12,3 +12,9 @@ export class AuthDTO implements AuthBody {
   @IsString()
   password: string;
 }
+
+export class ValidateTokenDTO {
+  @IsNotEmpty()
+  @IsString()
+  token: string;
+}

@@ -4,6 +4,7 @@ import { UserEntity } from 'src/users/entities/user.entity';
 export interface PayloadToken {
   sub: string;
   role: ROLES;
+  // exp: number;
 }
 
 export interface AuthBody {
