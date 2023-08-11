@@ -39,22 +39,17 @@ export class AuthController {
   @Roles('ADMIN')
   @Post('validateToken')
   public async validateToken(@Body() { token }: ValidateTokenDTO) {
-    console.log('token controller', token);
-    console.log('token controller typeof', typeof token);
-
     const data = await this.authService.activeTokenValidate(token);
-    if (typeof data === 'boolean') {
-      if (data === true) {
-        return {
-          status: 200,
-          tokenActive: true,
-        };
-      } else {
-        return {
-          status: 200,
-          tokenActive: false,
-        };
-      }
+    if (data === true) {
+      return {
+        status: 201,
+        tokenActive: true,
+      };
+    } else {
+      return {
+        status: 201,
+        tokenActive: false,
+      };
     }
   }
 }

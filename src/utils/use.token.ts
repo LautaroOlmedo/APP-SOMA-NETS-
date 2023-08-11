@@ -30,23 +30,21 @@ export const useToken = (token: string): IUseToken | string => {
   }
 };
 
-export const validateToken = (token: string) => {
-  // ---> PARSEAR A STRING EL ID
-  // ---> EN CASO DE FALLO CONTROLAR CORRECTAMENTE
-  console.log(token);
-
+export const validateToken = (token: string): boolean | string => {
   try {
     const decode = jwt.verify(
       token,
       configService.get('JWT_SECRET'),
     ) as AuthTokenResult;
-    console.log('ACAAAAAAAAAAAAAAAAAA', decode);
 
     const currentDate = new Date();
     const expiresDate = new Date(decode.exp * 1000);
     const isTokenValid = currentDate <= expiresDate;
     return isTokenValid;
   } catch (e) {
+    if (e instanceof jwt.TokenExpiredError) {
+      return false;
+    }
     console.log(e);
     return 'Token invalido';
   }
