@@ -5,6 +5,7 @@ import { StoreEntity } from './store.entity';
 
 @Entity({ name: 'stores_wallets' })
 export class StoreWalletsEntity extends BaseEntity {
+  
   // ---------- ---------- RELATIONS ---------- ----------
 
   @ManyToOne(() => WalletEntity, (wallet) => wallet.storesIncludes)

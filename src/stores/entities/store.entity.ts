@@ -34,7 +34,7 @@ export class StoreEntity extends BaseEntity implements IStore {
   @OneToMany(() => StoreClientsEntity, (storesClients) => storesClients.store)
   clientsIncludes: StoreClientsEntity[];
 
-  @OneToMany(() => StoreWalletsEntity, (storesWallet) => storesWallet.store)
+  @OneToMany(() => StoreWalletsEntity, (storesWallets) => storesWallets.store)
   walletsIncludes: StoreWalletsEntity[];
 
   @OneToMany(

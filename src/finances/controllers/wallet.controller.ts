@@ -21,10 +21,10 @@ import { StoreWalletDTO, WalletDTO } from '../dto/wallet.dto';
 @Controller('wallets')
 export class WalletController {
   constructor(private readonly walletService: WalletService) {}
-  // @Get('all')
-  // public async getAllWallets() {
-  //   return await this.walletService.findAllProducts();
-  // }
+  @Get('all')
+  public async getAllWallets() {
+    return await this.walletService.findAllWallets();
+  }
 
   @Post('register')
   public async registerProduct(@Body() body: WalletDTO) {
@@ -36,13 +36,10 @@ export class WalletController {
     }
   }
 
-  @Post('relationStore')
-  public async relationToStore(@Body() body: StoreWalletDTO) {
-    const resp = await this.walletService.relationToStore(body);
-    if (resp == null) {
-      return HttpStatus.CREATED;
-    } else {
-      return HttpStatus.INTERNAL_SERVER_ERROR;
-    }
+  // ---------- ----------  RELATIONS  ---------- ----------
+
+  @Post('storeWallet')
+  public async addToStore(@Body() body: StoreWalletDTO) {
+    return await this.walletService.relationToStore(body);
   }
 }

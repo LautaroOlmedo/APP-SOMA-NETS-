@@ -28,12 +28,7 @@ import { BrandsService } from '.././brands/services/brands.service';
     ]),
   ],
   controllers: [FinancesControllerController, WalletController],
-  providers: [
-    FinancesServicesService,
-    WalletService,
-    BrandsService,
-    StoresService,
-  ],
+  providers: [FinancesServicesService, WalletService],
   exports: [TypeOrmModule],
 })
 export class FinancesModule {}

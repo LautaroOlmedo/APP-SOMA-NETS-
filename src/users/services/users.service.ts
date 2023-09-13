@@ -52,7 +52,7 @@ export class UsersService {
     }
   }
 
-  public async findOneUser(id: string): Promise<UserEntity> {
+  public async findOneUser(id: string): Promise<UserEntity | null> {
     try {
       const user: UserEntity = await this.userRepository
         .createQueryBuilder('user')
@@ -89,13 +89,28 @@ export class UsersService {
     }
   }
 
+  public async findByDNI(DNI: string): Promise<UserEntity | null> {
+    try {
+      const user: UserEntity | null = await this.userRepository.findOneBy({
+        dni: DNI,
+      });
+      if (!user) {
+        return null;
+      } else {
+        return user;
+      }
+    } catch (e) {
+      console.log(e);
+      throw new ErrorManager.createSignatureError(e.message);
+    }
+  }
+
   public async createUser(body: UserDTO): Promise<UserEntity> {
-    let {
+    const {
       lastname,
       firstname,
       age,
       username,
-      password,
       role,
       active,
       dni,
@@ -106,10 +121,23 @@ export class UsersService {
       country,
       emails,
       phones,
-      storesIncludes,
     } = body;
+
+    let { password } = body;
+
     const queryRunner = this.dataSource.createQueryRunner();
     try {
+      queryRunner.connect();
+      queryRunner.startTransaction();
+      if (
+        (await this.findByDNI(dni)) === null ||
+        (await this.findByDNI(dni)).username === username
+      ) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'El usuario ya existe',
+        });
+      }
       password = await bcrypt.hash(password, +process.env.HASH_SALT);
       const newUser = this.userRepository.create({
         firstname: firstname,
@@ -126,9 +154,6 @@ export class UsersService {
         country: country,
       });
 
-      queryRunner.connect();
-      queryRunner.startTransaction();
-
       const newDirection = this.directionRepository.create({ direction });
       newDirection.department = newUser.department;
       await this.directionRepository.save(newDirection);
@@ -138,13 +163,13 @@ export class UsersService {
 
       await this.userRepository.save(newUser); // PARA CREAR UN NUEVO USUARIO Y LUEGO GUARDAR SUS EMAILS Y PHONES PRIMEROS LO GUARDAMOS
       for (let i = 0; i < emails.length; i++) {
-        let newEmail = this.emailRepository.create({ email: emails[i] });
+        const newEmail = this.emailRepository.create({ email: emails[i] });
         newEmail.user = newUser;
         await this.emailRepository.save(newEmail);
       }
 
       for (let j = 0; j < phones.length; j++) {
-        let newPhone = this.phoneRepository.create({
+        const newPhone = this.phoneRepository.create({
           phoneNumber: phones[j],
         });
         newPhone.user = newUser;

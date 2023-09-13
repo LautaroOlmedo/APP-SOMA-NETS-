@@ -11,23 +11,17 @@ import {
 // ---------- ---------- ---------- ---------- ----------
 
 import { BrandEntity } from '../../brands/entities/brand.entity';
-import { wallet_type } from '../../constants/enums';
+
 import { StoreWalletsEntity } from 'src/stores/entities/store-wallet.entity';
 import { WalletEntity } from '../entities/wallet.entity';
 import { StoreEntity } from 'src/stores/entities/store.entity';
 
 export class WalletDTO {
   @IsNotEmpty()
-  //@IsEnum(wallet_type)
   @IsString()
-  walletType: string;
-
-  @IsOptional()
-  //@IsDecimal()
-  totalAcount: number;
+  walletName: string;
 
   @IsNotEmpty()
-  //@IsString()
   @IsUUID()
   brand: BrandEntity;
 
