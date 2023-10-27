@@ -10,7 +10,7 @@ import { SupplierEntity } from '../../suppliers/entities/supplier.entity';
 
 @Entity({ name: 'emails' })
 export class EmailsEntity extends BaseEntity {
-  @Column()
+  @Column({ type: 'varchar' })
   email: string;
 
   // ---------- ----------  RELATIONS  ---------- ----------

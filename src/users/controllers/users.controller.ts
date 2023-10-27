@@ -25,21 +25,22 @@ import { query } from 'express';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Roles('ADMIN')
+  //@Roles('ADMIN')
+  @PublicAcces()
   @Get('all')
   async getAllUsers() {
     return await this.usersService.findAllUsers();
   }
 
-  //@PublicAcces()
+  @PublicAcces()
   @Get(':id')
   public async getUserById(@Param('id', ParseUUIDPipe) id: string) {
     // A CHECKEAR EL PARSE
     return await this.usersService.findOneUser(id);
   }
 
-  @Roles('ADMIN')
-  //@PublicAcces()
+  //@Roles('ADMIN')
+  @PublicAcces()
   @Post('register')
   public async registerUser(@Body() body: UserDTO) {
     return await this.usersService.createUser(body);

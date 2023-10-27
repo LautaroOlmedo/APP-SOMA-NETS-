@@ -9,9 +9,11 @@ import { UserDTO, UserToStoreDTO, UserUpdateDTO } from '../dto/user.dto';
 import { UserEntity } from '../entities/user.entity';
 import { StoreUsersEntity } from 'src/stores/entities/store-users.entity';
 import { ErrorManager } from '../../utils/error.manager';
-import { EmailsEntity } from '../../emails/entities/emails.entity';
-import { PhonesEntity } from '../../phones/entities/phones.entity';
+
 import { DirectionsEntity } from 'src/directions/entities/directions.entity';
+import { EmailService } from '../../emails/services/email.service';
+
+import { PhonesService } from 'src/phones/services/phones.service';
 
 @Injectable()
 export class UsersService {
@@ -22,10 +24,10 @@ export class UsersService {
     private readonly storeUsersRepository: Repository<StoreUsersEntity>,
     @InjectRepository(DirectionsEntity)
     private readonly directionRepository: Repository<DirectionsEntity>,
-    @InjectRepository(EmailsEntity)
-    private readonly emailRepository: Repository<EmailsEntity>,
-    @InjectRepository(PhonesEntity)
-    private readonly phoneRepository: Repository<PhonesEntity>,
+
+    private readonly emailsService: EmailService,
+    private readonly phonesService: PhonesService,
+
     private readonly dataSource: DataSource,
   ) {}
 
@@ -39,12 +41,12 @@ export class UsersService {
         .leftJoinAndSelect('user.emails', 'email')
         .leftJoinAndSelect('user.phones', 'phone')
         .getMany();
-      if (users.length === 0) {
-        throw new ErrorManager({
-          type: 'BAD_REQUEST',
-          message: 'No se encontró resultado',
-        });
-      }
+      // if (users.length === 0) {
+      //   throw new ErrorManager({
+      //     type: 'BAD_REQUEST',
+      //     message: 'No se encontró resultado',
+      //   });
+      // }
       return users;
     } catch (e) {
       console.log(e);
@@ -89,16 +91,23 @@ export class UsersService {
     }
   }
 
-  public async findByDNI(DNI: string): Promise<UserEntity | null> {
+  public async findByUniqueValues(
+    DNI: string,
+    email: string,
+    username: string,
+  ): Promise<UserEntity | null> {
     try {
-      const user: UserEntity | null = await this.userRepository.findOneBy({
-        dni: DNI,
+      const userAlreadyExists: UserEntity = await this.userRepository.findOne({
+        where: [{ dni: DNI }, { username }],
       });
-      if (!user) {
-        return null;
-      } else {
-        return user;
+
+      if (!userAlreadyExists) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'El usuario ya existe',
+        });
       }
+      return null;
     } catch (e) {
       console.log(e);
       throw new ErrorManager.createSignatureError(e.message);
@@ -129,15 +138,7 @@ export class UsersService {
     try {
       queryRunner.connect();
       queryRunner.startTransaction();
-      if (
-        (await this.findByDNI(dni)) === null ||
-        (await this.findByDNI(dni)).username === username
-      ) {
-        throw new ErrorManager({
-          type: 'BAD_REQUEST',
-          message: 'El usuario ya existe',
-        });
-      }
+
       password = await bcrypt.hash(password, +process.env.HASH_SALT);
       const newUser = this.userRepository.create({
         firstname: firstname,
@@ -162,21 +163,9 @@ export class UsersService {
       // ---> MODIFICAR EMAILS & PHONES
 
       await this.userRepository.save(newUser); // PARA CREAR UN NUEVO USUARIO Y LUEGO GUARDAR SUS EMAILS Y PHONES PRIMEROS LO GUARDAMOS
-      for (let i = 0; i < emails.length; i++) {
-        const newEmail = this.emailRepository.create({ email: emails[i] });
-        newEmail.user = newUser;
-        await this.emailRepository.save(newEmail);
-      }
 
-      for (let j = 0; j < phones.length; j++) {
-        const newPhone = this.phoneRepository.create({
-          phoneNumber: phones[j],
-        });
-        newPhone.user = newUser;
-        await this.phoneRepository.save(newPhone);
-      }
-
-      // ---> MODIFICAR EMAILS & PHONES
+      await this.emailsService.createUserEmail(emails, newUser);
+      await this.phonesService.createUserPhone(phones, newUser);
 
       await queryRunner.commitTransaction();
       return newUser;
