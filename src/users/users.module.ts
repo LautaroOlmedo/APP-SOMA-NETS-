@@ -11,15 +11,16 @@ import { CountryEntity } from '.././countries/entities/country.entity';
 import { ProvinceEntity } from '.././provinces/entities/province.entity';
 import { DepartmentEntity } from '.././departments/entities/department.entity';
 import { EmailsEntity } from '.././emails/entities/emails.entity';
-import { DirectionsModule } from '.././directions/directions.module';
+
 import { PhonesEntity } from '.././phones/entities/phones.entity';
 import { PurchaseEntity } from '.././purchases/entities/purchase.entity';
 import { StoreEntity } from '.././stores/entities/store.entity';
 import { DirectionsEntity } from '.././directions/entities/directions.entity';
 import { EmailService } from '.././emails/services/email.service';
-import { EmailsModule } from '.././emails/emails.module';
+
 import { PhonesService } from '.././phones/services/phones.service';
-import { PhonesModule } from 'src/phones/phones.module';
+
+import { DirectionsService } from '.././directions/services/directions.service';
 
 @Global()
 @Module({
@@ -36,12 +37,12 @@ import { PhonesModule } from 'src/phones/phones.module';
       PhonesEntity,
       PurchaseEntity,
     ]),
-    DirectionsModule,
-    PhonesModule,
-    EmailsModule,
+    //DirectionsModule,
+    //PhonesModule,
+    //EmailsModule,
   ],
   controllers: [UsersController],
-  providers: [UsersService, EmailService, PhonesService], //UserDirectionsService],
+  providers: [UsersService, EmailService, PhonesService, DirectionsService], //UserDirectionsService],
   exports: [TypeOrmModule, UsersService],
 })
 export class UsersModule {}

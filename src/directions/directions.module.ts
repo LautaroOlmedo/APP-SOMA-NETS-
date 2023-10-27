@@ -7,11 +7,11 @@ import { StoreDirectionsController } from './controllers/store-directions.contro
 import { UserDirectionsController } from './controllers/user-directions.controller';
 import { UserEntity } from '.././users/entities/user.entity';
 import { DepartmentEntity } from '.././departments/entities/department.entity';
-import { DepartmentsService } from '.././departments/services/departments.service';
 import { ClientEntity } from '.././clients/entities/client.entity';
-import { DirectionService } from './services/direction.service';
 import { DirectionsEntity } from './entities/directions.entity';
+import { DirectionsService } from './services/directions.service';
 
+@Global()
 @Module({
   imports: [
     TypeOrmModule.forFeature([
@@ -21,8 +21,8 @@ import { DirectionsEntity } from './entities/directions.entity';
       DepartmentEntity,
     ]),
   ],
-  controllers: [StoreDirectionsController, UserDirectionsController],
-  exports: [TypeOrmModule],
-  providers: [DirectionService],
+  controllers: [StoreDirectionsController],
+  providers: [DirectionsService],
+  exports: [TypeOrmModule, DirectionsService],
 })
 export class DirectionsModule {}

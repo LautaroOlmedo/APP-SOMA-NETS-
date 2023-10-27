@@ -16,29 +16,6 @@ export class EmailService {
     private readonly dataSource: DataSource,
   ) {}
 
-  // public async createEmail(emailDTO: EmailDTO): Promise<null | ErrorManager> {
-  //   const { email, user, clientID, storeID, supplierID } = emailDTO;
-  //   try {
-  //     if (user) {
-  //       await this.createUserEmail(email, user);
-  //     } else if (clientID) {
-  //       await this.createClientEmail(email, clientID);
-  //     } else if (storeID) {
-  //       await this.createStoreEmail(email, storeID);
-  //     } else {
-  //       await this.createSupplierEmail(email, supplierID);
-  //     }
-
-  //     return null;
-  //   } catch (e) {
-  //     console.log(e);
-  //     throw new ErrorManager({
-  //       type: 'INTERNAL_SERVER_ERROR',
-  //       message: 'Error al crear el email',
-  //     });
-  //   }
-  // }
-
   public async createUserEmail(
     emails: string[],
     user: UserEntity,

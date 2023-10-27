@@ -10,10 +10,9 @@ import { UserEntity } from '../entities/user.entity';
 import { StoreUsersEntity } from 'src/stores/entities/store-users.entity';
 import { ErrorManager } from '../../utils/error.manager';
 
-import { DirectionsEntity } from 'src/directions/entities/directions.entity';
 import { EmailService } from '../../emails/services/email.service';
-
-import { PhonesService } from 'src/phones/services/phones.service';
+import { PhonesService } from '../../phones/services/phones.service';
+import { DirectionsService } from '../../directions/services/directions.service';
 
 @Injectable()
 export class UsersService {
@@ -22,11 +21,10 @@ export class UsersService {
     private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(StoreUsersEntity)
     private readonly storeUsersRepository: Repository<StoreUsersEntity>,
-    @InjectRepository(DirectionsEntity)
-    private readonly directionRepository: Repository<DirectionsEntity>,
 
     private readonly emailsService: EmailService,
     private readonly phonesService: PhonesService,
+    private readonly directionsService: DirectionsService,
 
     private readonly dataSource: DataSource,
   ) {}
@@ -93,28 +91,29 @@ export class UsersService {
 
   public async findByUniqueValues(
     DNI: string,
-    email: string,
     username: string,
-  ): Promise<UserEntity | null> {
+    emails: string[],
+    phones: string[],
+  ): Promise<boolean | null> {
     try {
       const userAlreadyExists: UserEntity = await this.userRepository.findOne({
         where: [{ dni: DNI }, { username }],
       });
 
-      if (!userAlreadyExists) {
+      if (userAlreadyExists) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
           message: 'El usuario ya existe',
         });
       }
-      return null;
+      return true;
     } catch (e) {
       console.log(e);
       throw new ErrorManager.createSignatureError(e.message);
     }
   }
 
-  public async createUser(body: UserDTO): Promise<UserEntity> {
+  public async createUser(body: UserDTO): Promise<void | ErrorManager> {
     const {
       lastname,
       firstname,
@@ -133,6 +132,18 @@ export class UsersService {
     } = body;
 
     let { password } = body;
+    const validate = await this.findByUniqueValues(
+      dni,
+      username,
+      emails,
+      phones,
+    );
+    if (!validate) {
+      throw new ErrorManager({
+        type: 'BAD_REQUEST',
+        message: 'El usuario ya existe',
+      });
+    }
 
     const queryRunner = this.dataSource.createQueryRunner();
     try {
@@ -140,6 +151,7 @@ export class UsersService {
       queryRunner.startTransaction();
 
       password = await bcrypt.hash(password, +process.env.HASH_SALT);
+
       const newUser = this.userRepository.create({
         firstname: firstname,
         lastname: lastname,
@@ -155,20 +167,20 @@ export class UsersService {
         country: country,
       });
 
-      const newDirection = this.directionRepository.create({ direction });
-      newDirection.department = newUser.department;
-      await this.directionRepository.save(newDirection);
-      newUser.direction = newDirection;
+      const userDirection = await this.directionsService.createUserDirection(
+        direction,
+        department,
+      );
 
-      // ---> MODIFICAR EMAILS & PHONES
+      newUser.direction = userDirection;
 
-      await this.userRepository.save(newUser); // PARA CREAR UN NUEVO USUARIO Y LUEGO GUARDAR SUS EMAILS Y PHONES PRIMEROS LO GUARDAMOS
+      await this.userRepository.save(newUser);
 
       await this.emailsService.createUserEmail(emails, newUser);
       await this.phonesService.createUserPhone(phones, newUser);
 
       await queryRunner.commitTransaction();
-      return newUser;
+      return;
     } catch (e) {
       await queryRunner.rollbackTransaction();
       console.log(e);
