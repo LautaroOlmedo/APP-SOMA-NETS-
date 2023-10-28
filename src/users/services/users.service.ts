@@ -5,9 +5,9 @@ import * as bcrypt from 'bcrypt';
 
 // ---------- ---------- ---------- ---------- ----------
 
-import { UserDTO, UserToStoreDTO, UserUpdateDTO } from '../dto/user.dto';
+import { UserDTO, UserUpdateDTO } from '../dto/user.dto';
 import { UserEntity } from '../entities/user.entity';
-import { StoreUsersEntity } from 'src/stores/entities/store-users.entity';
+
 import { ErrorManager } from '../../utils/error.manager';
 
 import { EmailService } from '../../emails/services/email.service';
@@ -19,8 +19,6 @@ export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-    @InjectRepository(StoreUsersEntity)
-    private readonly storeUsersRepository: Repository<StoreUsersEntity>,
 
     private readonly emailsService: EmailService,
     private readonly phonesService: PhonesService,
@@ -89,7 +87,7 @@ export class UsersService {
     }
   }
 
-  public async findByUniqueValues(
+  private async findByUniqueValues(
     DNI: string,
     username: string,
     emails: string[],
@@ -226,13 +224,4 @@ export class UsersService {
   }
 
   // ---------- ----------  RELATIONS  ---------- ----------
-
-  public async relationToStore(body: UserToStoreDTO) {
-    try {
-      return await this.storeUsersRepository.save(body);
-    } catch (e) {
-      console.log(e);
-      throw ErrorManager.createSignatureError(e.message);
-    }
-  }
 }

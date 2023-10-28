@@ -45,8 +45,19 @@ export class DirectionsService {
     }
   }
 
-  private async findOneDirection(id: string) {
+  private async findByUniqueValues(direction: string) {
     try {
+      const directionAlreadyExists: DirectionsEntity =
+        await this.directionRepository.findOne({
+          where: [{ direction }],
+        });
+      if (directionAlreadyExists) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'La dirección ya existe',
+        });
+      }
+      return true;
     } catch (e) {
       throw new ErrorManager({
         type: 'INTERNAL_SERVER_ERROR',

@@ -13,7 +13,7 @@ import {
 // ---------- ---------- ---------- ---------- ----------
 
 import { UsersService } from '../services/users.service';
-import { UserDTO, UserToStoreDTO, UserUpdateDTO } from '../dto/user.dto';
+import { UserDTO, UserUpdateDTO } from '../dto/user.dto';
 import { PublicAcces } from 'src/auth/decorators/public.decorator';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
@@ -60,12 +60,5 @@ export class UsersController {
     console.log(id);
 
     return await this.usersService.deleteUser(id);
-  }
-
-  // ---------- ----------  RELATIONS  ---------- ----------
-
-  @Post('add-to-store')
-  public async addToStore(@Body() body: UserToStoreDTO) {
-    return await this.usersService.relationToStore(body);
   }
 }

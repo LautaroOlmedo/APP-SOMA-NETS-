@@ -12,10 +12,15 @@ import {
 
 import { StoresService } from '../services/stores.service';
 import { StoreDTO, StoreUpdateDTO } from '../dto/store.dto';
+import { UserToStoreDTO } from '../dto/store-user.dto';
+import { StoreUsersService } from '../services/store-users.service';
 
 @Controller('stores')
 export class StoresController {
-  constructor(private readonly storesService: StoresService) {}
+  constructor(
+    private readonly storesService: StoresService,
+    private readonly storeUsersService: StoreUsersService,
+  ) {}
 
   @Get('all')
   async getAllStores() {
@@ -36,6 +41,11 @@ export class StoresController {
       emails,
       phones,
     );
+  }
+
+  @Post('add-to-store')
+  public async addToStore(@Body() body: UserToStoreDTO) {
+    return await this.storeUsersService.relationToStore(body);
   }
 
   @Put('edit/:id')
