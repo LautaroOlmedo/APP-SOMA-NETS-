@@ -43,7 +43,12 @@ export class UsersController {
   @PublicAcces()
   @Post('register')
   public async registerUser(@Body() body: UserDTO) {
-    return await this.usersService.createUser(body);
+    const validate = await this.usersService.findByUniqueValues(body);
+    if (validate) {
+      return await this.usersService.createUser(body);
+    } else {
+      return validate;
+    }
   }
 
   @Put('edit/:id')

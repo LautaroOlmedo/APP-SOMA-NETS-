@@ -6,16 +6,6 @@ import {
   OneToMany,
   OneToOne,
 } from 'typeorm';
-import {
-  IsNotEmpty,
-  IsString,
-  IsEmail,
-  IsInt,
-  Min,
-  Max,
-  MinLength,
-  MaxLength,
-} from 'class-validator';
 
 // ---------- ---------- ---------- ---------- ----------
 

@@ -5,7 +5,31 @@ import { DataSource, Repository } from 'typeorm';
 // ---------- ---------- ---------- ---------- ----------
 
 import { ErrorManager } from '../../utils/error.manager';
-import { StoreWalletsEntity } from '../../stores/entities/store-wallet.entity';
+import { WalletEntity } from '../entities/wallet.entity';
 
 @Injectable()
-export class WalletService {}
+export class WalletService {
+  constructor(
+    @InjectRepository(WalletEntity)
+    private readonly walletRepository: Repository<WalletEntity>,
+    private readonly dataSource: DataSource,
+  ) {}
+
+  public async findAllWallets() {}
+
+  public async createWallet() {
+    const queryRunner = this.dataSource.createQueryRunner();
+    try {
+      queryRunner.connect();
+      queryRunner.startTransaction();
+
+      await queryRunner.commitTransaction();
+    } catch (e) {
+      await queryRunner.rollbackTransaction();
+      console.log(e);
+      throw ErrorManager.createSignatureError(e.message);
+    } finally {
+      queryRunner.release();
+    }
+  }
+}

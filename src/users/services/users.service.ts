@@ -87,21 +87,19 @@ export class UsersService {
     }
   }
 
-  private async findByUniqueValues(
-    DNI: string,
-    username: string,
-    emails: string[],
-    phones: string[],
-  ): Promise<boolean | null> {
+  public async findByUniqueValues(
+    body: UserDTO,
+  ): Promise<boolean | ErrorManager> {
+    const { dni, username } = body;
     try {
       const userAlreadyExists: UserEntity = await this.userRepository.findOne({
-        where: [{ dni: DNI }, { username }],
+        where: [{ dni }, { username }],
       });
 
       if (userAlreadyExists) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'El usuario ya existe',
+          message: 'DNI o USERNAME en uso',
         });
       }
       return true;
@@ -130,18 +128,6 @@ export class UsersService {
     } = body;
 
     let { password } = body;
-    const validate = await this.findByUniqueValues(
-      dni,
-      username,
-      emails,
-      phones,
-    );
-    if (!validate) {
-      throw new ErrorManager({
-        type: 'BAD_REQUEST',
-        message: 'El usuario ya existe',
-      });
-    }
 
     const queryRunner = this.dataSource.createQueryRunner();
     try {
