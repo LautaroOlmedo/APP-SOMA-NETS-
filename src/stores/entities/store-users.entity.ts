@@ -11,7 +11,9 @@ import { ACCESS_LEVEL } from '../../constants/roles';
 export class StoreUsersEntity extends BaseEntity {
   @Column({ type: 'enum', enum: ACCESS_LEVEL })
   accesLevel: ACCESS_LEVEL;
+
   // ---------- ---------- RELATIONS ---------- ----------
+  
   @ManyToOne(() => UserEntity, (user) => user.storesIncludes)
   user: UserEntity;
 

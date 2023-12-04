@@ -1,29 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository } from 'typeorm';
+import { Repository, DataSource } from 'typeorm';
 
 // ---------- ---------- ---------- ---------- ----------
 
-import { StoreUsersEntity } from '../entities/store-users.entity';
-import { UserToStoreDTO } from '../dto/store-user.dto';
+import { StoreWalletsEntity } from '../entities/store-wallets.entity';
 import { ErrorManager } from '../../utils/error.manager';
+import { WalletToStoreDTO } from '../dto/store-wallet.dto';
+
 @Injectable()
-export class StoreUsersService {
+export class StoreWalletsService {
   constructor(
-    @InjectRepository(StoreUsersEntity)
-    private readonly storeUsersRepository: Repository<StoreUsersEntity>,
+    @InjectRepository(StoreWalletsEntity)
+    private readonly storeWalletService: Repository<StoreWalletsEntity>,
 
     private readonly dataSource: DataSource,
   ) {}
 
   public async relationToStore(
-    body: UserToStoreDTO,
+    body: WalletToStoreDTO,
   ): Promise<void | ErrorManager> {
     const queryRunner = this.dataSource.createQueryRunner();
     try {
       queryRunner.connect();
       queryRunner.startTransaction();
-      await this.storeUsersRepository.save(body);
+
+      await this.storeWalletService.save(body);
+
       await queryRunner.commitTransaction();
       return;
     } catch (e) {

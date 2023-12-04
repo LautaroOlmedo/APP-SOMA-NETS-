@@ -11,8 +11,8 @@ import { StoreEntity } from 'src/stores/entities/store.entity';
 
 @Entity({ name: 'directions' })
 export class DirectionsEntity extends BaseEntity {
-  @Column()
-  direction: string;
+  @Column({ nullable: false }) // ---> unique?
+  direction!: string;
 
   // ---------- ----------  RELATIONS  ---------- ----------
 

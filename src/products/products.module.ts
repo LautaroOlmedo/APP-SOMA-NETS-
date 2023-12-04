@@ -10,7 +10,8 @@ import { ProductService } from './services/product.service';
 import { ProductController } from './controllers/product.controller';
 import { StockEntity } from '.././stocks/entities/stock.entity';
 import { StocksService } from '.././stocks/services/stocks.service';
-import { StockProductsEntity } from 'src/stocks/entities/stock-products.entity';
+import { StockProductsEntity } from '../stocks/entities/stock-products.entity';
+import { StockProductsService } from '.././stocks/services/stock-products.service';
 
 @Global()
 @Module({
@@ -20,11 +21,10 @@ import { StockProductsEntity } from 'src/stocks/entities/stock-products.entity';
       CategoryEntity,
       PurchaseProductsEntity,
       StockEntity,
-      StockProductsEntity,
     ]),
   ],
   controllers: [ProductController],
-  providers: [ProductService, StocksService],
+  providers: [ProductService, StocksService, StockProductsService],
 
   exports: [TypeOrmModule, ProductService],
 })

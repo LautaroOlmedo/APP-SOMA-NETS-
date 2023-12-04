@@ -114,17 +114,3 @@ export class UserUpdateDTO {
   @IsBoolean()
   active: boolean;
 }
-
-export class UserToStoreDTO {
-  @IsNotEmpty()
-  @IsEnum(ACCESS_LEVEL)
-  accesLevel: ACCESS_LEVEL;
-
-  @IsNotEmpty()
-  @IsUUID()
-  user: UserEntity;
-
-  @IsNotEmpty()
-  @IsUUID()
-  store: StoreEntity;
-}

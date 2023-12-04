@@ -12,10 +12,18 @@ import {
 
 import { StoresService } from '../services/stores.service';
 import { StoreDTO, StoreUpdateDTO } from '../dto/store.dto';
+import { UserToStoreDTO } from '../dto/store-user.dto';
+import { StoreUsersService } from '../services/store-users.service';
+import { StoreWalletsService } from '../services/store-wallets.service';
+import { WalletToStoreDTO } from '../dto/store-wallet.dto';
 
 @Controller('stores')
 export class StoresController {
-  constructor(private readonly storesService: StoresService) {}
+  constructor(
+    private readonly storesService: StoresService,
+    private readonly storeUsersService: StoreUsersService,
+    private readonly storeWalletsService: StoreWalletsService,
+  ) {}
 
   @Get('all')
   async getAllStores() {
@@ -29,13 +37,24 @@ export class StoresController {
 
   @Post('register')
   public async registerStore(@Body() body: StoreDTO) {
-    const { storeName, emails, phones, brand } = body;
-    return await this.storesService.createStore(
-      storeName,
-      brand,
-      emails,
-      phones,
+    const storeAlreadyExists = await this.storesService.findByUniqueValues(
+      body,
     );
+    if (!storeAlreadyExists) {
+      return storeAlreadyExists;
+    } else {
+      return await this.storesService.createStore(body);
+    }
+  }
+
+  @Post('add-to-store')
+  public async addToStore(@Body() body: UserToStoreDTO) {
+    return await this.storeUsersService.relationToStore(body);
+  }
+
+  @Post('add-wallet-to-store')
+  public async addWalletToStore(@Body() body: WalletToStoreDTO) {
+    return await this.storeWalletsService.relationToStore(body);
   }
 
   @Put('edit/:id')
