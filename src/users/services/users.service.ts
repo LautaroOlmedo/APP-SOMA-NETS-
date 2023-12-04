@@ -5,27 +5,25 @@ import * as bcrypt from 'bcrypt';
 
 // ---------- ---------- ---------- ---------- ----------
 
-import { UserDTO, UserToStoreDTO, UserUpdateDTO } from '../dto/user.dto';
+import { UserDTO, UserUpdateDTO } from '../dto/user.dto';
 import { UserEntity } from '../entities/user.entity';
-import { StoreUsersEntity } from 'src/stores/entities/store-users.entity';
+
 import { ErrorManager } from '../../utils/error.manager';
-import { EmailsEntity } from '../../emails/entities/emails.entity';
-import { PhonesEntity } from '../../phones/entities/phones.entity';
-import { DirectionsEntity } from 'src/directions/entities/directions.entity';
+
+import { EmailService } from '../../emails/services/email.service';
+import { PhonesService } from '../../phones/services/phones.service';
+import { DirectionsService } from '../../directions/services/directions.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-    @InjectRepository(StoreUsersEntity)
-    private readonly storeUsersRepository: Repository<StoreUsersEntity>,
-    @InjectRepository(DirectionsEntity)
-    private readonly directionRepository: Repository<DirectionsEntity>,
-    @InjectRepository(EmailsEntity)
-    private readonly emailRepository: Repository<EmailsEntity>,
-    @InjectRepository(PhonesEntity)
-    private readonly phoneRepository: Repository<PhonesEntity>,
+
+    private readonly emailsService: EmailService,
+    private readonly phonesService: PhonesService,
+    private readonly directionsService: DirectionsService,
+
     private readonly dataSource: DataSource,
   ) {}
 
@@ -39,12 +37,12 @@ export class UsersService {
         .leftJoinAndSelect('user.emails', 'email')
         .leftJoinAndSelect('user.phones', 'phone')
         .getMany();
-      if (users.length === 0) {
-        throw new ErrorManager({
-          type: 'BAD_REQUEST',
-          message: 'No se encontró resultado',
-        });
-      }
+      // if (users.length === 0) {
+      //   throw new ErrorManager({
+      //     type: 'BAD_REQUEST',
+      //     message: 'No se encontró resultado',
+      //   });
+      // }
       return users;
     } catch (e) {
       console.log(e);
@@ -52,7 +50,7 @@ export class UsersService {
     }
   }
 
-  public async findOneUser(id: string): Promise<UserEntity> {
+  public async findOneUser(id: string): Promise<UserEntity | null> {
     try {
       const user: UserEntity = await this.userRepository
         .createQueryBuilder('user')
@@ -89,13 +87,34 @@ export class UsersService {
     }
   }
 
-  public async createUser(body: UserDTO): Promise<UserEntity> {
-    let {
+  public async findByUniqueValues(
+    body: UserDTO,
+  ): Promise<boolean | ErrorManager> {
+    const { dni, username } = body;
+    try {
+      const userAlreadyExists: UserEntity = await this.userRepository.findOne({
+        where: [{ dni }, { username }],
+      });
+
+      if (userAlreadyExists) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'DNI o USERNAME en uso',
+        });
+      }
+      return true;
+    } catch (e) {
+      console.log(e);
+      throw new ErrorManager.createSignatureError(e.message);
+    }
+  }
+
+  public async createUser(body: UserDTO): Promise<void | ErrorManager> {
+    const {
       lastname,
       firstname,
       age,
       username,
-      password,
       role,
       active,
       dni,
@@ -106,11 +125,17 @@ export class UsersService {
       country,
       emails,
       phones,
-      storesIncludes,
     } = body;
+
+    let { password } = body;
+
     const queryRunner = this.dataSource.createQueryRunner();
     try {
+      queryRunner.connect();
+      queryRunner.startTransaction();
+
       password = await bcrypt.hash(password, +process.env.HASH_SALT);
+
       const newUser = this.userRepository.create({
         firstname: firstname,
         lastname: lastname,
@@ -126,35 +151,20 @@ export class UsersService {
         country: country,
       });
 
-      queryRunner.connect();
-      queryRunner.startTransaction();
+      const userDirection = await this.directionsService.createUserDirection(
+        direction,
+        department,
+      );
 
-      const newDirection = this.directionRepository.create({ direction });
-      newDirection.department = newUser.department;
-      await this.directionRepository.save(newDirection);
-      newUser.direction = newDirection;
+      newUser.direction = userDirection;
 
-      // ---> MODIFICAR EMAILS & PHONES
+      await this.userRepository.save(newUser);
 
-      await this.userRepository.save(newUser); // PARA CREAR UN NUEVO USUARIO Y LUEGO GUARDAR SUS EMAILS Y PHONES PRIMEROS LO GUARDAMOS
-      for (let i = 0; i < emails.length; i++) {
-        let newEmail = this.emailRepository.create({ email: emails[i] });
-        newEmail.user = newUser;
-        await this.emailRepository.save(newEmail);
-      }
-
-      for (let j = 0; j < phones.length; j++) {
-        let newPhone = this.phoneRepository.create({
-          phoneNumber: phones[j],
-        });
-        newPhone.user = newUser;
-        await this.phoneRepository.save(newPhone);
-      }
-
-      // ---> MODIFICAR EMAILS & PHONES
+      await this.emailsService.createUserEmail(emails, newUser);
+      await this.phonesService.createUserPhone(phones, newUser);
 
       await queryRunner.commitTransaction();
-      return newUser;
+      return;
     } catch (e) {
       await queryRunner.rollbackTransaction();
       console.log(e);
@@ -200,13 +210,4 @@ export class UsersService {
   }
 
   // ---------- ----------  RELATIONS  ---------- ----------
-
-  public async relationToStore(body: UserToStoreDTO) {
-    try {
-      return await this.storeUsersRepository.save(body);
-    } catch (e) {
-      console.log(e);
-      throw ErrorManager.createSignatureError(e.message);
-    }
-  }
 }

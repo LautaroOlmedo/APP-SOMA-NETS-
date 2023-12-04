@@ -29,8 +29,8 @@ import { DirectionsEntity } from 'src/directions/entities/directions.entity';
       PurchaseEntity,
     ]),
   ],
-  providers: [ClientsService],
   controllers: [ClientsController],
+  providers: [ClientsService],
   exports: [TypeOrmModule],
 })
 export class ClientsModule {}

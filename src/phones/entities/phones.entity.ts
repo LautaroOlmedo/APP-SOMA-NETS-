@@ -11,6 +11,7 @@ import { SupplierEntity } from 'src/suppliers/entities/supplier.entity';
 export class PhonesEntity extends BaseEntity {
   @Column({ type: 'varchar' })
   phoneNumber: string;
+
   // ---------- ----------  RELATIONS  ---------- ----------
 
   @ManyToOne(() => UserEntity, (user) => user.phones)

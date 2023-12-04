@@ -13,6 +13,7 @@ import { ErrorManager } from '../../utils/error.manager';
 import { StockProductsEntity } from '../../stocks/entities/stock-products.entity';
 import { StockEntity } from '../../stocks/entities/stock.entity';
 import { StocksService } from '../../stocks/services/stocks.service';
+import { StockProductsService } from '../../stocks/services/stock-products.service';
 
 @Injectable()
 export class ProductService {
@@ -20,8 +21,7 @@ export class ProductService {
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
 
-    @InjectRepository(StockProductsEntity)
-    private readonly stockProductsRepository: Repository<StockProductsEntity>,
+    private readonly stockProductsService: StockProductsService,
 
     private readonly stocksSerive: StocksService,
     private readonly dataSource: DataSource,
@@ -56,7 +56,7 @@ export class ProductService {
       code,
       size,
       category,
-      stock,
+      stock, // ---> Puede llegar a ser un array para crear un producto en varios stock
       quantity,
     } = body;
 
@@ -84,7 +84,11 @@ export class ProductService {
         category,
       });
       await this.productRepository.save(newProduct);
-      await this.relationToStock(newProduct, stockInDB, quantity);
+      await this.stockProductsService.addProductToStock(
+        quantity,
+        newProduct,
+        stockInDB,
+      );
 
       await queryRunner.commitTransaction();
       return newProduct;
@@ -101,38 +105,4 @@ export class ProductService {
   }
 
   // ---------- ----------  RELATIONS  ---------- ----------
-
-  private async relationToStock(
-    product: ProductEntity,
-    stock: StockEntity,
-    quantity: number,
-  ): Promise<StockProductsEntity | ErrorManager> {
-    const queryRunner = this.dataSource.createQueryRunner();
-    try {
-      queryRunner.connect();
-      const productInStock = this.stockProductsRepository.create({
-        productInStock: quantity,
-        product,
-        stock,
-      });
-      if (!productInStock) {
-        throw new ErrorManager({
-          type: 'BAD_REQUEST',
-          message: 'No se pudo guardar el producto',
-        });
-      }
-
-      queryRunner.startTransaction();
-
-      await this.stockProductsRepository.save(productInStock);
-      await queryRunner.commitTransaction();
-      return productInStock;
-    } catch (e) {
-      await queryRunner.rollbackTransaction();
-      console.log(e);
-      throw ErrorManager.createSignatureError(e.message);
-    } finally {
-      await queryRunner.release();
-    }
-  }
 }
