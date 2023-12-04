@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 // ---------- ---------- ---------- ---------- ----------
 
 import { WalletEntity } from './entities/wallet.entity';
-import { StoreWalletsEntity } from '.././stores/entities/store-wallet.entity';
+import { StoreWalletsEntity } from '../stores/entities/store-wallets.entity';
 
 import { FinancesServicesService } from './services/finances.services.service';
 

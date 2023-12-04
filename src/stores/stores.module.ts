@@ -15,8 +15,11 @@ import { PurchaseEntity } from '.././purchases/entities/purchase.entity';
 import { StoreSuppliersEntity } from './entities/store-suppliers.entity';
 import { SupplierEntity } from '.././suppliers/entities/supplier.entity';
 import { StoreUsersService } from './services/store-users.service';
+import { EmailService } from './../emails/services/email.service';
+import { PhonesService } from './../phones/services/phones.service';
 
 // import { PurchaseProductsEntity } from '.././purchases/entities/purchase-product.entity';
+import { StoreWalletsService } from './services/store-wallets.service';
 
 @Global()
 @Module({
@@ -34,7 +37,18 @@ import { StoreUsersService } from './services/store-users.service';
     ]),
   ],
   controllers: [StoresController],
-  providers: [StoresService, StoreUsersService],
-  exports: [TypeOrmModule, StoresService, StoreUsersService],
+  providers: [
+    StoresService,
+    StoreUsersService,
+    EmailService,
+    PhonesService,
+    StoreWalletsService,
+  ],
+  exports: [
+    TypeOrmModule,
+    StoresService,
+    StoreUsersService,
+    StoreWalletsService,
+  ],
 })
 export class StoresModule {}

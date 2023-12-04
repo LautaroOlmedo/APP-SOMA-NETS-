@@ -12,5 +12,7 @@ export class WalletController {
   }
 
   @Post('register')
-  public async registerUser(@Body() body: WalletDTO) {}
+  public async registerUser(@Body() body: WalletDTO) {
+    return await this.walletsService.createWallet(body);
+  }
 }

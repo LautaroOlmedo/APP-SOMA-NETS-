@@ -37,6 +37,9 @@ export class ProductEntity extends BaseEntity {
   @Column({ type: 'integer', nullable: false, unique: false })
   code: number;
 
+  @Column({ default: true })
+  active: boolean;
+
   // ---------- ---------- RELATIONS ---------- ----------
 
   @ManyToOne(() => CategoryEntity, (category) => category.products)

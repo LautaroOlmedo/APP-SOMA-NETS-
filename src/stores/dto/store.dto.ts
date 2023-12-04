@@ -15,6 +15,7 @@ export class StoreDTO {
   @IsNotEmpty()
   @IsString()
   storeName: string;
+
   @Expose()
   brand: BrandEntity;
 

@@ -1,26 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { DataSource, DeleteResult, Repository, UpdateResult } from 'typeorm';
 
 // ---------- ---------- ---------- ---------- ----------
 
 import { StoreDTO, StoreUpdateDTO } from '../dto/store.dto';
 import { StoreEntity } from '../entities/store.entity';
 import { ErrorManager } from '../../utils/error.manager';
-import { EmailsEntity } from 'src/emails/entities/emails.entity';
-import { BrandEntity } from '../../brands/entities/brand.entity';
-import { PhonesEntity } from '../../phones/entities/phones.entity';
+import { EmailService } from '../../emails/services/email.service';
+import { PhonesService } from '../../phones/services/phones.service';
 
 @Injectable()
 export class StoresService {
   constructor(
     @InjectRepository(StoreEntity)
     private readonly storeRepository: Repository<StoreEntity>,
-    @InjectRepository(EmailsEntity)
-    private readonly emailRepository: Repository<EmailsEntity>,
 
-    @InjectRepository(PhonesEntity)
-    private readonly phoneRepository: Repository<PhonesEntity>,
+    private readonly emailsService: EmailService,
+    private readonly phonesService: PhonesService,
+
+    private readonly dataSource: DataSource,
   ) {}
 
   async findAllStores(): Promise<StoreEntity[]> {
@@ -77,31 +76,54 @@ export class StoresService {
     }
   }
 
-  public async createStore(
-    storeName: string,
-    brand: BrandEntity,
-    emails: string[],
-    phones: string[],
-  ): Promise<StoreEntity> {
+  public async findByUniqueValues(
+    body: StoreDTO,
+  ): Promise<boolean | ErrorManager> {
+    const { storeName } = body;
     try {
-      const newStore = this.storeRepository.create({ storeName, brand });
-      await this.storeRepository.save(newStore); // PARA CREAR UNA NUEVA TIENDA Y LUEGO GUARDAR SUS EMAILS Y PHONES PRIMEROS LO GUARDAMOS
-      for (let i = 0; i < emails.length; i++) {
-        let newEmail = this.emailRepository.create({ email: emails[i] });
-        newEmail.store = newStore;
-        await this.emailRepository.save(newEmail);
-      }
-      for (let j = 0; j < phones.length; j++) {
-        let newPhone = this.phoneRepository.create({
-          phoneNumber: phones[j],
+      const storeAlreadyExists: StoreEntity =
+        await this.storeRepository.findOne({
+          where: [{ storeName }],
         });
-        newPhone.store = newStore;
-        await this.phoneRepository.save(newPhone);
+
+      if (storeAlreadyExists) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'El nombre de la tienda está en uso',
+        });
       }
-      return newStore;
+      return true;
     } catch (e) {
       console.log(e);
-      throw ErrorManager.createSignatureError(e.message);
+      throw new ErrorManager.createSignatureError(e.message);
+    }
+  }
+
+  public async createStore(body: StoreDTO): Promise<void | ErrorManager> {
+    const { storeName, brand, emails, phones } = body;
+
+    const queryRunner = this.dataSource.createQueryRunner();
+    try {
+      queryRunner.connect();
+      queryRunner.startTransaction();
+
+      const newStore = this.storeRepository.create({
+        storeName,
+        brand,
+      });
+
+      await this.storeRepository.save(newStore);
+
+      await this.emailsService.createStoreEmail(emails, newStore);
+      await this.phonesService.createStorePhone(phones, newStore);
+      await queryRunner.commitTransaction();
+      return;
+    } catch (e) {
+      await queryRunner.rollbackTransaction();
+      console.log(e);
+      throw ErrorManager.createSignatureError(e);
+    } finally {
+      queryRunner.release();
     }
   }
 

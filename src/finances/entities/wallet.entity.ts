@@ -11,7 +11,7 @@ import {
 
 import { BaseEntity } from '../../config/base.entity';
 import { BrandEntity } from '../../brands/entities/brand.entity';
-import { StoreWalletsEntity } from '../../stores/entities/store-wallet.entity';
+import { StoreWalletsEntity } from '../../stores/entities/store-wallets.entity';
 
 @Entity({ name: 'wallets' })
 export class WalletEntity extends BaseEntity {

@@ -44,10 +44,10 @@ export class UsersController {
   @Post('register')
   public async registerUser(@Body() body: UserDTO) {
     const validate = await this.usersService.findByUniqueValues(body);
-    if (validate) {
-      return await this.usersService.createUser(body);
-    } else {
+    if (!validate) {
       return validate;
+    } else {
+      return this.usersService.createUser(body);
     }
   }
 

@@ -6,7 +6,8 @@ import { DataSource, Repository } from 'typeorm';
 
 import { EmailsEntity } from '../entities/emails.entity';
 import { ErrorManager } from '../../utils/error.manager';
-import { UserEntity } from 'src/users/entities/user.entity';
+import { UserEntity } from '../../users/entities/user.entity';
+import { StoreEntity } from '../../stores/entities/store.entity';
 
 @Injectable()
 export class EmailService {
@@ -63,16 +64,31 @@ export class EmailService {
     }
   }
 
-  private async createStoreEmail(email: string, storeID: string) {
+  public async createStoreEmail(
+    emails: string[],
+    storeID: StoreEntity,
+  ): Promise<void | ErrorManager> {
     const queryRunner = this.dataSource.createQueryRunner();
     try {
       queryRunner.connect();
       queryRunner.startTransaction();
 
+      for (let i = 0; i < emails.length; i++) {
+        const newEmail = this.emailRepository.create({
+          email: emails[i],
+        });
+        newEmail.store = storeID;
+        await this.emailRepository.save(newEmail);
+      }
+
       await queryRunner.commitTransaction();
     } catch (e) {
       await queryRunner.rollbackTransaction();
       console.log(e);
+      throw new ErrorManager({
+        type: 'INTERNAL_SERVER_ERROR',
+        message: 'Error al crear el email',
+      });
     } finally {
       queryRunner.release();
     }

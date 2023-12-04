@@ -19,7 +19,7 @@ import { PhonesEntity } from '../../phones/entities/phones.entity';
 import { StockEntity } from '../../stocks/entities/stock.entity';
 import { PurchaseEntity } from '../../purchases/entities/purchase.entity';
 import { StoreSuppliersEntity } from './store-suppliers.entity';
-import { StoreWalletsEntity } from './store-wallet.entity';
+import { StoreWalletsEntity } from './store-wallets.entity';
 
 @Entity({ name: 'stores' })
 export class StoreEntity extends BaseEntity implements IStore {
