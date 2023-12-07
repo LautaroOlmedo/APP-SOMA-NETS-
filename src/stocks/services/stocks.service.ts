@@ -8,6 +8,7 @@ import { StockEntity } from '../entities/stock.entity';
 import { ErrorManager } from 'src/utils/error.manager';
 import { StoreEntity } from '../../stores/entities/store.entity';
 import { StockProductsEntity } from '../entities/stock-products.entity';
+import { StockDTO } from '../dto/stock.dto';
 
 @Injectable()
 export class StocksService {
@@ -40,10 +41,12 @@ export class StocksService {
     }
   }
 
-  public async createStock(store: StoreEntity): Promise<any> {
+  public async createStock(stock: StockDTO): Promise<any> {
     try {
+      const { stockName, store } = stock;
       const newStock = this.stockRepository.create({
         //availableQuantity: quantity,
+        stockName,
         store,
       });
       if (!newStock) {

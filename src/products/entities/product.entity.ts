@@ -21,7 +21,22 @@ export class ProductEntity extends BaseEntity {
   @Column({ type: 'integer' })
   @Min(9)
   @Max(25000)
-  price!: number;
+  effectivePrice!: number;
+
+  @Column({ type: 'integer' })
+  @Min(9)
+  @Max(25000)
+  cardPrice!: number;
+
+  @Column({ type: 'integer' })
+  @Min(9)
+  @Max(25000)
+  dollarPrice!: number;
+
+  @Column({ type: 'integer' })
+  @Min(9)
+  @Max(25000)
+  wholesalePrice!: number;
 
   @Column({ type: 'enum', enum: size, nullable: true })
   size: size;

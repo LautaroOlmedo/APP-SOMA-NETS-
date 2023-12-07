@@ -69,7 +69,7 @@ export class PurchaseProductService {
       //   newProductQuantity,
       // );
 
-      newPP.total_price = prod!.price * newPP.quantity_products;
+      newPP.total_price = prod!.effectivePrice * newPP.quantity_products;
       return await this.purchaseProductRepository.save(newPP);
     } catch (e) {
       console.log(e);

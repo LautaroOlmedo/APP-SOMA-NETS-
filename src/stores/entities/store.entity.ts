@@ -50,7 +50,7 @@ export class StoreEntity extends BaseEntity implements IStore {
   phones?: PhonesEntity[];
 
   @OneToMany(() => StockEntity, (stock) => stock.store)
-  stock?: StockEntity[];
+  stockIncludes?: StockEntity[];
 
   @OneToOne(() => PurchaseEntity, (purchases) => purchases.store)
   purchases: PurchaseEntity[];

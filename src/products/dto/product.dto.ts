@@ -22,7 +22,13 @@ export class ProductDTO {
   description: string;
 
   @IsNotEmpty()
-  price: number;
+  effectivePrice: number;
+  @IsNotEmpty()
+  cardPrice: number;
+  @IsNotEmpty()
+  dollarPrice: number;
+  @IsNotEmpty()
+  wholesalePrice: number;
 
   @IsNotEmpty()
   @IsUUID()

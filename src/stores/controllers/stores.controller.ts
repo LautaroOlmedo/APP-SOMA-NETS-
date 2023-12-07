@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -16,6 +17,7 @@ import { UserToStoreDTO } from '../dto/store-user.dto';
 import { StoreUsersService } from '../services/store-users.service';
 import { StoreWalletsService } from '../services/store-wallets.service';
 import { WalletToStoreDTO } from '../dto/store-wallet.dto';
+import { Response } from 'express';
 
 @Controller('stores')
 export class StoresController {
@@ -36,12 +38,15 @@ export class StoresController {
   }
 
   @Post('register')
-  public async registerStore(@Body() body: StoreDTO) {
+  public async registerStore(@Body() body: StoreDTO, res: Response) {
     const storeAlreadyExists = await this.storesService.findByUniqueValues(
       body,
     );
     if (!storeAlreadyExists) {
-      return storeAlreadyExists;
+      res.json({
+        msg: 'El nombre de la tienda está en uso',
+        status: res.status(HttpStatus.INTERNAL_SERVER_ERROR),
+      });
     } else {
       return await this.storesService.createStore(body);
     }

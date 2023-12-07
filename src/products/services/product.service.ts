@@ -51,7 +51,10 @@ export class ProductService {
   async create(body: ProductDTO): Promise<ProductEntity | null> {
     const {
       productName,
-      price,
+      effectivePrice,
+      cardPrice,
+      dollarPrice,
+      wholesalePrice,
       description,
       code,
       size,
@@ -78,7 +81,10 @@ export class ProductService {
       const newProduct = this.productRepository.create({
         productName,
         description,
-        price,
+        effectivePrice,
+        cardPrice,
+        dollarPrice,
+        wholesalePrice,
         size,
         code,
         category,
