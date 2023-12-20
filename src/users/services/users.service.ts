@@ -79,6 +79,7 @@ export class UsersService {
         .createQueryBuilder('user')
         .addSelect('user.password')
         .where({ [key]: value })
+        .leftJoinAndSelect('user.brand', 'brand.id')
         .getOne();
       return user;
     } catch (e) {
