@@ -6,10 +6,14 @@ import { BaseEntity } from '../../config/base.entity';
 import { UserEntity } from '../../users/entities/user.entity';
 import { ProvinceEntity } from '../../provinces/entities/province.entity';
 import { ClientEntity } from '../../clients/entities/client.entity';
-import { DirectionsEntity } from 'src/directions/entities/directions.entity';
+import { DirectionsEntity } from '../../directions/entities/directions.entity';
+import { DepartmentInterface } from '../../interfaces/department.interface';
 
 @Entity({ name: 'departments' })
-export class DepartmentEntity extends BaseEntity {
+export class DepartmentEntity
+  extends BaseEntity
+  implements DepartmentInterface
+{
   @Column()
   departmentKey!: number;
 

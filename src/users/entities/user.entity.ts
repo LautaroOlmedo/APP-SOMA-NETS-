@@ -11,7 +11,7 @@ import { Exclude } from 'class-transformer';
 // ---------- ---------- ---------- ---------- ----------
 
 import { BaseEntity } from '../../config/base.entity';
-import { IUser } from '../../interfaces/user.interface';
+import { UserInterface } from '../../interfaces/user.interface';
 import { ROLES } from '../../constants/roles';
 import { StoreUsersEntity } from '../../stores/entities/store-users.entity';
 import { BrandEntity } from '../../brands/entities/brand.entity';
@@ -24,7 +24,7 @@ import { PhonesEntity } from 'src/phones/entities/phones.entity';
 import { PurchaseEntity } from '../../purchases/entities/purchase.entity';
 
 @Entity('users')
-export class UserEntity extends BaseEntity implements IUser {
+export class UserEntity extends BaseEntity implements UserInterface {
   @Column()
   firstname: string;
 

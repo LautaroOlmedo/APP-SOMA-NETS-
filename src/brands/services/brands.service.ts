@@ -35,12 +35,15 @@ export class BrandsService {
   }
 
   public async findOneBrand(id: string): Promise<BrandEntity | null> {
+    // ---> AGRANDAR QUERY
     try {
       const brand: BrandEntity = await this.brandRepository
         .createQueryBuilder('brand')
         .where({ id })
         .leftJoinAndSelect('brand.users', 'user')
         .leftJoinAndSelect('brand.stores', 'store')
+        .leftJoinAndSelect('brand.stores', 'store') //
+        .leftJoinAndSelect('brand.stores', 'store') //
         .getOne();
       if (!brand) {
         return null;

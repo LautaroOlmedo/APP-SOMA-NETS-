@@ -8,9 +8,10 @@ import { UserEntity } from '../../users/entities/user.entity';
 import { ClientEntity } from '../../clients/entities/client.entity';
 import { SupplierEntity } from 'src/suppliers/entities/supplier.entity';
 import { StoreEntity } from 'src/stores/entities/store.entity';
+import { DirectionInterface } from 'src/interfaces/direction.interface';
 
 @Entity({ name: 'directions' })
-export class DirectionsEntity extends BaseEntity {
+export class DirectionsEntity extends BaseEntity implements DirectionInterface {
   @Column({ nullable: false }) // ---> unique?
   direction!: string;
 

@@ -10,7 +10,7 @@ import {
 // ---------- ---------- ---------- ---------- ----------
 
 import { BaseEntity } from '../../config/base.entity';
-import { IStore } from '../../interfaces/store.interface';
+import { StoreInterface } from '../../interfaces/store.interface';
 import { StoreUsersEntity } from './store-users.entity';
 import { BrandEntity } from '../../brands/entities/brand.entity';
 import { EmailsEntity } from '../../emails/entities/emails.entity';
@@ -22,7 +22,7 @@ import { StoreSuppliersEntity } from './store-suppliers.entity';
 import { StoreWalletsEntity } from './store-wallets.entity';
 
 @Entity({ name: 'stores' })
-export class StoreEntity extends BaseEntity implements IStore {
+export class StoreEntity extends BaseEntity implements StoreInterface {
   @Column()
   storeName: string;
 

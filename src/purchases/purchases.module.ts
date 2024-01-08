@@ -16,6 +16,7 @@ import { PuchaseProductsController } from './controllers/puchase-products.contro
 import { StoreEntity } from '.././stores/entities/store.entity';
 import { StocksService } from '.././stocks/services/stocks.service';
 import { StoresService } from '.././stores/services/stores.service';
+import { MovmentOutEntity } from '.././finances/entities/movement-out.entity';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { StoresService } from '.././stores/services/stores.service';
       ClientEntity,
       ProductEntity,
       StoreEntity,
+      MovmentOutEntity,
     ]),
   ],
   controllers: [PurchaseController, PuchaseProductsController],

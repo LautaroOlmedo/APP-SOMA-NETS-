@@ -15,9 +15,11 @@ import { PurchaseProductsEntity } from './purchase-product.entity';
 import { paymentMethod, transactionStatus } from '../../constants/index';
 import { ClientEntity } from '../../clients/entities/client.entity';
 import { StoreEntity } from '../../stores/entities/store.entity';
+import { MovmentOutEntity } from '../../finances/entities/movement-out.entity';
+import { PurchaseInterface } from 'src/interfaces/purchase.interface';
 
 @Entity({ name: 'purchases' })
-export class PurchaseEntity extends BaseEntity {
+export class PurchaseEntity extends BaseEntity implements PurchaseInterface {
   @Column({
     type: 'enum',
     enum: transactionStatus,
@@ -30,8 +32,9 @@ export class PurchaseEntity extends BaseEntity {
 
   // ---------- ---------- RELATIONS ---------- ----------
 
-  // @OneToOne(() => MovementInEntity, (movement) => movement.purchase)
-  // movementIn: MovementInEntity;
+  @OneToOne(() => MovmentOutEntity, (movmentOut) => movmentOut.purchase)
+  @JoinColumn({ name: 'movment_out_id' })
+  movementOut: MovmentOutEntity;
 
   @ManyToOne(() => UserEntity, (user) => user.purchases)
   @JoinColumn({ name: 'user_id' })
