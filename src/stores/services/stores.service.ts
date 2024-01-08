@@ -57,8 +57,11 @@ export class StoresService {
         .leftJoinAndSelect('usersIncludes.user', 'user')
         .leftJoinAndSelect('store.clientsIncludes', 'clientsIncludes')
         .leftJoinAndSelect('clientsIncludes.client', 'client')
-        .leftJoinAndSelect('store.stockIncludes', 'stock')
-        .leftJoinAndSelect('stock.productsIncludes', 'productsIncludes')
+        .leftJoinAndSelect('store.stocksIncludes', 'stocksIncludes')
+        .leftJoinAndSelect(
+          'stocksIncludes.productsIncludes',
+          'productsIncludes',
+        )
         .leftJoinAndSelect('productsIncludes.product', 'product')
         //.leftJoinAndSelect('productsIncludes.product', 'product')
         .leftJoinAndSelect('store.walletsIncludes', 'walletsIncludes')

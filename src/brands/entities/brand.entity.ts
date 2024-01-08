@@ -21,11 +21,11 @@ export class BrandEntity extends BaseEntity implements BrandInterface {
 
   // ---------- ---------- RELATIONS ---------- ----------
   @OneToMany(() => UserEntity, (users) => users.brand)
-  users?: UserEntity[];
+  usersIncludes?: UserEntity[];
 
   @OneToMany(() => WalletEntity, (wallets) => wallets.brand)
   wallets?: WalletEntity[];
 
   @OneToMany(() => StoreEntity, (stores) => stores.brand)
-  stores?: StoreEntity[];
+  storesIncludes?: StoreEntity[];
 }

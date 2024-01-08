@@ -27,7 +27,7 @@ export class WalletEntity extends BaseEntity implements WallletInterface {
   @OneToMany(() => StoreWalletsEntity, (storesWallets) => storesWallets.wallet)
   storesIncludes: StoreWalletsEntity[];
 
-  @ManyToOne(() => BrandEntity, (brand) => brand.users)
+  @ManyToOne(() => BrandEntity, (brand) => brand.usersIncludes)
   @JoinColumn({ name: 'brand_id' })
   brand?: BrandEntity;
 }

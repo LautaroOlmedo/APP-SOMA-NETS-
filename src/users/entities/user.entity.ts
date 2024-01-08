@@ -64,7 +64,7 @@ export class UserEntity extends BaseEntity implements UserInterface {
   @OneToMany(() => PurchaseEntity, (purchases) => purchases.user)
   purchases?: PurchaseEntity[];
 
-  @ManyToOne(() => BrandEntity, (brand) => brand.users)
+  @ManyToOne(() => BrandEntity, (brand) => brand.usersIncludes)
   @JoinColumn({ name: 'brand_id' })
   brand?: BrandEntity;
 

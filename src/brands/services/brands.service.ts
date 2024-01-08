@@ -40,10 +40,12 @@ export class BrandsService {
       const brand: BrandEntity = await this.brandRepository
         .createQueryBuilder('brand')
         .where({ id })
-        .leftJoinAndSelect('brand.users', 'user')
-        .leftJoinAndSelect('brand.stores', 'store')
-        .leftJoinAndSelect('brand.stores', 'store') //
-        .leftJoinAndSelect('brand.stores', 'store') //
+        .leftJoinAndSelect('brand.usersIncludes', 'userIncludes')
+        .leftJoinAndSelect('brand.storesIncludes', 'storesIncludes')
+        .leftJoinAndSelect('storesIncludes.usersIncludes', 'usersIncludes')
+        .leftJoinAndSelect('storesIncludes.clientsIncludes', 'clientsIncludes')
+        .leftJoinAndSelect('storesIncludes.stocksIncludes', 'stocksIncludes') //
+        .leftJoinAndSelect('storesIncludes.walletsIncludes', 'walletsIncludes') //
         .getOne();
       if (!brand) {
         return null;

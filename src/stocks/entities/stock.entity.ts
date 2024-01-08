@@ -14,7 +14,7 @@ export class StockEntity extends BaseEntity implements StockInterface {
   @OneToMany(() => StockProductsEntity, (stockProducts) => stockProducts.stock)
   productsIncludes: StockProductsEntity[];
 
-  @ManyToOne(() => StoreEntity, (store) => store.stockIncludes)
+  @ManyToOne(() => StoreEntity, (store) => store.stocksIncludes)
   @JoinColumn({ name: 'store_id' })
   store: StoreEntity;
 }

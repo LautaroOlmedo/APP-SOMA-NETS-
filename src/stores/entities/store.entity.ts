@@ -50,7 +50,7 @@ export class StoreEntity extends BaseEntity implements StoreInterface {
   phones?: PhonesEntity[];
 
   @OneToMany(() => StockEntity, (stock) => stock.store)
-  stockIncludes?: StockEntity[];
+  stocksIncludes?: StockEntity[];
 
   @OneToOne(() => PurchaseEntity, (purchases) => purchases.store)
   purchases: PurchaseEntity[];
@@ -59,7 +59,7 @@ export class StoreEntity extends BaseEntity implements StoreInterface {
   @JoinColumn({ name: 'direction_id' })
   direction?: StoreDirectionsEntity;*/
 
-  @ManyToOne(() => BrandEntity, (brand) => brand.stores)
+  @ManyToOne(() => BrandEntity, (brand) => brand.storesIncludes)
   @JoinColumn({ name: 'brand_id' })
   brand!: BrandEntity;
 }
