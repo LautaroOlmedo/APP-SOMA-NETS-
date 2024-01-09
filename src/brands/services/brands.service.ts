@@ -42,10 +42,9 @@ export class BrandsService {
         .where({ id })
         .leftJoinAndSelect('brand.usersIncludes', 'userIncludes')
         .leftJoinAndSelect('brand.storesIncludes', 'storesIncludes')
-        .leftJoinAndSelect('storesIncludes.usersIncludes', 'usersIncludes')
-        .leftJoinAndSelect('storesIncludes.clientsIncludes', 'clientsIncludes')
-        .leftJoinAndSelect('storesIncludes.stocksIncludes', 'stocksIncludes') //
-        .leftJoinAndSelect('storesIncludes.walletsIncludes', 'walletsIncludes') //
+        .leftJoinAndSelect('brand.clientsIncludes', 'clientsIncludes')
+        .leftJoinAndSelect('brand.emails', 'emails')
+        .leftJoinAndSelect('brand.phones', 'phones')
         .getOne();
       if (!brand) {
         return null;

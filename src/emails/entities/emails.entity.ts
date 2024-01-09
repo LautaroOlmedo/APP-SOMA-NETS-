@@ -7,6 +7,7 @@ import { UserEntity } from '../../users/entities/user.entity';
 import { ClientEntity } from '../../clients/entities/client.entity';
 import { StoreEntity } from '../../stores/entities/store.entity';
 import { SupplierEntity } from '../../suppliers/entities/supplier.entity';
+import { BrandEntity } from '../../brands/entities/brand.entity';
 
 @Entity({ name: 'emails' })
 export class EmailsEntity extends BaseEntity {
@@ -14,6 +15,10 @@ export class EmailsEntity extends BaseEntity {
   email: string;
 
   // ---------- ----------  RELATIONS  ---------- ----------
+
+  @ManyToOne(() => BrandEntity, (brand) => brand.emails)
+  @JoinColumn({ name: 'brand_id' })
+  brand?: BrandEntity;
 
   @ManyToOne(() => UserEntity, (user) => user.emails)
   @JoinColumn({ name: 'user_id' })

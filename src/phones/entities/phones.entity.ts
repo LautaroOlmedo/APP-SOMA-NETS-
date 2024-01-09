@@ -6,8 +6,9 @@ import { BaseEntity } from '../../config/base.entity';
 import { UserEntity } from '../../users/entities/user.entity';
 import { StoreEntity } from '../../stores/entities/store.entity';
 import { ClientEntity } from '../../clients/entities/client.entity';
-import { SupplierEntity } from 'src/suppliers/entities/supplier.entity';
-import { PhoneInterface } from 'src/interfaces/phone.interface';
+import { SupplierEntity } from '../../suppliers/entities/supplier.entity';
+import { PhoneInterface } from '../../interfaces/phone.interface';
+import { BrandEntity } from '../../brands/entities/brand.entity';
 
 @Entity({ name: 'phones' })
 export class PhonesEntity extends BaseEntity implements PhoneInterface {
@@ -15,6 +16,10 @@ export class PhonesEntity extends BaseEntity implements PhoneInterface {
   phoneNumber: string;
 
   // ---------- ----------  RELATIONS  ---------- ----------
+
+  @ManyToOne(() => BrandEntity, (brand) => brand.phones)
+  @JoinColumn({ name: 'brand_id' })
+  brand?: BrandEntity;
 
   @ManyToOne(() => UserEntity, (user) => user.phones)
   @JoinColumn({ name: 'user_id' })
