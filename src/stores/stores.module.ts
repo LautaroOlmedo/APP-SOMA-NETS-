@@ -20,6 +20,7 @@ import { PhonesService } from './../phones/services/phones.service';
 
 // import { PurchaseProductsEntity } from '.././purchases/entities/purchase-product.entity';
 import { StoreWalletsService } from './services/store-wallets.service';
+import { StoreClientsService } from './services/store-clients.service';
 
 @Global()
 @Module({
@@ -43,6 +44,7 @@ import { StoreWalletsService } from './services/store-wallets.service';
     EmailService,
     PhonesService,
     StoreWalletsService,
+    StoreClientsService,
   ],
   exports: [
     TypeOrmModule,

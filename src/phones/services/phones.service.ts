@@ -8,6 +8,7 @@ import { PhonesEntity } from '../entities/phones.entity';
 import { ErrorManager } from '../../utils/error.manager';
 import { UserEntity } from '../../users/entities/user.entity';
 import { StoreEntity } from '../../stores/entities/store.entity';
+import { ClientEntity } from '../../clients/entities/client.entity';
 
 @Injectable()
 export class PhonesService {
@@ -28,6 +29,33 @@ export class PhonesService {
           phoneNumber: phones[j],
         });
         newPhone.user = user;
+        await this.phoneRepository.save(newPhone);
+
+        await queryRunner.commitTransaction();
+      }
+    } catch (e) {
+      await queryRunner.rollbackTransaction();
+      console.log(e);
+      throw new ErrorManager({
+        type: 'INTERNAL_SERVER_ERROR',
+        message: 'Error al guardar el número de teléfono',
+      });
+    } finally {
+      queryRunner.release();
+    }
+  }
+
+  public async createClientPhone(phones: string[], client: ClientEntity) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    try {
+      queryRunner.connect();
+      queryRunner.startTransaction();
+
+      for (let j = 0; j < phones.length; j++) {
+        const newPhone = this.phoneRepository.create({
+          phoneNumber: phones[j],
+        });
+        newPhone.client = client;
         await this.phoneRepository.save(newPhone);
 
         await queryRunner.commitTransaction();

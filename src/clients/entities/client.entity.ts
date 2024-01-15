@@ -45,7 +45,7 @@ export class ClientEntity extends BaseEntity implements IClient {
 
   @ManyToOne(() => BrandEntity, (brand) => brand.clientsIncludes)
   @JoinColumn({ name: 'brand_id' })
-  brand?: BrandEntity;
+  brand!: BrandEntity;
 
   @ManyToOne(() => DirectionsEntity, (direction) => direction.clients)
   @JoinColumn({ name: 'direction_id' })

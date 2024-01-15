@@ -43,7 +43,7 @@ import { StoreUsersService } from '.././stores/services/store-users.service';
     PhonesService,
     DirectionsService,
     StoreUsersService,
-  ], //UserDirectionsService],
+  ],
   exports: [TypeOrmModule, UsersService],
 })
 export class UsersModule {}

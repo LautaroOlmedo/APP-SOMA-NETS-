@@ -16,7 +16,7 @@ export class DirectionsService {
     private readonly dataSource: DataSource,
   ) {}
 
-  public async createUserDirection(
+  public async createDirection(
     direction: string,
     department: DepartmentEntity,
   ): Promise<DirectionsEntity> {

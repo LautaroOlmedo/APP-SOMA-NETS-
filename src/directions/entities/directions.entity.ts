@@ -6,9 +6,8 @@ import { BaseEntity } from '../../config/base.entity';
 import { DepartmentEntity } from '../../departments/entities/department.entity';
 import { UserEntity } from '../../users/entities/user.entity';
 import { ClientEntity } from '../../clients/entities/client.entity';
-import { SupplierEntity } from 'src/suppliers/entities/supplier.entity';
-import { StoreEntity } from 'src/stores/entities/store.entity';
-import { DirectionInterface } from 'src/interfaces/direction.interface';
+import { SupplierEntity } from '../../suppliers/entities/supplier.entity';
+import { DirectionInterface } from '../../interfaces/direction.interface';
 
 @Entity({ name: 'directions' })
 export class DirectionsEntity extends BaseEntity implements DirectionInterface {
@@ -20,14 +19,8 @@ export class DirectionsEntity extends BaseEntity implements DirectionInterface {
   @OneToMany(() => UserEntity, (users) => users.direction)
   users?: UserEntity[];
 
-  @OneToMany(() => ClientEntity, (client) => client.direction)
+  @OneToMany(() => ClientEntity, (clients) => clients.direction)
   clients?: ClientEntity[];
-
-  // @OneToMany(() => UserEntity, (users) => users.direction)
-  // users?: UserEntity[];
-
-  // @OneToMany(() => UserEntity, (users) => users.direction)
-  // users?: UserEntity[];
 
   @ManyToOne(() => DepartmentEntity, (department) => department.directions)
   @JoinColumn({ name: 'department_id' })

@@ -32,6 +32,7 @@ export class UsersService {
       const users: UserEntity[] = await this.userRepository
         .createQueryBuilder('user')
         .leftJoinAndSelect('user.brand', 'brand')
+        .leftJoinAndSelect('user.direction', 'direction')
         .leftJoinAndSelect('user.storesIncludes', 'storesIncludes')
         .leftJoinAndSelect('storesIncludes.store', 'store')
         .leftJoinAndSelect('user.emails', 'email')
@@ -152,7 +153,7 @@ export class UsersService {
         country: country,
       });
 
-      const userDirection = await this.directionsService.createUserDirection(
+      const userDirection = await this.directionsService.createDirection(
         direction,
         department,
       );

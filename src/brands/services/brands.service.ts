@@ -18,7 +18,8 @@ export class BrandsService {
     try {
       const brands = await this.brandRepository
         .createQueryBuilder('brand')
-        .leftJoinAndSelect('brand.users', 'user')
+        .leftJoinAndSelect('brand.clientsIncludes', 'clientsIncludes')
+        .leftJoinAndSelect('brand.usersIncludes', 'usersIncludes')
         .leftJoinAndSelect('brand.stores', 'store')
         .getMany();
       if (brands.length === 0) {

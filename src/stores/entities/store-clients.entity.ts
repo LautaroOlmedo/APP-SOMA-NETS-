@@ -18,6 +18,7 @@ export class StoreClientsEntity
   clientType: ACCES_LEVEL_CLIENTS;
 
   // ---------- ---------- RELATIONS ---------- ----------
+
   @ManyToOne(() => ClientEntity, (client) => client.storesIncludes)
   client: ClientEntity;
 

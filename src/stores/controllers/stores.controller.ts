@@ -18,12 +18,15 @@ import { StoreUsersService } from '../services/store-users.service';
 import { StoreWalletsService } from '../services/store-wallets.service';
 import { WalletToStoreDTO } from '../dto/store-wallet.dto';
 import { Response } from 'express';
+import { ClientToStoreDTO } from '../dto/store-client.dto';
+import { StoreClientsService } from '../services/store-clients.service';
 
 @Controller('stores')
 export class StoresController {
   constructor(
     private readonly storesService: StoresService,
     private readonly storeUsersService: StoreUsersService,
+    private readonly storeClientsService: StoreClientsService,
     private readonly storeWalletsService: StoreWalletsService,
   ) {}
 
@@ -53,8 +56,13 @@ export class StoresController {
   }
 
   @Post('add-to-store')
-  public async addToStore(@Body() body: UserToStoreDTO) {
+  public async addUserToStore(@Body() body: UserToStoreDTO) {
     return await this.storeUsersService.relationToStore(body);
+  }
+
+  @Post('add-client-to-store')
+  public async addClientToStore(@Body() body: ClientToStoreDTO) {
+    return await this.storeClientsService.relationToStore(body);
   }
 
   @Post('add-wallet-to-store')

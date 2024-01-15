@@ -8,6 +8,7 @@ import { EmailsEntity } from '../entities/emails.entity';
 import { ErrorManager } from '../../utils/error.manager';
 import { UserEntity } from '../../users/entities/user.entity';
 import { StoreEntity } from '../../stores/entities/store.entity';
+import { ClientEntity } from '../../clients/entities/client.entity';
 
 @Injectable()
 export class EmailService {
@@ -49,16 +50,28 @@ export class EmailService {
     }
   }
 
-  private async createClientEmail(email: string, ClientID: string) {
+  public async createClientEmail(emails: string[], client: ClientEntity) {
     const queryRunner = this.dataSource.createQueryRunner();
     try {
       queryRunner.connect();
       queryRunner.startTransaction();
 
+      for (let i = 0; i < emails.length; i++) {
+        const newEmail = this.emailRepository.create({
+          email: emails[i],
+        });
+        newEmail.client = client;
+        await this.emailRepository.save(newEmail);
+      }
+
       await queryRunner.commitTransaction();
     } catch (e) {
       await queryRunner.rollbackTransaction();
       console.log(e);
+      throw new ErrorManager({
+        type: 'INTERNAL_SERVER_ERROR',
+        message: 'Error al crear el email',
+      });
     } finally {
       queryRunner.release();
     }

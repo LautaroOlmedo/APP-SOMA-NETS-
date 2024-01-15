@@ -1,30 +1,29 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { DataSource, DeleteResult, Repository, UpdateResult } from 'typeorm';
 
 // ---------- ---------- ---------- ---------- ----------
 
 import { ClientEntity } from '../entities/client.entity';
-import { EmailsEntity } from '../../emails/entities/emails.entity';
-import { PhonesEntity } from '../../phones/entities/phones.entity';
 import { ErrorManager } from '../../utils/error.manager';
-import { StoreClientsEntity } from '../../stores/entities/store-clients.entity';
 import { DepartmentEntity } from '../../departments/entities/department.entity';
 import { ProvinceEntity } from '../../provinces/entities/province.entity';
 import { CountryEntity } from '../../countries/entities/country.entity';
-import { ClientUpdateDTO } from '../dto/client.dto';
+import { ClientDTO, ClientUpdateDTO } from '../dto/client.dto';
+import { EmailService } from '../../emails/services/email.service';
+import { PhonesService } from '../../phones/services/phones.service';
+import { DirectionsService } from '../../directions/services/directions.service';
 
 @Injectable()
 export class ClientsService {
   constructor(
     @InjectRepository(ClientEntity)
     private readonly clientRepository: Repository<ClientEntity>,
-    @InjectRepository(StoreClientsEntity)
-    private readonly storeClientsRepository: Repository<StoreClientsEntity>,
-    @InjectRepository(EmailsEntity)
-    private readonly emailRepository: Repository<EmailsEntity>,
-    @InjectRepository(PhonesEntity)
-    private readonly phoneRepository: Repository<PhonesEntity>, //@InjectRepository(UserDirectionsEntity) //private readonly userDirectionRepository: Repository<UserDirectionsEntity>,
+    private readonly emailsService: EmailService,
+    private readonly phonesService: PhonesService,
+    private readonly directionsService: DirectionsService,
+
+    private readonly dataSource: DataSource, //@InjectRepository(UserDirectionsEntity) //private readonly userDirectionRepository: Repository<UserDirectionsEntity>,
   ) {}
 
   public async findAllClients(): Promise<ClientEntity[]> {
@@ -69,43 +68,53 @@ export class ClientsService {
     }
   }
 
-  public async createClient(
-    firstname: string,
-    lastname: string,
-    dni: string,
-    department: DepartmentEntity,
-    province: ProvinceEntity,
-    country: CountryEntity,
-    emails: string[],
-    phones: string[],
-  ) {
+  public async createClient(body: ClientDTO) {
+    const {
+      firstname,
+      lastname,
+      dni,
+      department,
+      direction,
+      brand,
+      province,
+      country,
+      emails,
+      phones,
+    } = body;
+    const queryRunner = this.dataSource.createQueryRunner();
     try {
+      queryRunner.connect();
+      queryRunner.startTransaction();
+
       const newClient = this.clientRepository.create({
         firstname,
         lastname,
         dni,
+        brand,
         department,
         province,
         country,
       });
+
+      const clientDirection = await this.directionsService.createDirection(
+        direction,
+        department,
+      );
+
+      newClient.direction = clientDirection;
+
       await this.clientRepository.save(newClient);
 
-      for (let i = 0; i < emails.length; i++) {
-        let newEmail = this.emailRepository.create({ email: emails[i] });
-        newEmail.client = newClient;
-        await this.emailRepository.save(newEmail);
-      }
+      await this.emailsService.createClientEmail(emails, newClient);
+      await this.phonesService.createClientPhone(phones, newClient);
 
-      for (let j = 0; j < phones.length; j++) {
-        let newPhone = this.phoneRepository.create({
-          phoneNumber: phones[j],
-        });
-        newPhone.client = newClient;
-        await this.phoneRepository.save(newPhone);
-      }
+      await queryRunner.commitTransaction();
     } catch (e) {
+      await queryRunner.rollbackTransaction();
       console.log(e);
       throw ErrorManager.createSignatureError(e.message);
+    } finally {
+      queryRunner.release();
     }
   }
 
@@ -145,13 +154,4 @@ export class ClientsService {
   }
 
   // ---------- ----------  RELATIONS  ---------- ----------
-
-  public async relationToStore(body: any /*UserToStoreDTO*/) {
-    try {
-      return await this.storeClientsRepository.save(body);
-    } catch (e) {
-      console.log(e);
-      throw ErrorManager.createSignatureError(e.message);
-    }
-  }
 }

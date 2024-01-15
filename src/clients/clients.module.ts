@@ -14,6 +14,9 @@ import { PhonesEntity } from '.././phones/entities/phones.entity';
 import { EmailsEntity } from '.././emails/entities/emails.entity';
 import { PurchaseEntity } from '.././purchases/entities/purchase.entity';
 import { DirectionsEntity } from 'src/directions/entities/directions.entity';
+import { EmailService } from '.././emails/services/email.service';
+import { PhonesService } from '.././phones/services/phones.service';
+import { DirectionsService } from '.././directions/services/directions.service';
 
 @Module({
   imports: [
@@ -30,7 +33,7 @@ import { DirectionsEntity } from 'src/directions/entities/directions.entity';
     ]),
   ],
   controllers: [ClientsController],
-  providers: [ClientsService],
-  exports: [TypeOrmModule],
+  providers: [ClientsService, EmailService, PhonesService, DirectionsService],
+  exports: [TypeOrmModule, ClientsService],
 })
 export class ClientsModule {}
