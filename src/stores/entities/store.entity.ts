@@ -55,10 +55,6 @@ export class StoreEntity extends BaseEntity implements StoreInterface {
   @OneToOne(() => PurchaseEntity, (purchases) => purchases.store)
   purchases: PurchaseEntity[];
 
-  /*@ManyToOne(() => StoreDirectionsEntity, (direction) => direction.stores)
-  @JoinColumn({ name: 'direction_id' })
-  direction?: StoreDirectionsEntity;*/
-
   @ManyToOne(() => BrandEntity, (brand) => brand.storesIncludes)
   @JoinColumn({ name: 'brand_id' })
   brand!: BrandEntity;

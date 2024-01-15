@@ -3,7 +3,6 @@ import { Column, Entity, ManyToOne } from 'typeorm';
 // ---------- ---------- ---------- ---------- ----------
 
 import { BaseEntity } from '../../config/base.entity';
-import { UserEntity } from '../../users/entities/user.entity';
 import { StoreEntity } from './store.entity';
 import { ACCES_LEVEL_CLIENTS } from '../../constants/roles';
 import { ClientEntity } from '../../clients/entities/client.entity';
