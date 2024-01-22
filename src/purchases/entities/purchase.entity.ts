@@ -17,6 +17,7 @@ import { ClientEntity } from '../../clients/entities/client.entity';
 import { StoreEntity } from '../../stores/entities/store.entity';
 import { MovmentOutEntity } from '../../finances/entities/movement-out.entity';
 import { PurchaseInterface } from 'src/interfaces/purchase.interface';
+import { MovmentInEntity } from 'src/finances/entities/movement-in.entity';
 
 @Entity({ name: 'purchases' })
 export class PurchaseEntity extends BaseEntity implements PurchaseInterface {
@@ -32,9 +33,9 @@ export class PurchaseEntity extends BaseEntity implements PurchaseInterface {
 
   // ---------- ---------- RELATIONS ---------- ----------
 
-  @OneToOne(() => MovmentOutEntity, (movmentOut) => movmentOut.purchase)
-  @JoinColumn({ name: 'movment_out_id' })
-  movementOut: MovmentOutEntity;
+  @OneToOne(() => MovmentInEntity, (movmentIn) => movmentIn.purchase)
+  @JoinColumn({ name: 'movment_in_id' })
+  movementIn: MovmentInEntity;
 
   @ManyToOne(() => UserEntity, (user) => user.purchases)
   @JoinColumn({ name: 'user_id' })

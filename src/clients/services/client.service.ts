@@ -22,8 +22,7 @@ export class ClientsService {
     private readonly emailsService: EmailService,
     private readonly phonesService: PhonesService,
     private readonly directionsService: DirectionsService,
-
-    private readonly dataSource: DataSource, //@InjectRepository(UserDirectionsEntity) //private readonly userDirectionRepository: Repository<UserDirectionsEntity>,
+    private readonly dataSource: DataSource,
   ) {}
 
   public async findAllClients(): Promise<ClientEntity[]> {
@@ -68,7 +67,30 @@ export class ClientsService {
     }
   }
 
-  public async createClient(body: ClientDTO) {
+  public async findByUniqueValues(
+    body: ClientDTO,
+  ): Promise<boolean | ErrorManager> {
+    const { dni } = body;
+    try {
+      const userAlreadyExists: ClientEntity =
+        await this.clientRepository.findOne({
+          where: [{ dni }],
+        });
+
+      if (userAlreadyExists) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'DNI ya existe uso',
+        });
+      }
+      return true;
+    } catch (e) {
+      console.log(e);
+      throw new ErrorManager.createSignatureError(e.message);
+    }
+  }
+
+  public async createClient(body: ClientDTO): Promise<void | ErrorManager> {
     const {
       firstname,
       lastname,
@@ -82,6 +104,7 @@ export class ClientsService {
       phones,
     } = body;
     const queryRunner = this.dataSource.createQueryRunner();
+
     try {
       queryRunner.connect();
       queryRunner.startTransaction();

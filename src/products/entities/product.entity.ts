@@ -9,6 +9,7 @@ import { PurchaseProductsEntity } from '../../purchases/entities/purchase-produc
 import { size, talle } from '../../constants/enums';
 
 import { StockProductsEntity } from '../../stocks/entities/stock-products.entity';
+import { BrandEntity } from '../../brands/entities/brand.entity';
 
 @Entity({ name: 'products' })
 export class ProductEntity extends BaseEntity {
@@ -56,6 +57,10 @@ export class ProductEntity extends BaseEntity {
   active: boolean;
 
   // ---------- ---------- RELATIONS ---------- ----------
+
+  @ManyToOne(() => BrandEntity, (brand) => brand.productsIncludes)
+  @JoinColumn({ name: 'brand_id' })
+  brand!: BrandEntity;
 
   @ManyToOne(() => CategoryEntity, (category) => category.products)
   @JoinColumn({ name: 'category_id' })

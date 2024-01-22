@@ -11,7 +11,12 @@ export class ClientsController {
 
   @Post('register')
   public async createClient(@Body() body: ClientDTO) {
-    return await this.clientsService.createClient(body);
+    const validate = await this.clientsService.findByUniqueValues(body);
+    if (!validate) {
+      return validate;
+    } else {
+      return await this.clientsService.createClient(body);
+    }
   }
 
   // ---------- ----------  RELATIONS  ---------- ----------

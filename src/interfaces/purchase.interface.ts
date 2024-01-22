@@ -1,5 +1,6 @@
 // ---------- ---------- ---------- ---------- ----------
 
+import { MovmentInEntity } from '.././finances/entities/movement-in.entity';
 import { ClientEntity } from '.././clients/entities/client.entity';
 import { paymentMethod, transactionStatus } from '.././constants';
 import { MovmentOutEntity } from '.././finances/entities/movement-out.entity';
@@ -10,7 +11,7 @@ import { UserEntity } from '.././users/entities/user.entity';
 export interface PurchaseInterface {
   status: transactionStatus;
   paymentMethod: paymentMethod;
-  movementOut: MovmentOutEntity;
+  movementIn?: MovmentInEntity;
   user: UserEntity;
   client: ClientEntity;
   store: StoreEntity;

@@ -20,7 +20,7 @@ export class BrandsService {
         .createQueryBuilder('brand')
         .leftJoinAndSelect('brand.clientsIncludes', 'clientsIncludes')
         .leftJoinAndSelect('brand.usersIncludes', 'usersIncludes')
-        .leftJoinAndSelect('brand.stores', 'store')
+        .leftJoinAndSelect('brand.storesIncludes', 'storesIncludes')
         .getMany();
       if (brands.length === 0) {
         throw new ErrorManager({
@@ -44,6 +44,8 @@ export class BrandsService {
         .leftJoinAndSelect('brand.usersIncludes', 'userIncludes')
         .leftJoinAndSelect('brand.storesIncludes', 'storesIncludes')
         .leftJoinAndSelect('brand.clientsIncludes', 'clientsIncludes')
+        .leftJoinAndSelect('brand.stocksIncludes', 'stocksIncludes')
+        //.leftJoinAndSelect('brand.clientsIncludes', 'clientsIncludes')
         .leftJoinAndSelect('brand.emails', 'emails')
         .leftJoinAndSelect('brand.phones', 'phones')
         .getOne();
