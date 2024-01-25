@@ -20,6 +20,8 @@ export class BrandsService {
         .createQueryBuilder('brand')
         .leftJoinAndSelect('brand.users', 'user')
         .leftJoinAndSelect('brand.stores', 'store')
+        .leftJoinAndSelect('store.stock', 'stock')
+
         .getMany();
       if (brands.length === 0) {
         throw new ErrorManager({
@@ -35,12 +37,15 @@ export class BrandsService {
   }
 
   public async findOneBrand(id: string): Promise<BrandEntity | undefined> {
+    // clientes asociados a la marca
     try {
       const brand: BrandEntity = await this.brandRepository
         .createQueryBuilder('brand')
         .where({ id })
         .leftJoinAndSelect('brand.users', 'user')
         .leftJoinAndSelect('brand.stores', 'store')
+        .leftJoinAndSelect('store.stock', 'stock')
+        .leftJoinAndSelect('stock.productsIncludes', 'productsIncludes')
         .getOne();
       if (!brand) {
         throw new ErrorManager({
