@@ -16,7 +16,7 @@ export class MovmentInEntity extends BaseEntity {
 
   // ---------- ---------- RELATIONS ---------- ----------
 
-  @OneToOne(() => PurchaseEntity, (purchase) => purchase.movementIn)
+  @OneToOne(() => PurchaseEntity, (purchase) => purchase.movmentIn)
   purchase?: PurchaseEntity;
 
   @OneToOne(() => WalletEntity, (wallet) => wallet.movmentIn)

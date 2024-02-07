@@ -21,7 +21,7 @@ export class ProvincesService {
   public async loadProvinceDB(): Promise<string | void> {
     let provinces: ProvinceEntity[] = await this.provinceRepository.find();
     const country: CountryEntity = await this.countriesServices.findOneCountry(
-      'f9340df8-c875-40be-8151-7afa2ebc97b9',
+      'a7769313-4d25-4673-b59d-83341016087e',
     );
     console.log('COUNTY', country);
 

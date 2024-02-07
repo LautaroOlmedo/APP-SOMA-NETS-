@@ -125,7 +125,6 @@ export class ClientsService {
       );
 
       newClient.direction = clientDirection;
-
       await this.clientRepository.save(newClient);
 
       await this.emailsService.createClientEmail(emails, newClient);

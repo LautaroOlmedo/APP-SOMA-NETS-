@@ -35,7 +35,7 @@ export class PurchaseEntity extends BaseEntity implements PurchaseInterface {
 
   @OneToOne(() => MovmentInEntity, (movmentIn) => movmentIn.purchase)
   @JoinColumn({ name: 'movment_in_id' })
-  movementIn: MovmentInEntity;
+  movmentIn: MovmentInEntity;
 
   @ManyToOne(() => UserEntity, (user) => user.purchases)
   @JoinColumn({ name: 'user_id' })

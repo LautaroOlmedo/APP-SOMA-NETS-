@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
+
 // ---------- ---------- ---------- ---------- ----------
 
 import { PurchaseEntity } from '../entities/purchase.entity';
@@ -9,12 +10,15 @@ import { ClientEntity } from '../../clients/entities/client.entity';
 import { UserEntity } from '../../users/entities/user.entity';
 import { ErrorManager } from '../../utils/error.manager';
 import { StoreEntity } from '../../stores/entities/store.entity';
+import { WalletEntity } from '../../finances/entities/wallet.entity';
+import { PurchaseDTO } from '../dto/purchase.dto';
 
 @Injectable()
 export class PurchaseService {
   constructor(
     @InjectRepository(PurchaseEntity)
     private readonly purchaseRepository: Repository<PurchaseEntity>,
+    private readonly dataSource: DataSource,
   ) {}
 
   public async findAllPurchases(): Promise<PurchaseEntity[]> {
@@ -33,25 +37,29 @@ export class PurchaseService {
     }
   }
 
-  public async createPurchase(
-    user: UserEntity,
-    client: ClientEntity,
-    store: StoreEntity,
-    paymentMethod: paymentMethod,
-    status: transactionStatus,
-  ): Promise<PurchaseEntity> {
+  public async createPurchase(body: PurchaseDTO): Promise<PurchaseEntity> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    const { user, client, store, paymentMethod, status, movmentIn } = body;
     try {
+      queryRunner.connect();
+      queryRunner.startTransaction();
       const newPurchase = this.purchaseRepository.create({
         user,
         client,
         store,
         paymentMethod,
         status,
+        movmentIn,
       });
-      return await this.purchaseRepository.save(newPurchase);
+      await this.purchaseRepository.save(newPurchase);
+      await queryRunner.commitTransaction();
+      return newPurchase;
     } catch (e) {
       console.log(e);
+      await queryRunner.rollbackTransaction();
       throw ErrorManager.createSignatureError(e.message);
+    } finally {
+      queryRunner.release();
     }
   }
 }

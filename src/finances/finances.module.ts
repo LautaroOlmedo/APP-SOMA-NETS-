@@ -6,14 +6,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { WalletEntity } from './entities/wallet.entity';
 import { StoreWalletsEntity } from '../stores/entities/store-wallets.entity';
 
-import { FinancesServicesService } from './services/finances.services.service';
-
 import { WalletService } from './services/wallet.service';
 
 import { WalletController } from './controllers/wallet.controller';
 import { MovmentInEntity } from './entities/movement-in.entity';
 import { MovmentOutEntity } from './entities/movement-out.entity';
 import { PurchaseEntity } from '.././purchases/entities/purchase.entity';
+import { MovmentInService } from './services/movment-in.service';
 
 @Global()
 @Module({
@@ -27,7 +26,7 @@ import { PurchaseEntity } from '.././purchases/entities/purchase.entity';
     ]),
   ],
   controllers: [WalletController],
-  providers: [FinancesServicesService, WalletService],
-  exports: [TypeOrmModule, WalletService],
+  providers: [WalletService, MovmentInService],
+  exports: [TypeOrmModule, WalletService, MovmentInService],
 })
 export class FinancesModule {}
