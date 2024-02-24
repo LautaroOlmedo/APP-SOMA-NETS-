@@ -10,7 +10,7 @@ import {
 // ---------- ---------- ---------- ---------- ----------
 
 import { BaseEntity } from '../../config/base.entity';
-import { IClient } from '../../interfaces/client.interface';
+import { ClientInterface } from '../../interfaces/client.interface';
 import { CountryEntity } from '../../countries/entities/country.entity';
 import { ProvinceEntity } from '../../provinces/entities/province.entity';
 import { DepartmentEntity } from '../../departments/entities/department.entity';
@@ -22,7 +22,7 @@ import { DirectionsEntity } from 'src/directions/entities/directions.entity';
 import { BrandEntity } from '../../brands/entities/brand.entity';
 
 @Entity({ name: 'clients' })
-export class ClientEntity extends BaseEntity implements IClient {
+export class ClientEntity extends BaseEntity implements ClientInterface {
   @Column()
   firstname: string;
 

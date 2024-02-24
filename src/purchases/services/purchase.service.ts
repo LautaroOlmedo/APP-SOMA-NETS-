@@ -5,12 +5,7 @@ import { DataSource, Repository } from 'typeorm';
 // ---------- ---------- ---------- ---------- ----------
 
 import { PurchaseEntity } from '../entities/purchase.entity';
-import { paymentMethod, transactionStatus } from '../../constants';
-import { ClientEntity } from '../../clients/entities/client.entity';
-import { UserEntity } from '../../users/entities/user.entity';
 import { ErrorManager } from '../../utils/error.manager';
-import { StoreEntity } from '../../stores/entities/store.entity';
-import { WalletEntity } from '../../finances/entities/wallet.entity';
 import { PurchaseDTO } from '../dto/purchase.dto';
 
 @Injectable()
@@ -21,15 +16,18 @@ export class PurchaseService {
     private readonly dataSource: DataSource,
   ) {}
 
-  public async findAllPurchases(): Promise<PurchaseEntity[]> {
+  public async findAllPurchases(
+    storeID: string,
+  ): Promise<PurchaseEntity[] | ErrorManager> {
     try {
-      const purchases: PurchaseEntity[] = await this.purchaseRepository.find();
-      if (purchases.length === 0) {
-        throw new ErrorManager({
-          type: 'BAD_REQUEST',
-          message: 'No se encontró resultado',
-        });
-      }
+      const purchases: PurchaseEntity[] = await this.purchaseRepository
+        .createQueryBuilder('purchase')
+        .leftJoinAndSelect('purchase.movmentIn', 'movmentInInclude')
+        .leftJoinAndSelect('purchase.user', 'userInclude')
+        .leftJoinAndSelect('purchase.client', 'clientInclude')
+        .leftJoinAndSelect('purchase.store', 'storeInclude')
+        .where('purchase.store = :storeID', { storeID })
+        .getMany();
       return purchases;
     } catch (e) {
       console.log(e);
@@ -37,7 +35,8 @@ export class PurchaseService {
     }
   }
 
-  public async createPurchase(body: PurchaseDTO): Promise<PurchaseEntity> {
+  public async createPurchase(body: PurchaseDTO): Promise<void | ErrorManager> {
+    // ---> validate user, client, store, movment
     const queryRunner = this.dataSource.createQueryRunner();
     const { user, client, store, paymentMethod, status, movmentIn } = body;
     try {
@@ -46,14 +45,13 @@ export class PurchaseService {
       const newPurchase = this.purchaseRepository.create({
         user,
         client,
-        store,
+        store, // ---> store in movmentIn?
         paymentMethod,
         status,
         movmentIn,
       });
       await this.purchaseRepository.save(newPurchase);
       await queryRunner.commitTransaction();
-      return newPurchase;
     } catch (e) {
       console.log(e);
       await queryRunner.rollbackTransaction();

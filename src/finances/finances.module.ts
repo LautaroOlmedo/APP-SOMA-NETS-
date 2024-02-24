@@ -13,6 +13,8 @@ import { MovmentInEntity } from './entities/movement-in.entity';
 import { MovmentOutEntity } from './entities/movement-out.entity';
 import { PurchaseEntity } from '.././purchases/entities/purchase.entity';
 import { MovmentInService } from './services/movment-in.service';
+import { MovmentOutService } from './services/movment-out.service';
+import { MovmentController } from './controllers/movment.controller';
 
 @Global()
 @Module({
@@ -25,8 +27,8 @@ import { MovmentInService } from './services/movment-in.service';
       PurchaseEntity,
     ]),
   ],
-  controllers: [WalletController],
-  providers: [WalletService, MovmentInService],
+  controllers: [WalletController, MovmentController],
+  providers: [WalletService, MovmentInService, MovmentOutService],
   exports: [TypeOrmModule, WalletService, MovmentInService],
 })
 export class FinancesModule {}

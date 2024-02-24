@@ -25,20 +25,17 @@ export class ClientsService {
     private readonly dataSource: DataSource,
   ) {}
 
-  public async findAllClients(): Promise<ClientEntity[]> {
+  public async findAllClients(
+    storeID: string,
+  ): Promise<ClientEntity[] | ErrorManager> {
     try {
       const clients: ClientEntity[] = await this.clientRepository
         .createQueryBuilder('client')
-        .leftJoinAndSelect('client.storesIncludes', 'storesIncludes')
-        .leftJoinAndSelect('storesIncludes.store', 'store')
+        .leftJoinAndSelect('client.brand', 'brandInclude')
+        .innerJoin('client.storesIncludes', 'storesIncludes')
+        .innerJoin('storesIncludes.store', 'store')
+        .where('store.id = :storeID', { storeID })
         .getMany();
-
-      if (clients.length === 0) {
-        throw new ErrorManager({
-          type: 'BAD_REQUEST',
-          message: 'No se encontró resultado',
-        });
-      }
       return clients;
     } catch (e) {
       console.log(e);
@@ -46,13 +43,13 @@ export class ClientsService {
     }
   }
 
-  public async findOneClient(id: string): Promise<ClientEntity> {
+  public async findOneClient(storeID: string): Promise<ClientEntity> {
     try {
       const client: ClientEntity = await this.clientRepository
         .createQueryBuilder('client')
-        .where({ id })
-        .leftJoinAndSelect('client.storesIncludes', 'storesIncludes')
-        .leftJoinAndSelect('storesIncludes.store', 'store')
+        .innerJoin('client.storesIncludes', 'storesIncludes')
+        .innerJoin('storesIncludes.store', 'store')
+        .where('store.id = :storeID', { storeID })
         .getOne();
       if (!client) {
         throw new ErrorManager({

@@ -38,7 +38,7 @@ export class PurchaseProductService {
     }
   }
 
-  async create(
+  async createPurchaseProduct(
     quantity: number,
     product: ProductEntity,
     purchase: PurchaseEntity,

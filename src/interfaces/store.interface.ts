@@ -17,6 +17,6 @@ export interface StoreInterface {
   emails?: EmailsEntity[];
   phones?: PhonesEntity[];
   stockIncludes?: StockEntity[];
-  purchases?: PurchaseEntity[];
+  // purchases?: PurchaseEntity[];
   brand?: BrandEntity;
 }

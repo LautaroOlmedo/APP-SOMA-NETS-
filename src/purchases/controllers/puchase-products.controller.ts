@@ -20,7 +20,7 @@ export class PuchaseProductsController {
     try {
       const { quantity, product, purchase } = body;
 
-      const newPP = await this.purchaseProductsService.create(
+      const newPP = await this.purchaseProductsService.createPurchaseProduct(
         quantity,
         product,
         purchase,

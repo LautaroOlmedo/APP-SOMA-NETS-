@@ -47,10 +47,7 @@ export class WalletService {
         });
 
       if (storeAlreadyExists !== null) {
-        throw new ErrorManager({
-          type: 'BAD_REQUEST',
-          message: 'El nombre de la billetera está en uso',
-        });
+        return false;
       }
       return true;
     } catch (e) {
@@ -59,12 +56,15 @@ export class WalletService {
     }
   }
 
-  public async createWallet(body: WalletDTO) {
+  public async createWallet(body: WalletDTO): Promise<void | ErrorManager> {
+    if (!(await this.findByUniqueValues(body))) {
+      throw new ErrorManager({
+        type: 'BAD_REQUEST',
+        message: 'La billetera ya existe',
+      });
+    }
     const queryRunner = this.dataSource.createQueryRunner();
     try {
-      if (await this.findByUniqueValues(body)) {
-        return await this.findByUniqueValues(body);
-      }
       queryRunner.connect();
       queryRunner.startTransaction();
 
@@ -101,6 +101,7 @@ export class WalletService {
   }
 
   public async addBalance(
+    // ---> transaction
     balance: number,
     walletID: string,
   ): Promise<void | ErrorManager> {
@@ -124,6 +125,7 @@ export class WalletService {
   }
 
   public async subtractBalance(
+    // ---> transaction
     balance: number,
     walletID: string,
   ): Promise<void | ErrorManager> {

@@ -1,27 +1,28 @@
-import { Body, Post, Controller } from '@nestjs/common';
+import {
+  Body,
+  Post,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+} from '@nestjs/common';
 
 // ---------- ---------- ---------- ---------- ----------
 
 import { PurchaseService } from '../services/purchase.service';
 import { PurchaseDTO } from '../dto/purchase.dto';
 
-@Controller('purchase')
+@Controller('purchases')
 export class PurchaseController {
   constructor(private readonly purchasesService: PurchaseService) {}
 
-  public async getAllPurchases() {
-    return await this.purchasesService.findAllPurchases();
+  @Get(':id')
+  public async getAllPurchases(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.purchasesService.findAllPurchases(id);
   }
 
   @Post('register')
   public async createPurchase(@Body() body: PurchaseDTO) {
-    const { user, client, store, paymentMethod, status } = body;
-    return await this.purchasesService.createPurchase(
-      user,
-      client,
-      store,
-      paymentMethod,
-      status,
-    );
+    return await this.purchasesService.createPurchase(body);
   }
 }

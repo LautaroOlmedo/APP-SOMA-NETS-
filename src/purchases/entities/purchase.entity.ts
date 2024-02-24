@@ -15,9 +15,9 @@ import { PurchaseProductsEntity } from './purchase-product.entity';
 import { paymentMethod, transactionStatus } from '../../constants/index';
 import { ClientEntity } from '../../clients/entities/client.entity';
 import { StoreEntity } from '../../stores/entities/store.entity';
-import { MovmentOutEntity } from '../../finances/entities/movement-out.entity';
-import { PurchaseInterface } from 'src/interfaces/purchase.interface';
-import { MovmentInEntity } from 'src/finances/entities/movement-in.entity';
+import { PurchaseInterface } from '../../interfaces/purchase.interface';
+import { MovmentInEntity } from '../../finances/entities/movement-in.entity';
+import { WalletEntity } from '../../finances/entities/wallet.entity';
 
 @Entity({ name: 'purchases' })
 export class PurchaseEntity extends BaseEntity implements PurchaseInterface {
@@ -48,6 +48,10 @@ export class PurchaseEntity extends BaseEntity implements PurchaseInterface {
   @ManyToOne(() => StoreEntity, (store) => store.purchases)
   @JoinColumn({ name: 'store_id' })
   store: StoreEntity;
+
+  // @ManyToOne(() => WalletEntity, (wallet) => wallet.purchases)
+  // @JoinColumn({ name: 'store_id' })
+  // wallet: WalletEntity;
 
   @OneToMany(
     () => PurchaseProductsEntity,

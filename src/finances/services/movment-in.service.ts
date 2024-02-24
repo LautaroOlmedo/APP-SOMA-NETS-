@@ -29,7 +29,6 @@ export class MovmentInService {
 
   public async createMovment(body: MovmentInDTO): Promise<void | ErrorManager> {
     const queryRunner = this.dataSource.createQueryRunner();
-
     try {
       const { reason, total, wallet } = body;
 
@@ -40,6 +39,7 @@ export class MovmentInService {
         reason,
         total,
         wallet,
+        // ---> store?
       });
       await this.movmentInRepository.save(newMovmentIn);
       await queryRunner.commitTransaction();

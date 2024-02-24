@@ -11,7 +11,7 @@ export class MovmentInEntity extends BaseEntity {
   @Column()
   reason: string;
 
-  @Column()
+  @Column({ default: 0.0 })
   total: number;
 
   // ---------- ---------- RELATIONS ---------- ----------

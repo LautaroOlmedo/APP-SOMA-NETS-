@@ -36,11 +36,11 @@ export class PurchaseDTO {
   @Expose()
   client: ClientEntity;
 
-  @Expose()
-  purchaseProduct: PurchaseProductsEntity;
+  // @Expose()
+  // purchaseProduct: PurchaseProductsEntity;
 
-  @Expose()
-  wallet: WalletEntity;
+  // @Expose()
+  // wallet: WalletEntity;
 
   @Expose()
   movmentIn: MovmentInEntity;
