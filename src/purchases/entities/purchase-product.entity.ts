@@ -14,10 +14,13 @@ export class PurchaseProductsEntity
   implements PurchaseProductInterface
 {
   @Column({ type: 'integer' })
-  quantity_products!: number;
+  quantityOfProducts!: number;
 
   @Column({ type: 'integer' })
-  total_price!: number;
+  totalPrice!: number;
+
+  // @Column({ type: 'integer' })
+  // totalPaid: number
 
   // ---------- ---------- RELATIONS ---------- ----------
 
@@ -28,7 +31,7 @@ export class PurchaseProductsEntity
   @JoinColumn({ name: 'product_id' })
   product!: ProductEntity;
 
-  @OneToOne(() => WalletEntity, (wallet) => wallet.purchaseProduct)
-  @JoinColumn({ name: 'wallet_id' })
-  wallet?: WalletEntity;
+  // @OneToOne(() => WalletEntity, (wallet) => wallet.purchaseProduct)
+  // @JoinColumn({ name: 'wallet_id' })
+  // wallet?: WalletEntity;
 }

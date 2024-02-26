@@ -16,25 +16,26 @@ export class PuchaseProductsController {
   }
 
   @Post('register')
-  public async registerPP(@Body() body: any) {
-    try {
-      const { quantity, product, purchase } = body;
+  public async registerPP() {}
+  // public async registerPP(@Body() body: any) {
+  //   try {
+  //     const { quantity, product, purchase } = body;
 
-      const newPP = await this.purchaseProductsService.createPurchaseProduct(
-        quantity,
-        product,
-        purchase,
-      );
-      if (newPP) {
-        return newPP;
-      } else {
-        return 'prueba';
-      }
-    } catch (e) {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        msg: 'Error en el servidor',
-      };
-    }
-  }
+  //     const newPP = await this.purchaseProductsService.createPurchaseProduct(
+  //       quantity,
+  //       product,
+  //       purchase,
+  //     );
+  //     if (newPP) {
+  //       return newPP;
+  //     } else {
+  //       return 'prueba';
+  //     }
+  //   } catch (e) {
+  //     return {
+  //       status: HttpStatus.BAD_REQUEST,
+  //       msg: 'Error en el servidor',
+  //     };
+  //   }
+  // }
 }

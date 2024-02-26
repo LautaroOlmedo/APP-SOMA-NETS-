@@ -26,7 +26,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   //@Roles('ADMIN')
-  @PublicAcces()
+  //@PublicAcces()
   @Get('all')
   async getAllUsers() {
     return await this.usersService.findAllUsers();
