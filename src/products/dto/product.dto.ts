@@ -15,6 +15,8 @@ import { ProductEntity } from '../entities/product.entity';
 import { StockEntity } from '../../stocks/entities/stock.entity';
 
 export class ProductDTO {
+  @IsOptional()
+  image: string;
   @IsNotEmpty()
   productName: string;
 
@@ -23,10 +25,13 @@ export class ProductDTO {
 
   @IsNotEmpty()
   effectivePrice: number;
+
   @IsNotEmpty()
   cardPrice: number;
+
   @IsNotEmpty()
   dollarPrice: number;
+
   @IsNotEmpty()
   wholesalePrice: number;
 
@@ -40,7 +45,6 @@ export class ProductDTO {
 
   @IsNotEmpty()
   @IsInt()
-  @Min(9)
   @Max(250)
   quantity: number;
 

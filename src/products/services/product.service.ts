@@ -61,6 +61,7 @@ export class ProductService {
       category,
       stock, // ---> Puede llegar a ser un array para crear un producto en varios stock
       quantity,
+      image,
     } = body;
 
     const queryRunner = this.dataSource.createQueryRunner();
@@ -88,6 +89,7 @@ export class ProductService {
         size,
         code,
         category,
+        productImage: image,
       });
       await this.productRepository.save(newProduct);
       await this.stockProductsService.addProductToStock(
