@@ -29,6 +29,6 @@ import { MovmentController } from './controllers/movment.controller';
   ],
   controllers: [WalletController, MovmentController],
   providers: [WalletService, MovmentInService, MovmentOutService],
-  exports: [TypeOrmModule, WalletService, MovmentInService],
+  exports: [TypeOrmModule, WalletService, MovmentInService, MovmentOutService],
 })
 export class FinancesModule {}

@@ -17,6 +17,8 @@ import { StoreEntity } from '.././stores/entities/store.entity';
 import { StocksService } from '.././stocks/services/stocks.service';
 import { StoresService } from '.././stores/services/stores.service';
 import { MovmentOutEntity } from '.././finances/entities/movement-out.entity';
+import { WalletService } from '.././finances/services/wallet.service';
+import { MovmentInService } from '.././finances/services/movment-in.service';
 
 @Module({
   imports: [
@@ -33,6 +35,8 @@ import { MovmentOutEntity } from '.././finances/entities/movement-out.entity';
   controllers: [PurchaseController, PuchaseProductsController],
   providers: [
     PurchaseService,
+    WalletService,
+    MovmentInService,
     PurchaseProductService,
     ProductService,
     StocksService,

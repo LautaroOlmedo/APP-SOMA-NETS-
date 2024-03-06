@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 
 // ---------- ---------- ---------- ---------- ----------
 
@@ -11,6 +11,7 @@ import { ErrorManager } from '../../utils/error.manager';
 import { PurchaseEntity } from '../entities/purchase.entity';
 import { StoresService } from '../../stores/services/stores.service';
 import { StoreEntity } from '../../stores/entities/store.entity';
+import { paymentMethod } from 'src/constants';
 
 @Injectable()
 export class PurchaseProductService {
@@ -19,18 +20,14 @@ export class PurchaseProductService {
     private readonly purchaseProductRepository: Repository<PurchaseProductsEntity>,
     private readonly productsService: ProductService,
     private readonly storesService: StoresService,
+
+    private readonly dataSource: DataSource,
   ) {}
 
   public async findAllPP(): Promise<PurchaseProductsEntity[]> {
     try {
       const purchaseProducts: PurchaseProductsEntity[] =
         await this.purchaseProductRepository.find();
-      if (purchaseProducts.length === 0) {
-        throw new ErrorManager({
-          type: 'BAD_REQUEST',
-          message: 'No se encontró resultado',
-        });
-      }
       return purchaseProducts;
     } catch (e) {
       console.log(e);
@@ -38,42 +35,44 @@ export class PurchaseProductService {
     }
   }
 
-  // async createPurchaseProduct(
-  //   quantity: number,
-  //   product: ProductEntity,
-  //   purchase: PurchaseEntity,
-  // ): Promise<PurchaseProductsEntity> {
-  //   try {
-  //     const newPP = this.purchaseProductRepository.create({
-  //       product: product,
-  //       quantity_products: quantity,
-  //       purchase: purchase,
-  //     });
-  //     const prod: ProductEntity = await this.productsService.findOneProduct(
-  //       newPP.product.id,
-  //     );
-  //     const store: StoreEntity = await this.storesService.findOneStore(
-  //       newPP.purchase.store.id,
-  //     );
+  async createPurchaseProduct(
+    quantityOfProducts: number,
+    totalPaid: number,
+    product: ProductEntity,
+    purchase: PurchaseEntity,
+  ): Promise<PurchaseProductsEntity> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    try {
+      queryRunner.connect();
+      queryRunner.startTransaction();
 
-  //     // if (stock.availableQuantity < newPP.quantity_products) {
-  //     //   throw new ErrorManager({
-  //     //     type: 'CONFLICT',
-  //     //     message: 'No hay suficiente stock',
-  //     //   });
-  //     // }
-  //     // const newProductQuantity = (prod!.quantity =
-  //     //   prod!.quantity - newPP.quantity_products);
-  //     // await this.productsService.actualizarCantidad(
-  //     //   prod.id,
-  //     //   newProductQuantity,
-  //     // );
+      const newPurchaseProduct = this.purchaseProductRepository.create({
+        quantityOfProducts,
+        totalPaid,
+        product,
+      });
 
-  //     newPP.total_price = prod!.effectivePrice * newPP.quantity_products;
-  //     return await this.purchaseProductRepository.save(newPP);
-  //   } catch (e) {
-  //     console.log(e);
-  //     throw new ErrorManager.createSignatureError(e.message);
-  //   }
-  // }
+      if (purchase.paymentMethod == paymentMethod.CASH) {
+        // .---> ARMAR VERIFICACIÓN PARA MÉTODO DE PAGO Y MONEDA
+        newPurchaseProduct.totalPrice =
+          product!.effectivePrice * newPurchaseProduct.quantityOfProducts;
+      } else {
+        newPurchaseProduct.totalPrice =
+          product!.dollarPrice * newPurchaseProduct.quantityOfProducts;
+      }
+      newPurchaseProduct.totalPrice =
+        product!.effectivePrice * newPurchaseProduct.quantityOfProducts;
+
+      newPurchaseProduct.purchase = purchase;
+      await this.purchaseProductRepository.save(newPurchaseProduct);
+      await queryRunner.commitTransaction();
+      return newPurchaseProduct;
+    } catch (e) {
+      await queryRunner.rollbackTransaction();
+      console.log(e);
+      throw new ErrorManager.createSignatureError(e.message);
+    } finally {
+      queryRunner.release();
+    }
+  }
 }

@@ -1,3 +1,4 @@
+import { MovmentInEntity } from '.././finances/entities/movement-in.entity';
 import { BrandEntity } from '.././brands/entities/brand.entity';
 import { EmailsEntity } from '.././emails/entities/emails.entity';
 import { PhonesEntity } from '.././phones/entities/phones.entity';
@@ -18,5 +19,6 @@ export interface StoreInterface {
   phones?: PhonesEntity[];
   stockIncludes?: StockEntity[];
   // purchases?: PurchaseEntity[];
+  movmentsIn?: MovmentInEntity[];
   brand?: BrandEntity;
 }

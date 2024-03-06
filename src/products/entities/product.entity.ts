@@ -13,29 +13,28 @@ import { BrandEntity } from '../../brands/entities/brand.entity';
 
 @Entity({ name: 'products' })
 export class ProductEntity extends BaseEntity {
-  @Column({ type: 'varchar', length: 25 })
+  @Column({ type: 'varchar' })
   productName!: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  productImage!: string;
 
   @Column({ type: 'varchar', length: 150 })
   description!: string;
 
-  @Column({ type: 'integer' })
-  @Min(9)
+  @Column({ type: 'integer', nullable: true })
   @Max(25000)
   effectivePrice!: number;
 
-  @Column({ type: 'integer' })
-  @Min(9)
+  @Column({ type: 'integer', nullable: true, default: null })
   @Max(25000)
   cardPrice!: number;
 
-  @Column({ type: 'integer' })
-  @Min(9)
+  @Column({ type: 'integer', nullable: true, default: null })
   @Max(25000)
   dollarPrice!: number;
 
-  @Column({ type: 'integer' })
-  @Min(9)
+  @Column({ type: 'integer', nullable: true, default: null })
   @Max(25000)
   wholesalePrice!: number;
 

@@ -14,6 +14,6 @@ export interface PurchaseInterface {
   movementIn?: MovmentInEntity;
   user: UserEntity;
   client: ClientEntity;
-  store: StoreEntity;
+  // store: StoreEntity;
   purchaseProduct: PurchaseProductsEntity[];
 }

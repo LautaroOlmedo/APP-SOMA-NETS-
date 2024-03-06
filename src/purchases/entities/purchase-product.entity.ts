@@ -13,18 +13,19 @@ export class PurchaseProductsEntity
   extends BaseEntity
   implements PurchaseProductInterface
 {
-  @Column({ type: 'integer' })
-  quantityOfProducts!: number;
+  @Column({ default: 0.0 })
+  quantityOfProducts: number;
 
-  @Column({ type: 'integer' })
-  totalPrice!: number;
+  @Column({ default: 0.0 })
+  totalPrice: number;
 
-  // @Column({ type: 'integer' })
-  // totalPaid: number
+  @Column({ default: 0.0 })
+  totalPaid: number;
 
   // ---------- ---------- RELATIONS ---------- ----------
 
   @ManyToOne(() => PurchaseEntity, (purchase) => purchase.purchaseProduct)
+  @JoinColumn({ name: 'purchase_id' })
   purchase: PurchaseEntity;
 
   @ManyToOne(() => ProductEntity, (product) => product.purchaseProduct)

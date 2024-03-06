@@ -45,9 +45,9 @@ export class PurchaseEntity extends BaseEntity implements PurchaseInterface {
   @JoinColumn({ name: 'client_id' })
   client!: ClientEntity;
 
-  @ManyToOne(() => StoreEntity, (store) => store.purchases)
-  @JoinColumn({ name: 'store_id' })
-  store: StoreEntity;
+  // @ManyToOne(() => StoreEntity, (store) => store.purchases)
+  // @JoinColumn({ name: 'store_id' })
+  // store: StoreEntity;
 
   // @ManyToOne(() => WalletEntity, (wallet) => wallet.purchases)
   // @JoinColumn({ name: 'store_id' })

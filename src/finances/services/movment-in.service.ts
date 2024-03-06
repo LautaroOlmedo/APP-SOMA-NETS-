@@ -9,6 +9,7 @@ import { ErrorManager } from '../../utils/error.manager';
 import { MovmentInDTO } from '../dto/movment-in.dto';
 import { WalletService } from './wallet.service';
 import { WalletEntity } from '../entities/wallet.entity';
+import { StoreEntity } from '../../stores/entities/store.entity';
 
 @Injectable()
 export class MovmentInService {
@@ -39,13 +40,40 @@ export class MovmentInService {
         reason,
         total,
         wallet,
-        // ---> store?
       });
       await this.movmentInRepository.save(newMovmentIn);
       await queryRunner.commitTransaction();
     } catch (e) {
       console.log(e);
       await queryRunner.rollbackTransaction();
+      throw new ErrorManager.createSignatureError(e.message);
+    } finally {
+      queryRunner.release();
+    }
+  }
+
+  public async createMovmentForPurchase(
+    reason: string,
+    wallet: WalletEntity,
+    store: StoreEntity,
+  ): Promise<MovmentInEntity> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    try {
+      queryRunner.connect();
+      queryRunner.startTransaction();
+      const newMovmentIn = this.movmentInRepository.create({
+        reason,
+        wallet,
+        store,
+      });
+      // ---> newMovmentIn.purchase = newPurchase ?
+      await this.movmentInRepository.save(newMovmentIn);
+
+      await queryRunner.commitTransaction();
+      return newMovmentIn;
+    } catch (e) {
+      await queryRunner.rollbackTransaction();
+      console.log(e);
       throw new ErrorManager.createSignatureError(e.message);
     } finally {
       queryRunner.release();

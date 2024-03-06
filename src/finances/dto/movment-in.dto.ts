@@ -20,7 +20,7 @@ export class MovmentInDTO {
   @IsString()
   reason: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   total: number;
 

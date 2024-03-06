@@ -11,7 +11,9 @@ export enum transactionStatus {
 
   PENDING = 'PENDING',
 
-  REJECTED = 'TREJECTED',
+  REJECTED = 'REJECTED',
+
+  PARTIAL = 'PARTIAL',
 }
 
 export enum size {

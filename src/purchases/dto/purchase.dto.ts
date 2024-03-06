@@ -2,6 +2,7 @@ import {
   IsBoolean,
   isEnum,
   IsEnum,
+  IsInt,
   isNotEmpty,
   IsNotEmpty,
   IsNumber,
@@ -20,15 +21,32 @@ import { paymentMethod, transactionStatus } from '../../constants';
 import { StoreEntity } from '../../stores/entities/store.entity';
 import { WalletEntity } from '../../finances/entities/wallet.entity';
 import { MovmentInEntity } from '../../finances/entities/movement-in.entity';
+import { ProductEntity } from 'src/products/entities/product.entity';
 
 export class PurchaseDTO {
-  @IsNotEmpty()
-  @IsEnum(transactionStatus)
-  status: transactionStatus;
+  // @IsNotEmpty()
+  // @IsEnum(transactionStatus)
+  // status: transactionStatus;
 
   @IsNotEmpty()
   @IsEnum(paymentMethod)
   paymentMethod: paymentMethod;
+
+  @IsNotEmpty()
+  @IsInt()
+  quantityOfProducts: number;
+
+  // @IsNotEmpty()
+  // @IsNumber()
+  // totalPrice: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  totalPaid: number;
+
+  @IsNotEmpty()
+  @IsString()
+  reason: string;
 
   @Expose()
   user: UserEntity;
@@ -36,14 +54,11 @@ export class PurchaseDTO {
   @Expose()
   client: ClientEntity;
 
-  // @Expose()
-  // purchaseProduct: PurchaseProductsEntity;
-
-  // @Expose()
-  // wallet: WalletEntity;
+  @Expose()
+  product: ProductEntity;
 
   @Expose()
-  movmentIn: MovmentInEntity;
+  wallet: WalletEntity;
 
   @Expose()
   store: StoreEntity;

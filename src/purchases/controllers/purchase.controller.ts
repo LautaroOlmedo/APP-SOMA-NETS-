@@ -21,7 +21,7 @@ export class PurchaseController {
     return await this.purchasesService.findAllPurchases(id);
   }
 
-  @Post('register')
+  @Post('create')
   public async createPurchase(@Body() body: PurchaseDTO) {
     return await this.purchasesService.createPurchase(body);
   }
