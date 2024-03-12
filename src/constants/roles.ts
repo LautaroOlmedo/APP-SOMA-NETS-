@@ -1,7 +1,8 @@
 export enum ROLES {
-  USER = 'USER',
+  USER = 'USER', // ---> No puede ver finanzas
   OWNER = 'OWNER',
   ADMIN = 'ADMIN',
+  USER_ADVANCED = 'USER_ADVANCED',
 }
 
 export enum ACCESS_LEVEL {
