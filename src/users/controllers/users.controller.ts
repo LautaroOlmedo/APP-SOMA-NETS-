@@ -21,7 +21,7 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { query } from 'express';
 
 @Controller('users')
-@UseGuards(AuthGuard, RolesGuard)
+//@UseGuards(AuthGuard, RolesGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -32,7 +32,7 @@ export class UsersController {
     return await this.usersService.findAllUsers();
   }
 
-  @PublicAcces()
+  //@PublicAcces()
   @Get(':id')
   public async getUserById(@Param('id', ParseUUIDPipe) id: string) {
     // A CHECKEAR EL PARSE
@@ -40,7 +40,7 @@ export class UsersController {
   }
 
   //@Roles('ADMIN')
-  @PublicAcces()
+  //@PublicAcces()
   @Post('register')
   public async registerUser(@Body() body: UserDTO) {
     const validate = await this.usersService.findByUniqueValues(body);

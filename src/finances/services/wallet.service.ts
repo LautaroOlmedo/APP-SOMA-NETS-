@@ -16,7 +16,16 @@ export class WalletService {
     private readonly dataSource: DataSource,
   ) {}
 
-  public async findAllWallets() {}
+  public async findAllWallets(): Promise<WalletEntity[] | ErrorManager> {
+    try {
+      const wallets: WalletEntity[] = await this.walletRepository
+        .createQueryBuilder('walllets')
+        .getMany();
+      return wallets;
+    } catch (e) {
+      throw new ErrorManager.createSignatureError(e.message);
+    }
+  }
 
   public async findOneWallet(id: string): Promise<WalletEntity | ErrorManager> {
     try {

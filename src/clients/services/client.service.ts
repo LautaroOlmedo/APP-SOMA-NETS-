@@ -6,9 +6,6 @@ import { DataSource, DeleteResult, Repository, UpdateResult } from 'typeorm';
 
 import { ClientEntity } from '../entities/client.entity';
 import { ErrorManager } from '../../utils/error.manager';
-import { DepartmentEntity } from '../../departments/entities/department.entity';
-import { ProvinceEntity } from '../../provinces/entities/province.entity';
-import { CountryEntity } from '../../countries/entities/country.entity';
 import { ClientDTO, ClientUpdateDTO } from '../dto/client.dto';
 import { EmailService } from '../../emails/services/email.service';
 import { PhonesService } from '../../phones/services/phones.service';
@@ -29,6 +26,7 @@ export class ClientsService {
     storeID: string,
   ): Promise<ClientEntity[] | ErrorManager> {
     try {
+      console.log(storeID);
       const clients: ClientEntity[] = await this.clientRepository
         .createQueryBuilder('client')
         .leftJoinAndSelect('client.brand', 'brandInclude')
@@ -36,6 +34,7 @@ export class ClientsService {
         .innerJoin('storesIncludes.store', 'store')
         .where('store.id = :storeID', { storeID })
         .getMany();
+
       return clients;
     } catch (e) {
       console.log(e);
